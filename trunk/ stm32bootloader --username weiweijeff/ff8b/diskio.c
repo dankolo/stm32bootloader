@@ -34,17 +34,12 @@ BYTE drv /* Physical drive number (0) */
   {
   case 0:
     {
-     NVIC_InitTypeDef NVIC_InitStructure;
-     SD_Init();
-     SD_GetCardInfo(&SDCardInfo);
-     SD_SelectDeselect((uint32_t) (SDCardInfo.RCA << 16));
-     SD_EnableWideBusOperation(SDIO_BusWide_4b);
-     SD_SetDeviceMode(SD_DMA_MODE);
-     NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-     NVIC_Init(&NVIC_InitStructure); 
+     uint16_t Status;
+     Status = SD_Init();
+     Status = SD_GetCardInfo(&SDCardInfo);
+     Status = SD_SelectDeselect((uint32_t) (SDCardInfo.RCA << 16));
+     Status = SD_EnableWideBusOperation(SDIO_BusWide_4b);
+     Status = SD_SetDeviceMode(SD_DMA_MODE);
     }
     break;
   case 1:
@@ -54,6 +49,8 @@ BYTE drv /* Physical drive number (0) */
       /* Configure FSMC Bank1 NOR/SRAM2 */
       FSMC_NOR_Init();
     }
+    break;
+  default:break;
   }
 return 0;
 }
@@ -82,12 +79,27 @@ DWORD sector, /* Start sector number (LBA) */
 BYTE count /* Sector count (1..255) */
 )
 {
-uint16_t Transfer_Length;
-uint32_t Memory_Offset;
-
-Transfer_Length =  count * 512;
-Memory_Offset = sector * 512;
-SD_ReadBlock(Memory_Offset, (uint32_t *)buff, Transfer_Length);
+  uint16_t Transfer_Length;
+  uint32_t Memory_Offset;
+  switch(drv)
+  {
+  case 0:
+    {
+      
+      Transfer_Length =  count * 512;
+      Memory_Offset = sector * 512;
+      SD_ReadBlock(Memory_Offset, (uint32_t *)buff, Transfer_Length);
+    }
+    break;
+  case 1:
+    {
+      //FSMC_NOR_ReturnToReadMode();
+      //FSMC_NOR_ReadBuffer(uint16_t* pBuffer, uint32_t ReadAddr, uint32_t NumHalfwordToRead);
+    }
+    break;
+  default:break;
+  }
+  
   return RES_OK;
 }
 

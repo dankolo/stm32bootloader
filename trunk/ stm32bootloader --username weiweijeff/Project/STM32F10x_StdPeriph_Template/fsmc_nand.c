@@ -22,7 +22,17 @@
 #define FSMC_Bank_NAND     FSMC_Bank2_NAND
 #define Bank_NAND_ADDR     Bank2_NAND_ADDR 
 #define Bank2_NAND_ADDR    ((uint32_t)0x70000000)
-
+static void delay_nus(vu32 nCount)
+{
+  u16 TIMCounter = nCount;
+  TIM_Cmd(TIM4, ENABLE);
+  TIM_SetCounter(TIM4, TIMCounter);
+  while (TIMCounter)
+  {
+    TIMCounter = TIM_GetCounter(TIM4);
+  }
+  TIM_Cmd(TIM4, DISABLE);
+}
 /* Private macro -------------------------------------------------------------*/
 #define ROW_ADDRESS (Address.Page + (Address.Block + (Address.Zone * NAND_ZONE_SIZE)) * NAND_BLOCK_SIZE)
 
@@ -94,6 +104,16 @@ void FSMC_NAND_Init(void)
 
   /* FSMC NAND Bank Cmd Test */
   FSMC_NANDCmd(FSMC_Bank2_NAND, ENABLE);
+  
+  /**************************************************************************/
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+  TIM_TimeBaseStructure.TIM_Period = 1;                 //自动装载
+  TIM_TimeBaseStructure.TIM_Prescaler = 72;       //72M分频率到1MHz
+  TIM_TimeBaseStructure.TIM_ClockDivision = 0;   
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Down;  //向下计数
+  TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+/**************************************************************************/
 }
 
 /******************************************************************************
@@ -212,6 +232,7 @@ uint32_t FSMC_NAND_ReadSmallPage(uint8_t *pBuffer, NAND_ADDRESS Address, uint32_
     *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_3rd_CYCLE(ROW_ADDRESS); 
     
     *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_TRUE1; 
+    delay_nus(20);
 
     /* Calculate the size */
     size = NAND_PAGE_SIZE + (NAND_PAGE_SIZE * numpageread);
@@ -327,6 +348,7 @@ uint32_t FSMC_NAND_ReadSpareArea(uint8_t *pBuffer, NAND_ADDRESS Address, uint32_
     *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_3rd_CYCLE(ROW_ADDRESS);    
 
     *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_TRUE1;
+    delay_nus(15);
 
     /* Data Read */
     size = NAND_SPARE_AREA_SIZE +  (NAND_SPARE_AREA_SIZE * numsparearearead);

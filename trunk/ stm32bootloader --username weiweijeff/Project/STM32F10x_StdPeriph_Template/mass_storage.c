@@ -57,13 +57,7 @@ void Mass_Storage_Start (void)
 {
   
 
-  /* Disble the JoyStick interrupts */
-//  IntExtOnOffConfig(DISABLE);
-
-
-//  while(ReadKey() != NOKEY)
-//  {
-//  }
+  
 
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
     
@@ -74,51 +68,10 @@ void Mass_Storage_Start (void)
   MAL_Config();
 
   Set_USBClock();
-#if 0  
-  NVIC_InitTypeDef NVIC_InitStructure;
-  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-  NVIC_InitStructure.NVIC_IRQChannel = USB_HP_CAN1_TX_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  
-  NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-#endif
   
   USB_Init();
   USB_Cable_Config(ENABLE);
-  while (bDeviceState != CONFIGURED);
-#if 0
-  while (bDeviceState != CONFIGURED)
-  {
-    if(ReadKey() != NOKEY)
-    {
-      PowerOff();
-      IntExtOnOffConfig(ENABLE);
-      return;
-    }
-  }
-
-  
-  /* Loop until SEL key pressed */
-  while(ReadKey() != SEL)
-  {
-  }
-
-  PowerOff();
-#endif  
-  
-//  IntExtOnOffConfig(ENABLE);
+  //while (bDeviceState != CONFIGURED);
 }
 
 /*******************************************************************************
@@ -131,33 +84,12 @@ void Mass_Storage_Start (void)
 void Mass_Storage_Recovery (void)
 {
 #if 0  
-  /* Disble the JoyStick interrupts */
-  IntExtOnOffConfig(DISABLE);
 
-
-  while(ReadKey() != NOKEY)
-  {
-  }
-
-
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
-
- 
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
   /* FSMC Initialization */
   FSMC_NAND_Init();
 
-  NAND_Format();
-
-  /* Display the "To stop Press SEL" message */
-  LCD_DisplayStringLine(Line4, "     NAND Erased    ");
-  LCD_DisplayStringLine(Line5, "  To exit Press SEL ");
-
-  /* Loop until SEL key pressed */
-  while(ReadKey() != SEL)
-  {
-  }
-  
-  IntExtOnOffConfig(ENABLE);
+  NAND_Format();  
 #endif  
 }
 

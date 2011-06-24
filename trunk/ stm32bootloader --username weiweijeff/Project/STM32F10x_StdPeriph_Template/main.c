@@ -29,6 +29,9 @@
 #include "ff.h"
 #include <assert.h>
 #include "mass_storage.h"
+#include "fsmc_nor.h"
+#include "fsmc_nand.h"
+#include "nand_if.h"
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -81,6 +84,13 @@ volatile TestStatus MemoryProgramStatus = PASSED;
 
 
 
+NAND_IDTypeDef NAND_ID;
+NAND_ADDRESS WriteReadAddr;
+uint8_t TxBuffer[11]="0123456789", RxBuffer[11];
+uint32_t PageNumber = 2, WriteReadStatus = 0, status= 0;
+uint32_t j = 0;
+
+
 char *str;
 int main(void)
 {
@@ -101,8 +111,10 @@ int main(void)
   USART1_Init();
   LED_GPIO_Configuration();
   
-  get_disk_info();
-  list_file();
+//  get_disk_info();
+//  format_disk(0,0,512);
+//  get_disk_info();
+//  list_file();
 //  str=read_file("/","test.txt",0,32);
 //  printf("\n\r");
 //  printf(str);
@@ -121,7 +133,31 @@ int main(void)
   
   
   
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
+  /* FSMC Initialization */
+  FSMC_NAND_Init();
+
   
+
+  /* NAND read ID command */
+  FSMC_NAND_ReadID(&NAND_ID);
+  printf("\r\n%x\t%x\t%x\t%x",NAND_ID.Maker_ID,NAND_ID.Device_ID,NAND_ID.Third_ID,NAND_ID.Fourth_ID);
+  /* NAND memory address to write to */
+    WriteReadAddr.Zone = 0x00;
+    WriteReadAddr.Block = 0x00;
+    WriteReadAddr.Page = 0x00;
+
+    /* Erase the NAND first Block */
+    status = FSMC_NAND_EraseBlock(WriteReadAddr);
+
+    /* Write data to FSMC NAND memory */
+    /* Fill the buffer to send */
+
+    status = FSMC_NAND_WriteSmallPage(TxBuffer, WriteReadAddr, PageNumber);
+
+    /* Read back the written data */
+    status = FSMC_NAND_ReadSmallPage (RxBuffer, WriteReadAddr, PageNumber);
+    printf(RxBuffer);
 
   
   LCD_Clear(0xff);
@@ -130,7 +166,8 @@ int main(void)
   
   
 //  Run_App();
-    
+  
+
   while (1)
   {
     //printf("\r\nHELLO");
@@ -320,7 +357,8 @@ void USART1_Init()
   */
 void NVIC_Configuration(void)
 {
-  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
+  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
+//  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   
   NVIC_InitTypeDef NVIC_InitStructure;
