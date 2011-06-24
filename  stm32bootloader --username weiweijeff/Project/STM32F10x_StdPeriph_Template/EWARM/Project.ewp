@@ -2493,7 +2493,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32f10x_flash_boot.icf</state>
+          <state>$PROJ_DIR$\stm32f10x_ram.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
