@@ -280,8 +280,8 @@ void MAL_Config(void)
   MAL_Init(0);
 
   /* Enable the FSMC Clock */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
-  MAL_Init(1);
+//  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
+//  MAL_Init(1);
 }
 
 /*******************************************************************************

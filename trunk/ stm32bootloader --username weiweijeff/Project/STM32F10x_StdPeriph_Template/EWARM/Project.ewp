@@ -1884,7 +1884,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.20.1.52589</state>
+          <state>6.21.1.52845</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -2493,7 +2493,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32f10x_ram.icf</state>
+          <state>$PROJ_DIR$\stm32f10x_flash_boot.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -5661,15 +5661,6 @@
       <name>$PROJ_DIR$\..\ADC.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\DS18B20.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\fsmc_nand.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\fsmc_nor.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\hw_config.c</name>
     </file>
     <file>
@@ -5683,12 +5674,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\memory.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\nand_if.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\queue.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\RTC_Time.c</name>

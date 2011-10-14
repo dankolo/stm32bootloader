@@ -29,9 +29,7 @@
 #include "ff.h"
 #include <assert.h>
 #include "mass_storage.h"
-#include "fsmc_nor.h"
-#include "fsmc_nand.h"
-#include "nand_if.h"
+#include "sdcard.h"
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -50,48 +48,24 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 /* Private variables ---------------------------------------------------------*/
 pFunction Jump_To_Application;
 __IO uint32_t JumpAddress;
-void LowPower_Init(void);
 void Run_App(void);
 
 void NVIC_Configuration(void);
 void SetSysClockTo72(void);
-void USART1_Init();
 void TIM2_Config(void);
 void TIM3_Config(void);
-void LED_GPIO_Configuration(void);
 
 void delay(void)//延时函数，流水灯显示用
 {
  uint32_t i;
- for(i=0;i<0x1FFFF;i++);
+ for(i=0;i<0x9fFFFF;i++);
 }
 
 
 
-#define FLASH_PAGE_SIZE    ((uint16_t)0x800)
-#define BANK1_WRITE_START_ADDR  ((uint32_t)0x08008000)
-#define BANK1_WRITE_END_ADDR    ((uint32_t)0x0807FFFF)
-
-
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/  
-uint32_t EraseCounter = 0x00, Address = 0x00;
-uint32_t Data = 0x3210ABCD;
-uint32_t NbrOfPage = 0x00;
-volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
-volatile TestStatus MemoryProgramStatus = PASSED;
 
 
 
-
-NAND_IDTypeDef NAND_ID;
-NAND_ADDRESS WriteReadAddr;
-uint8_t TxBuffer[11]="0123456789", RxBuffer[11];
-uint32_t PageNumber = 2, WriteReadStatus = 0, status= 0;
-uint32_t j = 0;
-
-
-char *str;
 int main(void)
 {
   /*!< At this stage the microcontroller clock setting is already configured, 
@@ -104,14 +78,13 @@ int main(void)
   
        
   SetSysClockTo72();
-  LowPower_Init();
+  Mass_Storage_Start();
   NVIC_Configuration();
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
   STM3210E_LCD_Init();
   Touch_Config();
-  USART1_Init();
-  LED_GPIO_Configuration();
   
-//  get_disk_info();
+  
 //  format_disk(0,0,512);
 //  get_disk_info();
 //  list_file();
@@ -126,52 +99,26 @@ int main(void)
 //  edit_file("/","hello.txt","creat_file is ok!",0x00);
 //  str=read_file("/","test.txt",0x00,512);
 //  printf(str);
-//  printf("\n\r");
-  
+//  printf("\n\r");  
 //  list_file();
   
   
   
   
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
-  /* FSMC Initialization */
-  FSMC_NAND_Init();
-
   
 
-  /* NAND read ID command */
-  FSMC_NAND_ReadID(&NAND_ID);
-  printf("\r\n%x\t%x\t%x\t%x",NAND_ID.Maker_ID,NAND_ID.Device_ID,NAND_ID.Third_ID,NAND_ID.Fourth_ID);
-  /* NAND memory address to write to */
-    WriteReadAddr.Zone = 0x00;
-    WriteReadAddr.Block = 0x00;
-    WriteReadAddr.Page = 0x00;
-
-    /* Erase the NAND first Block */
-    status = FSMC_NAND_EraseBlock(WriteReadAddr);
-
-    /* Write data to FSMC NAND memory */
-    /* Fill the buffer to send */
-
-    status = FSMC_NAND_WriteSmallPage(TxBuffer, WriteReadAddr, PageNumber);
-
-    /* Read back the written data */
-    status = FSMC_NAND_ReadSmallPage (RxBuffer, WriteReadAddr, PageNumber);
-    printf(RxBuffer);
-
   
-  LCD_Clear(0xff);
-  
-  Mass_Storage_Start();
+  LCD_Clear(0xaaaa);
   
   
+  delay();  
+  LCD_CN(10,10,"升", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  //LCD_str(210,10,"固件", 16, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 //  Run_App();
   
-
   while (1)
   {
-    //printf("\r\nHELLO");
-    delay();
+    
   }
 }
 
@@ -297,59 +244,6 @@ void SetSysClockTo72(void)
   }
 }
 
-
-void USART1_Init()
-{
-  /* USARTx configured as follow:
-        - BaudRate = 9600 baud
-        - Word Length = 8 Bits
-        - One Stop Bit
-        - No parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  USART_InitTypeDef USART_InitStructure;
-  USART_InitStructure.USART_BaudRate = 115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-
-
-  GPIO_InitTypeDef GPIO_InitStructure;
-  /* Enable GPIO clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
-
-  /* Enable UART clock */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-
-  /* Configure USART Tx as alternate function push-pull */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  /* Configure USART Rx as input floating */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-  GPIO_Init( GPIOA, &GPIO_InitStructure);
-
-  /* USART configuration */
-  USART_Init(USART1, &USART_InitStructure);
-
-  /*********************************************/
-//  USART_DMACmd(USART1,USART_DMAReq_Rx,ENABLE);
-  //USART_DMACmd(USART1,USART_DMAReq_Tx,ENABLE);
-//  USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-  //USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-  /*********************************************/
-
-  /* Enable USART */
-  USART_Cmd(USART1, ENABLE);
-  USART_GetITStatus( USART1,  USART_IT_TC);
-}
-
 /**
   * @brief  Configures the nested vectored interrupt controller.
   * @param  None
@@ -357,8 +251,8 @@ void USART1_Init()
   */
 void NVIC_Configuration(void)
 {
-  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
-//  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
+//  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
+  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   
   NVIC_InitTypeDef NVIC_InitStructure;
@@ -455,17 +349,6 @@ void LED_GPIO_Configuration(void)
 }
 
 
-void LowPower_Init(void)
-{
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-
-  /* Enable WakeUp pin */
-  PWR_WakeUpPinCmd(ENABLE);
-
-  /* Enable Clock Security System(CSS) */
-  RCC_ClockSecuritySystemCmd(ENABLE);
-}
-
 void Run_App(void)
 {    
   JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
@@ -476,3 +359,30 @@ void Run_App(void)
 
   Jump_To_Application();
 }
+
+
+
+
+
+
+#if 0
+void Set_Channel(unsigned char x)
+{
+  if((Channel[x]>>3)==0)
+  {GPIO_ResetBits(GPIOF,GPIO_Pin_6);}
+  else
+  {GPIO_SetBits(GPIOF,GPIO_Pin_6);}
+    if(((Channel[x]&0x04)>>2)==0)
+  {GPIO_ResetBits(GPIOF,GPIO_Pin_7);}
+  else
+  {GPIO_SetBits(GPIOF,GPIO_Pin_7);}
+    if(((Channel[x]&0x02)>>1)==0)
+  {GPIO_ResetBits(GPIOF,GPIO_Pin_9);}
+  else
+  {GPIO_SetBits(GPIOF,GPIO_Pin_9);}
+   if((Channel[x]&0x01)==0)
+  {GPIO_ResetBits(GPIOF,GPIO_Pin_10);}
+  else
+  {GPIO_SetBits(GPIOF,GPIO_Pin_10);}
+}
+#endif

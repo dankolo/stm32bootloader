@@ -22,8 +22,6 @@
 #include "hw_config.h"
 #include "usb_istr.h"
 #include "sdcard.h"
-#include "fsmc_nand.h"
-#include "nand_if.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -59,19 +57,19 @@ void Mass_Storage_Start (void)
 
   
 
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
+//  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
     
   /* Enable and GPIOD clock */
-  USB_Disconnect_Config();
+//  USB_Disconnect_Config();
   
   /* MAL configuration */
-  MAL_Config();
-
+//  MAL_Config();
   Set_USBClock();
   
   USB_Init();
-  USB_Cable_Config(ENABLE);
-  //while (bDeviceState != CONFIGURED);
+  
+//  USB_Cable_Config(ENABLE);
+//  while (bDeviceState != CONFIGURED);
 }
 
 /*******************************************************************************

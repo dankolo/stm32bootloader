@@ -6,44 +6,43 @@
 void Touch_Config(void) 
 { 
   GPIO_InitTypeDef  GPIO_InitStructure; 
-  //GPIOC AFIO clock enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOF | RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO, ENABLE);
-  //SPI1 Remap enable
-//  GPIO_PinRemapConfig(GPIO_Remap_SPI1, ENABLE );
-
-  //Configure SPI1 pins: SCK and MOSI 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_7; 
+  //GPIOB AFIO clock enable
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO, ENABLE);
+ 
+  //Configure SPI2 pins: SCK and MOSI 
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13|GPIO_Pin_15; 
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;   //复用推挽输出
-  GPIO_Init(GPIOA,&GPIO_InitStructure); 
+  GPIO_Init(GPIOB,&GPIO_InitStructure); 
 
-  //Configure SPI1 pins: MISO
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6; 
+  //Configure SPI2 pins: MISO
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14; 
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;   //上拉输入
-  GPIO_Init(GPIOA,&GPIO_InitStructure);
+  GPIO_Init(GPIOB,&GPIO_InitStructure);
   
-  //Configure TP_PINS:TP_CS PF10
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10; 
+  //Configure TP_PINS:TP_CS PB12
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12; 
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   //推挽输出
-  GPIO_Init(GPIOF,&GPIO_InitStructure);	
+  GPIO_Init(GPIOB,&GPIO_InitStructure);	
  
   
-  /***PB10->TOUCH-INT***/
+  /***PB11->TOUCH-INT***/
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
-  GPIO_SetBits(GPIOB,GPIO_Pin_10);
+  
+  GPIO_SetBits(GPIOB,GPIO_Pin_11);
    
-  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource10);//PB10作为外部中断引 
+  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource11);//PB11作为外部中断引 
 
-  // SPI1 Config
-  //SPI1 Periph clock enable 
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);
-  /* DISABLE SPI1 必须先禁止*/
-  SPI_Cmd(SPI1, DISABLE);
+  // SPI2 Config
+  //SPI2 Periph clock enable 
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE);
+  /* DISABLE SPI2 必须先禁止*/
+  SPI_Cmd(SPI2, DISABLE);
   SPI_InitTypeDef   SPI_InitStructure;
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex; 
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master; 
@@ -56,8 +55,8 @@ void Touch_Config(void)
   SPI_InitStructure.SPI_CRCPolynomial = 7; 
   SPI_Init(SPI1,&SPI_InitStructure); 
 
-  // SPI1 enable  
-  SPI_Cmd(SPI1,ENABLE);  
+  // SPI2 enable  
+  SPI_Cmd(SPI2,ENABLE);  
 }
 
 unsigned char SPI_WriteByte(unsigned char data) 
@@ -122,7 +121,7 @@ int16_t  TP_MeasureX(void)
   int16_t databuffer[16]={0};//数据组
   int16_t temp=0,X=0;
   uint32_t sum=0;
-  while(/*GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)==0&&*/count<16)//循环读数10次
+  while(count<16)//循环读数16次
   {
     databuffer[count]=TPReadX();
     count++;
@@ -160,7 +159,7 @@ int16_t  TP_MeasureY(void)
   int16_t databuffer[16]={0};//数据组
   int16_t temp=0,Y=0;
   uint32_t sum=0;
-  while(/*GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)==0&&*/count<16)	//循环读数10次
+  while(count<16)	//循环读数10次
   {
     databuffer[count]=TPReadY();
     count++;

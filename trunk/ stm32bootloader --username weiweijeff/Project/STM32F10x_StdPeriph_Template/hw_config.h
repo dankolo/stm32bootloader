@@ -26,9 +26,9 @@
 /* Exported define -----------------------------------------------------------*/
 #define BULK_MAX_PACKET_SIZE              0x00000040
 #define USE_WAITN
-#define USB_DISCONNECT                    GPIOB  
-#define USB_DISCONNECT_PIN                GPIO_Pin_14
-#define RCC_APB2Periph_GPIO_DISCONNECT    RCC_APB2Periph_GPIOB
+#define USB_DISCONNECT                    GPIOG 
+#define USB_DISCONNECT_PIN                GPIO_Pin_6
+#define RCC_APB2Periph_GPIO_DISCONNECT    RCC_APB2Periph_GPIOG
 #define USB_LED_PORT                      GPIOF
 #define GPIO_LED                          GPIOF    
 #define RCC_APB2Periph_GPIO_LED           RCC_APB2Periph_GPIOF
