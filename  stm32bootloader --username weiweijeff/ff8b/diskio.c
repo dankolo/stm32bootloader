@@ -9,8 +9,6 @@
 #include "stm32f10x.h"
 #include "sdcard.h"
 #include<stdio.h>
-//#include "stm3210e_eval_fsmc_nor.h"
-#include "fsmc_nor.h"
 
 
 
@@ -44,10 +42,7 @@ BYTE drv /* Physical drive number (0) */
     break;
   case 1:
     {
-      /* Enable the FSMC Clock */
-      RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
-      /* Configure FSMC Bank1 NOR/SRAM2 */
-      FSMC_NOR_Init();
+
     }
     break;
   default:break;

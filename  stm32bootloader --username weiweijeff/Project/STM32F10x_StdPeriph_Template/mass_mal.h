@@ -22,7 +22,7 @@
 /* Exported constants --------------------------------------------------------*/
 #define MAL_OK   0
 #define MAL_FAIL 1
-#define MAX_LUN  1
+#define MAX_LUN  0
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

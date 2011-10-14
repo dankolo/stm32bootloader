@@ -17,30 +17,30 @@ void list_file(void)
 	res = f_mount(0,&fs);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}	
 	res = f_opendir(&dirs, (const TCHAR*) "/");
 	if (res == FR_OK)
 	{
-          printf("\r\n------------文件列表------------");
+          //printf("\r\n------------文件列表------------");
 		while ((f_readdir(&dirs, &finfo) == FR_OK) && finfo.fname[0])
 		{
 			i = strlen(finfo.fname);
 			if (finfo.fattrib & AM_DIR)//如果是文件夹
 			{
 				files_num++;
-				printf("\r\n/%s", &finfo.fname[0]);
+				//printf("\r\n/%s", &finfo.fname[0]);
 				switch(i)//作用：输出文件名左对齐
 				{
-				case 1:printf(" ");
-				case 2:printf(" ");
-				case 3:printf(" ");
-				case 4:printf(" ");
-				case 5:printf(" ");
-				case 6:printf(" ");
-				case 7:printf(" ");
-				case 8:printf("%15s"," ");
+				case 1://printf(" ");
+				case 2://printf(" ");
+				case 3://printf(" ");
+				case 4://printf(" ");
+				case 5://printf(" ");
+				case 6://printf(" ");
+				case 7://printf(" ");
+				case 8://printf("%15s"," ");
 				}
 
 				
@@ -54,8 +54,8 @@ void list_file(void)
 	}
 	else
 	{
-		printf("\r\n打开根目录失败!");
-		printf("\r\n错误代码: %u",res);
+		//printf("\r\n打开根目录失败!");
+		//printf("\r\n错误代码: %u",res);
 	}
 	res = f_opendir(&dirs, (const TCHAR*)"/");
 
@@ -74,20 +74,20 @@ void list_file(void)
 			else
 			{
 				files_num++;				
-				printf("\r\n/.%12s%7ld KB ",  &finfo.fname[0],(finfo.fsize+512)/1024);				
+				//printf("\r\n/.%12s%7ld KB ",  &finfo.fname[0],(finfo.fsize+512)/1024);				
 			}
 		}
 		if( files_num==0 )//无文件
 		{
-			printf("\r\n无文件!");
+			//printf("\r\n无文件!");
 		}
 	}
 	else
 	{
-		printf("\r\n打开根目录失败!");
-		printf("\r\n错误代码: %u",res);
+		//printf("\r\n打开根目录失败!");
+		//printf("\r\n错误代码: %u",res);
 	}
-        printf("\n\r");
+        //printf("\n\r");
 	f_mount(0,NULL);
 
 }
@@ -100,10 +100,10 @@ void get_disk_info(void)
 	DWORD clust,tot_sect,fre_sect;	
 	
 	res = f_mount(0,&fs);
-//        printf("f_mount---%u---",res);
+//        //printf("f_mount---%u---",res);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}	
 
@@ -113,15 +113,13 @@ void get_disk_info(void)
 		tot_sect = (fls->n_fatent - 2) * fls->csize;
 		fre_sect = clust * fls->csize;
 
-		printf("\r\nfree space in unit of KB (assuming 512B/sector)");
-		printf("\r\n%lu KB total drive space.\r\n"
-			"%lu KB available.",
-			fre_sect / 2, tot_sect / 2);
+		//printf("\r\nfree space in unit of KB (assuming 512B/sector)");
+		//printf("\r\n%lu KB total drive space.\r\n"	"%lu KB available.",fre_sect / 2, tot_sect / 2);
 	}
 	else
 	{
-		printf("\r\n获得磁盘信息失败!");
-		printf("\r\n错误代码: %u",res);
+		//printf("\r\n获得磁盘信息失败!");
+		//printf("\r\n错误代码: %u",res);
 	}
 	
 	f_mount(0,NULL);
@@ -140,19 +138,19 @@ void format_disk(
 	res = f_mount(0,&fs);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}	
-	printf("\r\n正在格式化磁盘,请稍候...");
+	//printf("\r\n正在格式化磁盘,请稍候...");
 	res = f_mkfs(drv,partition,allocsize);
 	if (res == FR_OK)
 	{
-		printf("\r\n格式化成功...");
+		//printf("\r\n格式化成功...");
 	}
 	else
 	{
-		printf("\r\n格式化失败...");
-		printf("\r\n错误代码: %u",res);
+		//printf("\r\n格式化失败...");
+		//printf("\r\n错误代码: %u",res);
 	}
 	f_mount(0,NULL);
 }
@@ -197,24 +195,24 @@ void creat_file(const TCHAR *file_name)
 	res = f_mount(0,&fs);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}	
 	res = f_open(pf,file_name,FA_READ | FA_WRITE | FA_CREATE_NEW);
 	if (res == FR_OK)
 	{
-		printf("\r\n创建文件成功!");
+		//printf("\r\n创建文件成功!");
 		res = f_close(pf);
 		if (res != FR_OK)
 		{
-			printf("\r\n创建文件成功,但关闭文件时,失败!");
-			printf("\r\n错误代码: %u",res);				
+			//printf("\r\n创建文件成功,但关闭文件时,失败!");
+			//printf("\r\n错误代码: %u",res);				
 		}				
 	}
 	else
 	{
-		printf("\r\n创建文件失败!");
-		printf("\r\n错误代码: %u",res);	
+		//printf("\r\n创建文件失败!");
+		//printf("\r\n错误代码: %u",res);	
 	}
 	f_mount(0,NULL);
 }
@@ -226,18 +224,18 @@ void creat_dir(const TCHAR *dir_name)
 	res = f_mount(0,&fs);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}		
 	res = f_mkdir(dir_name);
 	if (res == FR_OK)
 	{
-		printf("\r\n创建文件目录成功!");
+		//printf("\r\n创建文件目录成功!");
 	}
 	else
 	{
-		printf("\r\n创建目录失败...");
-		printf("\r\n错误代码: %u",res);
+		//printf("\r\n创建目录失败...");
+		//printf("\r\n错误代码: %u",res);
 	}
 	f_mount(0,NULL);
 }
@@ -251,7 +249,7 @@ void delete_file(const TCHAR *dir, const TCHAR *file_name)
 	res = f_mount(0,&fs);        
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误: %u",res);
+		//printf("\r\n挂载文件系统失败,错误: %u",res);
 		return;
 	}
         res = f_opendir(&dirs,(const TCHAR*)"/");
@@ -276,7 +274,7 @@ void edit_file(const TCHAR *dir,const TCHAR *write_file,char *write_data,uint32_
 	res = f_mount(0,&fs);
 	if (res != FR_OK)
 	{
-		printf("\r\n挂载文件系统失败,错误代码: %u",res);
+		//printf("\r\n挂载文件系统失败,错误代码: %u",res);
 		return;
 	}
 	res = f_opendir(&dirs,(const TCHAR*)"/");
@@ -294,8 +292,8 @@ void edit_file(const TCHAR *dir,const TCHAR *write_file,char *write_data,uint32_
             }
             else
             {
-              printf("\r\n保存数据失败!");
-              printf("\r\n错误代码: %u",res);
+              //printf("\r\n保存数据失败!");
+              //printf("\r\n错误代码: %u",res);
             }
           }
           else
@@ -309,8 +307,8 @@ void edit_file(const TCHAR *dir,const TCHAR *write_file,char *write_data,uint32_
               }
               else
               {
-                printf("\r\n保存数据失败!");
-                printf("\r\n错误代码: %u",res);
+                //printf("\r\n保存数据失败!");
+                //printf("\r\n错误代码: %u",res);
               }
               write_data+=512;
               index+=512;
@@ -321,7 +319,7 @@ void edit_file(const TCHAR *dir,const TCHAR *write_file,char *write_data,uint32_
 	}
 	else
 	{
-		printf("\r\n打开文件失败,错误代码: %u",res);
+		//printf("\r\n打开文件失败,错误代码: %u",res);
 	}
         f_mount(0,NULL);
 }
@@ -371,7 +369,7 @@ void LCD_CN(u16 x,u16 y,uc8 *p,uint8_t fon, u16 charColor,u16 bkColor)
   FIL	file;
   FRESULT res;
   DIR dirs;
-  u8 buffer[32]={0};
+  u8 buffer[128]={0};
   uint32_t re;
   res = f_mount(0,&fs);
   res = f_opendir(&dirs,(const TCHAR*)"/");//打开根目录

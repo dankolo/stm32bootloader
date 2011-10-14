@@ -15,8 +15,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "sdcard.h"
-#include "fsmc_nand.h"
-#include "nand_if.h"
 #include "mass_mal.h"
 #include "hw_config.h"
 
@@ -53,7 +51,7 @@ uint16_t MAL_Init(uint8_t lun)
       Status = SD_SetDeviceMode(SD_DMA_MODE);
       break;
     case 1:
-      status = NAND_Init();
+     ;
       break;
     default:
       return MAL_FAIL;
@@ -81,7 +79,7 @@ uint16_t MAL_Write(uint8_t lun, uint32_t Memory_Offset, uint32_t *Writebuff, uin
       break;
 
     case 1:
-      NAND_Write(Memory_Offset, Writebuff, Transfer_Length);
+      ;
       break;
 
     default:
@@ -111,7 +109,7 @@ uint16_t MAL_Read(uint8_t lun, uint32_t Memory_Offset, uint32_t *Readbuff, uint1
       break;
 
     case 1:
-      NAND_Read(Memory_Offset, Readbuff, Transfer_Length);
+      ;
       break;
 
     default:
@@ -129,7 +127,7 @@ uint16_t MAL_Read(uint8_t lun, uint32_t Memory_Offset, uint32_t *Readbuff, uint1
 *******************************************************************************/
 uint16_t MAL_GetStatus (uint8_t lun)
 {
-  NAND_IDTypeDef NAND_ID;
+  ;
   uint32_t DeviceSizeMul = 0, NumberOfBlocks = 0;
 
 
@@ -171,15 +169,7 @@ uint16_t MAL_GetStatus (uint8_t lun)
   }
   else
   {
-    FSMC_NAND_ReadID(&NAND_ID);
-    if (NAND_ID.Device_ID != 0 )
-    {
-      /* only one zone is used */
-      Mass_Block_Count[1] = NAND_ZONE_SIZE * NAND_BLOCK_SIZE * NAND_MAX_ZONE ;
-      Mass_Block_Size[1]  = NAND_PAGE_SIZE;
-      Mass_Memory_Size[1] = (Mass_Block_Count[1] * Mass_Block_Size[1]);
-      return MAL_OK;
-    }
+    return MAL_OK;
   }
   GPIO_ResetBits(USB_LED_PORT, GPIO_Pin_7);
   return MAL_FAIL;

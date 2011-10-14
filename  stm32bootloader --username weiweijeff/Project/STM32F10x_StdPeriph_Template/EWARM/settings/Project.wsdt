@@ -12,7 +12,7 @@
           
           
           
-        <Column0>353</Column0><Column1>14</Column1><Column2>27</Column2><Column3>1307796</Column3></ColumnWidths>
+        <Column0>506</Column0><Column1>14</Column1><Column2>27</Column2><Column3>1307796</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -25,7 +25,7 @@
     <Windows>
       
       
-    <Wnd0>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-32422-21669</Identity>
@@ -33,11 +33,11 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>Project</ExpandedNode><ExpandedNode>Project/Output</ExpandedNode><ExpandedNode>Project/User</ExpandedNode><ExpandedNode>Project/ff8b</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>Project</ExpandedNode><ExpandedNode>Project/STM32_USB-FS-Device_Driver</ExpandedNode><ExpandedNode>Project/User</ExpandedNode><ExpandedNode>Project/ff8b</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-30393-22117</Identity>
@@ -47,20 +47,20 @@
           </Tab>
         <Tab><Identity>TabID-8671-26166</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\diskio.c</Filename><XPos>0</XPos><YPos>68</YPos><SelStart>2713</SelStart><SelEnd>2713</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>136</YPos><SelStart>4576</SelStart><SelEnd>4576</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\nand_if.c</Filename><XPos>0</XPos><YPos>51</YPos><SelStart>1067</SelStart><SelEnd>1067</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\nand_if.h</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\fsmc_nand.h</Filename><XPos>0</XPos><YPos>13</YPos><SelStart>1357</SelStart><SelEnd>1357</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\fsmc_nand.c</Filename><XPos>0</XPos><YPos>211</YPos><SelStart>10563</SelStart><SelEnd>10563</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\DS18B20.c</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>109</SelStart><SelEnd>926</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_lcd.h</Filename><XPos>0</XPos><YPos>87</YPos><SelStart>2617</SelStart><SelEnd>2632</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\fatfs.c</Filename><XPos>0</XPos><YPos>94</YPos><SelStart>2079</SelStart><SelEnd>2079</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\fatfs.h</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>986</SelStart><SelEnd>993</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\diskio.c</Filename><XPos>0</XPos><YPos>159</YPos><SelStart>1410</SelStart><SelEnd>1410</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>65</YPos><SelStart>2688</SelStart><SelEnd>2688</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\ff.c</Filename><XPos>0</XPos><YPos>2204</YPos><SelStart>81105</SelStart><SelEnd>81105</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_storage.c</Filename><XPos>0</XPos><YPos>51</YPos><SelStart>2507</SelStart><SelEnd>2824</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>53</YPos><SelStart>2158</SelStart><SelEnd>2158</SelEnd></Tab><ActiveTab>7</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\hw_config.c</Filename><XPos>0</XPos><YPos>264</YPos><SelStart>10159</SelStart><SelEnd>10167</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_mal.c</Filename><XPos>0</XPos><YPos>29</YPos><SelStart>2098</SelStart><SelEnd>2108</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-01405e50><key>iaridepm.enu1</key></Toolbar-01405e50></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>581</Bottom><Right>431</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>138889</sizeHorzCX><sizeHorzCY>242718</sizeHorzCY><sizeVertCX>300694</sizeVertCX><sizeVertCY>707524</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>200</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>242718</sizeHorzCY><sizeVertCX>138889</sizeVertCX><sizeVertCY>242718</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00d5fd60><key>iaridepm.enu1</key></Toolbar-00d5fd60></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>488</Bottom><Right>584</Right><x>-2</x><y>-2</y><xscreen>271</xscreen><yscreen>287</yscreen><sizeHorzCX>188194</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>406944</sizeVertCX><sizeVertCY>599022</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>285</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>287</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>188194</sizeVertCX><sizeVertCY>350856</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

@@ -1,6 +1,6 @@
 [DebugChecksum]
 <<<<<<< .mine
-Checksum=-183801214
+Checksum=-233350610
 =======
 Checksum=-1250662152
 >>>>>>> .r19
@@ -47,18 +47,6 @@ SWOInfo_ITMPortsEnabled=0x00000000
 SWOInfo_ITMPortsTermIO=0x00000000
 SWOInfo_ITMPortsLogFile=0x00000000
 SWOInfo_ITMLogFile=$PROJ_DIR$\ITM.log
-[DataLog]
-LogEnabled=0
-SumEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-[InterruptLog]
-LogEnabled=0
-SumEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-SumSortOrder=0
 [TraceHelperExtra]
 Enabled=0
 ShowSource=1
@@ -91,6 +79,47 @@ StopOnUncaught=_ 0
 StopOnThrow=_ 0
 [CallStack]
 ShowArgs=0
+[Disassembly]
+MixedMode=1
+[SWOTraceHWSettings]
+OverrideDefaultClocks=0
+CpuClock=72000000
+ClockAutoDetect=1
+ClockWanted=6000000
+JtagSpeed=6000000
+Prescaler=12
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=0
+ITMportsTermIO=0
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[PowerLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=0
+Title0=I0
+Setup0=0 1 0 500 2 0 4 0 0
+LiveEnabled=0
+LiveFile=PowerLogLive.log
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
 [Disassemble mode]
 mode=1
 [Breakpoints2]
@@ -105,10 +134,25 @@ LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
+[Trace2]
+Enabled=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[PowerProbe]
+Frequency=10000
+Probe0=I0
+ProbeSetup0=2 1 1 2 0 0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=0
+Mode=3
 Graph=0
 Symbiont=0

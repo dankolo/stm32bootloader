@@ -20,8 +20,6 @@
 #include "usb_bot.h"
 #include "usb_regs.h"
 #include "memory.h"
-#include "nand_if.h"
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -355,7 +353,7 @@ void SCSI_Format_Cmd(uint8_t lun)
   }
   else
   {
-    NAND_Format();
+    ;
     Set_CSW (CSW_CMD_PASSED, SEND_CSW_ENABLE);
   }
 }
