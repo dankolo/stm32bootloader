@@ -224,7 +224,7 @@ void TIM2_IRQHandler(void)
   if(TIM_GetITStatus(TIM2, TIM_IT_Update)!=RESET)
   {
     TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-    if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)==0)
+    if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)==0)
     {
       TIM_Cmd(TIM3, ENABLE);
     }    
@@ -234,7 +234,7 @@ void TIM3_IRQHandler(void)
 {
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
   
-  if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)==0)
+  if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)==0)
   {
     if(tp_flag<4)
     {
