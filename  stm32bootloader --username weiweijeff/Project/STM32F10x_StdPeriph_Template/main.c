@@ -112,8 +112,7 @@ int main(void)
   
   TIM2_Config();
   TIM3_Config();
-  LCD_CN(10,10,"Éý", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-  //LCD_str(210,10,"¹Ì¼þ", 16, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(200,50,"Éý¼¶¹Ì¼þ", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 //  Run_App();
   
   while (1)
