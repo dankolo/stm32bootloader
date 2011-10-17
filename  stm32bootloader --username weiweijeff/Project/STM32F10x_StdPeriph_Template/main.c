@@ -63,9 +63,6 @@ void delay(void)//延时函数，流水灯显示用
 
 
 
-
-
-
 int main(void)
 {
   /*!< At this stage the microcontroller clock setting is already configured, 
@@ -111,7 +108,10 @@ int main(void)
   LCD_Clear(0xaaaa);
   
   
-  delay();  
+  delay(); 
+  
+  TIM2_Config();
+  TIM3_Config();
   LCD_CN(10,10,"升", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   //LCD_str(210,10,"固件", 16, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 //  Run_App();
@@ -259,14 +259,14 @@ void NVIC_Configuration(void)
   
   /* Enable the TIM2 global Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
   /* Enable the TIM3 global Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);

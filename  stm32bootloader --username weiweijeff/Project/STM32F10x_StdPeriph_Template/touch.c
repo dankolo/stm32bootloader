@@ -53,7 +53,7 @@ void Touch_Config(void)
   SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_128; 
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB; 
   SPI_InitStructure.SPI_CRCPolynomial = 7; 
-  SPI_Init(SPI1,&SPI_InitStructure); 
+  SPI_Init(SPI2,&SPI_InitStructure); 
 
   // SPI2 enable  
   SPI_Cmd(SPI2,ENABLE);  
@@ -64,14 +64,14 @@ unsigned char SPI_WriteByte(unsigned char data)
  unsigned char Data = 0; 
 
    //Wait until the transmit buffer is empty 
-  while(SPI_I2S_GetFlagStatus(SPI1,SPI_I2S_FLAG_TXE)==RESET); 
+  while(SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_TXE)==RESET); 
   // Send the byte  
-  SPI_I2S_SendData(SPI1,data); 
+  SPI_I2S_SendData(SPI2,data); 
 
    //Wait until a data is received 
-  while(SPI_I2S_GetFlagStatus(SPI1,SPI_I2S_FLAG_RXNE)==RESET); 
+  while(SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_RXNE)==RESET); 
   // Get the received data 
-  Data = SPI_I2S_ReceiveData(SPI1); 
+  Data = SPI_I2S_ReceiveData(SPI2); 
 
   // Return the shifted data 
   return Data; 
