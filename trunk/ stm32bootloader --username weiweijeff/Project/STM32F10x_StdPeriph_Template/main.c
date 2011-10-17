@@ -43,6 +43,19 @@ typedef  void (*pFunction)(void);
 typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 /* Private define ------------------------------------------------------------*/
 #define ApplicationAddress       ((uint32_t)0x800F000)
+#define FLASH_PAGE_SIZE    ((uint16_t)0x800)
+//#define BANK1_WRITE_START_ADDR  ((uint32_t)0x0800F000)
+//#define BANK1_WRITE_END_ADDR    ((uint32_t)0x0807FFFF)
+uint32_t BANK1_WRITE_START_ADDR=0x0800F000;
+uint32_t BANK1_WRITE_END_ADDR;
+uint32_t APP_PROGRAM_FLAG=0x00;
+uint32_t Jump_To_App_flag=0x01;
+uint32_t EraseCounter = 0x00, Address = 0x00;
+uint32_t NbrOfPage = 0x00;
+volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
+volatile TestStatus MemoryProgramStatus = PASSED;
+
+uint16_t test;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -61,7 +74,21 @@ void delay(void)//延时函数，流水灯显示用
  for(i=0;i<0x9fFFFF;i++);
 }
 
-
+      FILINFO file_info;
+      FILINFO *info;
+      DWORD	app_size;
+void stat_file(const TCHAR *dir,const TCHAR *file_name)
+{
+      FATFS fs;
+      FIL	file;
+      FRESULT res;
+      info=&file_info;
+      res = f_mount(0,&fs);
+      res = f_chdir(dir);
+      res = f_stat(file_name,info);
+      app_size=file_info.fsize;
+      f_mount(0,NULL);
+}
 
 int main(void)
 {
@@ -79,45 +106,105 @@ int main(void)
   NVIC_Configuration();
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
   STM3210E_LCD_Init();
-  Touch_Config();
-  
-  
-//  format_disk(0,0,512);
-//  get_disk_info();
-//  list_file();
-//  str=read_file("/","test.txt",0,32);
-//  printf("\n\r");
-//  printf(str);
-//  delete_file("/","test.txt");
-//  creat_file("test.txt");  
-//  delete_file("/","hello.txt");
-//  creat_file("hello.txt");
-//  delay();
-//  edit_file("/","hello.txt","creat_file is ok!",0x00);
-//  str=read_file("/","test.txt",0x00,512);
-//  printf(str);
-//  printf("\n\r");  
-//  list_file();
-  
-  
-  
-  
-  
-
-  
   LCD_Clear(0xaaaa);
-  
-  
-  delay(); 
-  
+  Touch_Config();  
+  delay();   
   TIM2_Config();
   TIM3_Config();
-  LCD_str(200,50,"升级固件", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-//  Run_App();
   
+  LCD_str(200,50,"升级固件", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  stat_file("/","app.bin");
   while (1)
   {
+    if(APP_PROGRAM_FLAG==0x01)
+    {
+      uint32_t m_size,n_size,k,p,offset=0;
+      
+      
+      /* Porgram FLASH Bank1 ********************************************************/
+      /* Unlock the Flash Bank1 Program Erase controller */
+      FLASH_UnlockBank1();
+      
+      /* Define the number of page to be erased */
+//      NbrOfPage = (BANK1_WRITE_END_ADDR - BANK1_WRITE_START_ADDR) / FLASH_PAGE_SIZE;
+      NbrOfPage = app_size / FLASH_PAGE_SIZE +1;
+      
+      /* Clear All pending flags */
+      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR);	
+      
+      /* Erase the FLASH pages */
+      for(EraseCounter = 0; (EraseCounter < NbrOfPage) && (FLASHStatus == FLASH_COMPLETE); EraseCounter++)
+      {
+        FLASHStatus = FLASH_ErasePage(BANK1_WRITE_START_ADDR + (FLASH_PAGE_SIZE * EraseCounter));
+      }   
+      
+      
+      /* Program Flash Bank1 */
+      Address = BANK1_WRITE_START_ADDR;
+      BANK1_WRITE_END_ADDR=BANK1_WRITE_START_ADDR+app_size;
+      m_size=app_size/512;
+      n_size=app_size%512;
+      
+      
+      
+#if 1      
+      while((Address < BANK1_WRITE_END_ADDR) && (FLASHStatus == FLASH_COMPLETE))
+      {
+        
+        char *app_buffer;
+        for(k=0;k<=m_size;k++)
+        {
+          app_buffer=read_file("/","app.bin",offset,512);
+          for(p=0;p<512;p+=2)
+          {
+            FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
+            Address+=2;
+            app_buffer+=2;
+          } 
+          offset+=512;
+        }
+        app_buffer=read_file("/","app.bin",offset,n_size);
+        if(n_size%2)
+        {
+          for(p=0;p<n_size-1;p+=2)
+          {
+            FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
+            Address+=2;
+            app_buffer+=2;
+          }
+          FLASHStatus=FLASH_ProgramHalfWord(Address, (uint16_t)((*app_buffer)));
+        }
+        for(p=0;p<n_size;p+=2)
+        {
+          FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
+          Address+=2;
+          app_buffer+=2;
+        }        
+      }
+#endif      
+      FLASH_LockBank1();
+      LCD_str(200,50,"固件升级完毕！", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      APP_PROGRAM_FLAG=0x00;
+#if 0   //     Check
+      /* Check the correctness of written data */
+      Address = BANK1_WRITE_START_ADDR;
+      
+      while((Address < BANK1_WRITE_END_ADDR) && (MemoryProgramStatus != FAILED))
+      {
+        if((*(__IO uint32_t*) Address) != Data)
+        {
+          MemoryProgramStatus = FAILED;
+        }
+        Address += 4;
+      }
+#endif       //Check
+    }
     
+    
+    if(Jump_To_App_flag==0x01)
+    {
+      Run_App();
+    }
   }
 }
 

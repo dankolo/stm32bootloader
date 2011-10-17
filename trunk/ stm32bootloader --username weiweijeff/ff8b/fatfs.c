@@ -170,7 +170,7 @@ char *read_file(const TCHAR *dir,const TCHAR *file_name,int offset,int length)
   FIL	file;
   FRESULT res;
 //  DIR dirs;
-//  FILINFO finfo;
+  FILINFO finfo;
   uint32_t re;
   res = f_mount(0,&fs);
   res = f_chdir(dir);
