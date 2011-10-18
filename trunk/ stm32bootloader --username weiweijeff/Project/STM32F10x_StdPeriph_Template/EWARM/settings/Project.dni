@@ -1,6 +1,6 @@
 [DebugChecksum]
 <<<<<<< .mine
-Checksum=1358827732
+Checksum=2096235063
 =======
 Checksum=-1250662152
 >>>>>>> .r19
@@ -120,10 +120,6 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
-[Disassemble mode]
-mode=1
-[Breakpoints2]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -131,9 +127,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Aliases]
-Count=0
-SuppressDialog=0
 [Trace2]
 Enabled=0
 [SWOTraceWindow]
@@ -156,3 +149,10 @@ Enabled=0
 Mode=3
 Graph=0
 Symbiont=0
+[Disassemble mode]
+mode=1
+[Breakpoints2]
+Count=0
+[Aliases]
+Count=0
+SuppressDialog=0
