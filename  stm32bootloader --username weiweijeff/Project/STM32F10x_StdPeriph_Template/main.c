@@ -49,13 +49,12 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 uint32_t BANK1_WRITE_START_ADDR=0x0800F000;
 uint32_t BANK1_WRITE_END_ADDR;
 uint32_t APP_PROGRAM_FLAG=0x00;
-uint32_t Jump_To_App_flag=0x01;
+uint32_t Jump_To_App_flag=0x00;
 uint32_t EraseCounter = 0x00, Address = 0x00;
 uint32_t NbrOfPage = 0x00;
 volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
 volatile TestStatus MemoryProgramStatus = PASSED;
 
-uint16_t test;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -106,18 +105,26 @@ int main(void)
   NVIC_Configuration();
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
   STM3210E_LCD_Init();
-  LCD_Clear(0xaaaa);
   Touch_Config();  
   delay();   
   TIM2_Config();
-  TIM3_Config();
-  
-  LCD_str(200,50,"升级固件", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-  stat_file("/","app.bin");
+  TIM3_Config();  
+  stat_file("/","app.bin");  
+  LCD_Clear(LCD_COLOR_BLACK);
+  LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(176,200,"设计单位：武昌南机务段", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(176,250,"技术支持：weiweijeff@gmail.com", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_DrawFullRect( 24, 320, 320,  424,  LCD_COLOR_BLUE, 0);
+  LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
+  LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   while (1)
   {
     if(APP_PROGRAM_FLAG==0x01)
     {
+      LCD_Clear(LCD_COLOR_BLACK);
+      LCD_str(200,50,"开始升级，请等待...", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
       uint32_t m_size,n_size,k,p,offset=0;
       
       
@@ -147,7 +154,6 @@ int main(void)
       
       
       
-#if 1      
       while((Address < BANK1_WRITE_END_ADDR) && (FLASHStatus == FLASH_COMPLETE))
       {
         
@@ -166,7 +172,8 @@ int main(void)
         app_buffer=read_file("/","app.bin",offset,n_size);
         if(n_size%2)
         {
-          for(p=0;p<n_size-1;p+=2)
+          *(app_buffer+n_size+1)=0xff;
+          for(p=0;p<n_size+1;p+=2)
           {
             FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
             Address+=2;
@@ -174,17 +181,32 @@ int main(void)
           }
           FLASHStatus=FLASH_ProgramHalfWord(Address, (uint16_t)((*app_buffer)));
         }
-        for(p=0;p<n_size;p+=2)
+        else
         {
-          FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
-          Address+=2;
-          app_buffer+=2;
-        }        
+          for(p=0;p<n_size;p+=2)
+          {
+            FLASHStatus=FLASH_ProgramHalfWord(Address, ((uint16_t)(*app_buffer)|((uint16_t)(*(app_buffer+1)))<<8));
+            Address+=2;
+            app_buffer+=2;
+          }
+        }
+                
       }
-#endif      
       FLASH_LockBank1();
-      LCD_str(200,50,"固件升级完毕！", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-      APP_PROGRAM_FLAG=0x00;
+      
+      LCD_Clear(LCD_COLOR_BLACK);
+      LCD_str(10,50,"软件升级成功！请稍候...", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      delay();
+      APP_PROGRAM_FLAG=0x00;      
+      LCD_Clear(LCD_COLOR_BLACK);
+      LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      LCD_str(176,200,"设计单位：武昌南机务段", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      LCD_str(176,250,"技术支持：weiweijeff@gmail.com", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      LCD_DrawFullRect( 24, 320, 320,  424,  LCD_COLOR_BLUE, 0);
+      LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
+      LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 #if 0   //     Check
       /* Check the correctness of written data */
       Address = BANK1_WRITE_START_ADDR;

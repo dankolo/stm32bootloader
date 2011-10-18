@@ -37,7 +37,8 @@
 uint8_t tp_flag=0;
 uint16_t tp_x[5],tp_y[5],x,y;
 
-
+extern uint32_t APP_PROGRAM_FLAG;
+extern uint32_t Jump_To_App_flag;
 extern void TIM2_Config(void);
 extern void TIM3_Config(void);
 /** @addtogroup STM32F10x_StdPeriph_Examples
@@ -280,7 +281,17 @@ void TIM3_IRQHandler(void)
       y=(tp_y[1]+tp_y[2]+tp_y[3])/3;
      if((x<800)&&(y<479))
      {
-       LCD_DrawFullCircle(x,y,3,1,0xaaaa);
+//       LCD_DrawFullCircle(x,y,3,1,0xaaaa);
+       if(x>24&&x<320&&y>320&&y<424)
+       {
+         APP_PROGRAM_FLAG=1;
+       }
+       
+       if(x>480&&x<776&&y>320&&y<424)
+       {
+         Jump_To_App_flag=1;
+       }
+       
      }
     }
   }

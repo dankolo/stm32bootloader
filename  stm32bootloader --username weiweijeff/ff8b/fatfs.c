@@ -369,7 +369,7 @@ void LCD_CN(u16 x,u16 y,uc8 *p,uint8_t fon, u16 charColor,u16 bkColor)
   FIL	file;
   FRESULT res;
   DIR dirs;
-  u8 buffer[128]={0};
+  u8 buffer[448]={0};
   uint32_t re;
   res = f_mount(0,&fs);
   res = f_opendir(&dirs,(const TCHAR*)"/");//打开根目录
@@ -480,6 +480,33 @@ void LCD_CN(u16 x,u16 y,uc8 *p,uint8_t fon, u16 charColor,u16 bkColor)
       LCD_WriteReg(END_X,end_x); // ............ END_X
       LCD_WriteRAM_Prepare(); // .............. PIXELS
       for(n=0;n<128;n++)
+      {
+        for (i = 0; i < 8; i++)//
+        {
+          if (buffer[n] & (0x01<<i))
+          {
+            LCD_WritePoint(charColor);//写有效点
+          }
+          else
+          {
+            LCD_WritePoint(bkColor);//写底色
+          }
+        }
+      }
+    }
+    break;
+    case 64:
+    {
+      index = (94*(region-1)+location-1)*448;//地址偏移量  
+      end_x=x+63;
+      res = f_open(&file,(const TCHAR*)"Chinese64.FON",FA_READ);//打开在根目录的字库
+      res = f_lseek (&file, index);//设置偏移量
+      res = f_read(&file,buffer,448,&re);//读出32字节字模数据
+      LCD_WriteReg(CUR_X,x); // .............. CUR_x
+      LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+      LCD_WriteReg(END_X,end_x); // ............ END_X
+      LCD_WriteRAM_Prepare(); // .............. PIXELS
+      for(n=0;n<448;n++)
       {
         for (i = 0; i < 8; i++)//
         {
@@ -647,7 +674,34 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
       }
     }
     break;
-    
+    case 64:
+    {
+      u8 buffer[256]={0};
+      index = p*256;
+      end_x=x+31;
+      res = f_open(&file,(const TCHAR*)"ASCII64.FON",FA_READ);//打开在根目录的字库
+      res = f_lseek (&file, index);//设置偏移量
+      res = f_read(&file,buffer,256,&re);//读出32字节字模数据
+      LCD_WriteReg(CUR_X,x); // .............. CUR_x
+      LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+      LCD_WriteReg(END_X,end_x); // ............ END_X
+      LCD_WriteRAM_Prepare(); // .............. PIXELS
+      for(n=0;n<256;n++)
+      {
+        for (i = 0; i < 8; i++)
+        {
+          if (buffer[n] & (0x01<<i))
+          {
+            LCD_WritePoint(charColor);//写有效点
+          }
+          else
+          {
+            LCD_WritePoint(bkColor);//写底色
+          }
+        }
+      }
+    }
+    break;
     
   default:break;
   }
