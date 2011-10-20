@@ -2,7 +2,6 @@
 #define __COMMONALITY_H
 #include "stm32f10x.h"
 #include <stdio.h>
-#include "ili9320.h"
 #include "RTC_Time.h"
 #include "fatfs.h"
 

@@ -28,6 +28,7 @@
 #include "fatfs.h"
 #include "ff.h"
 #include <assert.h>
+#include "RTC_Time.h"
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -36,33 +37,34 @@
   */
 
 
+
+struct tm time_now;
+unsigned char time_buffer[20]="2011-10-20 10:05:30";
+unsigned char *get_time_now();
+
+void LCD_Set_Time(unsigned char *set_buffer);
+
+
 void NVIC_Configuration(void);
 void SetSysClockTo72(void);
-
-
 void LED_GPIO_Configuration(void);
 void TIM2_Config(void);
 void TIM3_Config(void);
+
+
+
+
+
+
+
 void delay(void)//延时函数，流水灯显示用
 {
  uint32_t i;
  for(i=0;i<0x1FFFF;i++);
 }
-/** @addtogroup STM32F10x_StdPeriph_Examples
-  * @{
-  */
 
-/** @addtogroup GPIO_IOToggle
-  * @{
-  */
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
 
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 
 /**
   * @brief  Main program.
@@ -82,12 +84,16 @@ int main(void)
   
        
   SetSysClockTo72();
+  RTC_Config();
   NVIC_Configuration();
   STM3210E_LCD_Init();
   Touch_Config();
   LED_GPIO_Configuration();
   TIM2_Config();
   TIM3_Config();
+//  LCD_Set_Time(time_buffer);
+//  creat_file("0123456789876543210.txt");
+  
   
 //  format_disk(0,0,512);
 //  get_disk_info();
@@ -117,7 +123,7 @@ int main(void)
     LCD_Clear(colour);
     colour-=512;
   }
-  #if 1
+  #if 0
   LCD_Clear(0xf000);
 
   LCD_DrawUniLine(0,0,799,479,0xaaaa);
@@ -152,7 +158,9 @@ int main(void)
   
   while (1)
   {
-    ;
+    get_time_now();
+    LCD_str(10,100,time_buffer,24,0xaaaa,0x00ff);
+    delay();
   }
 }
 
@@ -189,31 +197,6 @@ void assert_failed(uint8_t* file, uint32_t line)
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 
 
-#ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(USART1, (uint8_t) ch);
-
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
-  {}
-
-  return ch;
-}
 
 
 void SetSysClockTo72(void)
@@ -378,3 +361,42 @@ void LED_GPIO_Configuration(void)
 }
 
 
+unsigned char *get_time_now()
+{
+
+  time_now = Time_GetCalendarTime();//获得当前时间
+  //转换年月日时分秒
+  time_buffer[0]=time_now.tm_year/1000+'0';
+  time_buffer[1]=(time_now.tm_year%1000)/100+'0';
+  time_buffer[2]=(time_now.tm_year%100)/10+'0';
+  time_buffer[3]=time_now.tm_year%10+'0';
+  //年
+  time_buffer[5]=((time_now.tm_mon+1)%100)/10+'0';
+  time_buffer[6]=(time_now.tm_mon+1)%10+'0';
+  //月,时间戳是0-11,显示+1
+  time_buffer[8]=(time_now.tm_mday%100)/10+'0';
+  time_buffer[9]=time_now.tm_mday%10+'0';
+  //日
+  time_buffer[11]=(time_now.tm_hour%100)/10+'0';
+  time_buffer[12]=time_now.tm_hour%10+'0';
+  //时
+  time_buffer[14]=(time_now.tm_min%100)/10+'0';
+  time_buffer[15]=time_now.tm_min%10+'0';
+  //分
+  time_buffer[17]=(time_now.tm_sec%100)/10+'0';
+  time_buffer[18]=time_now.tm_sec%10+'0';
+  //秒
+
+  return time_buffer;
+}
+
+void LCD_Set_Time(unsigned char *set_buffer)
+{
+  time_now.tm_year = (*set_buffer-'0')*1000+(*(set_buffer+1)-'0')*100+(*(set_buffer+2)-'0')*10+(*(set_buffer+3)-'0');
+  time_now.tm_mon =  (*(set_buffer+5)-'0')*10+(*(set_buffer+6)-'0'-1);
+  time_now.tm_mday = (*(set_buffer+8)-'0')*10+(*(set_buffer+9)-'0');
+  time_now.tm_hour = (*(set_buffer+11)-'0')*10+(*(set_buffer+12)-'0');
+  time_now.tm_min =  (*(set_buffer+14)-'0')*10+(*(set_buffer+15)-'0');
+  time_now.tm_sec =  (*(set_buffer+17)-'0')*10+(*(set_buffer+18)-'0');
+  Time_SetCalendarTime(time_now);
+}

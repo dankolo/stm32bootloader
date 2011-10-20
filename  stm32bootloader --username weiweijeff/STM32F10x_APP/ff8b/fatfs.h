@@ -8,6 +8,8 @@
 #include "ff.h"
 #include "diskio.h"
 
+//void stat_file(const TCHAR *dir,const TCHAR *file_name);
+
 void list_file(void);
 
 char *read_file(const TCHAR *dir,const TCHAR *file_name,int offset,int length);
