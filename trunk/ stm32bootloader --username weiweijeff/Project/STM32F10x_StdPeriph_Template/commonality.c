@@ -170,7 +170,7 @@ void ADC1_GPIO_Config(void)
 }
 
 
-
+#if 0
 void RCC_Configuration(void)
 {
   ErrorStatus HSEStartUpStatus;
@@ -225,7 +225,7 @@ void RCC_Configuration(void)
   }
   return;
 }
-
+#endif
 
 
 void NVIC_Config(void)
@@ -353,7 +353,7 @@ void CD4067_GPIO_Config(void)
 }
 
 
-
+#if 0
 
 void draw_choosemodel(void)
 {
@@ -375,7 +375,7 @@ void draw_choosemodel(void)
 //  ili9320_writestr(216, 160, "  ",Cyan,Black);
   write_str16(216, 160, "…Ë÷√ ±º‰",Cyan,Black);
 }
-
+#endif
 
 unsigned char *get_time_now()
 {
@@ -431,6 +431,9 @@ unsigned int action_tp[5][4]={
 enum action{up,left,ok,right,down};
 unsigned char time_set_flag=0,key_flag=0xff;
 unsigned char time_bit[14]={0,1,2,3,5,6,8,9,11,12,14,15,17,18};
+
+
+#if 0
 void draw_time_manger(void)
 {
   BMP_view((const XCHAR*)"/",(const XCHAR*)"time.bmp",0,239);
@@ -530,3 +533,4 @@ void time_manager(int x,int y)
   default:break;
   }
 }
+#endif

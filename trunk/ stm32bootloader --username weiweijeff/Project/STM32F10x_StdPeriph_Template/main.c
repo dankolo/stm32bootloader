@@ -30,6 +30,7 @@
 #include <assert.h>
 #include "mass_storage.h"
 #include "sdcard.h"
+#include "RTC_Time.h"
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -54,6 +55,12 @@ uint32_t EraseCounter = 0x00, Address = 0x00;
 uint32_t NbrOfPage = 0x00;
 volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
 volatile TestStatus MemoryProgramStatus = PASSED;
+
+struct tm time_now;
+unsigned char time_buffer[20]="2011-10-20 10:05:30";
+unsigned char *get_time_now();
+void LCD_Set_Time(unsigned char *set_buffer);
+
 
 
 /* Private macro -------------------------------------------------------------*/
@@ -101,6 +108,7 @@ int main(void)
   
        
   SetSysClockTo72();
+  RTC_Config();
   Mass_Storage_Start();
   NVIC_Configuration();
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
@@ -112,15 +120,19 @@ int main(void)
   stat_file("/","app.bin");  
   LCD_Clear(LCD_COLOR_BLACK);
   LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-  LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+//  LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(176,200,"设计单位：武昌南机务段", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(176,250,"技术支持：weiweijeff@gmail.com", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_DrawFullRect( 24, 320, 320,  424,  LCD_COLOR_BLUE, 0);
   LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
   LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  
+//  LCD_Set_Time("2011-10-20 10:50:30");
   while (1)
   {
+    get_time_now();
+    LCD_str(176,150,time_buffer, 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
     if(APP_PROGRAM_FLAG==0x01)
     {
       LCD_Clear(LCD_COLOR_BLACK);
@@ -494,3 +506,45 @@ void Set_Channel(unsigned char x)
   {GPIO_SetBits(GPIOF,GPIO_Pin_10);}
 }
 #endif
+
+
+
+unsigned char *get_time_now()
+{
+
+  time_now = Time_GetCalendarTime();//获得当前时间
+  //转换年月日时分秒
+  time_buffer[0]=time_now.tm_year/1000+'0';
+  time_buffer[1]=(time_now.tm_year%1000)/100+'0';
+  time_buffer[2]=(time_now.tm_year%100)/10+'0';
+  time_buffer[3]=time_now.tm_year%10+'0';
+  //年
+  time_buffer[5]=((time_now.tm_mon+1)%100)/10+'0';
+  time_buffer[6]=(time_now.tm_mon+1)%10+'0';
+  //月,时间戳是0-11,显示+1
+  time_buffer[8]=(time_now.tm_mday%100)/10+'0';
+  time_buffer[9]=time_now.tm_mday%10+'0';
+  //日
+  time_buffer[11]=(time_now.tm_hour%100)/10+'0';
+  time_buffer[12]=time_now.tm_hour%10+'0';
+  //时
+  time_buffer[14]=(time_now.tm_min%100)/10+'0';
+  time_buffer[15]=time_now.tm_min%10+'0';
+  //分
+  time_buffer[17]=(time_now.tm_sec%100)/10+'0';
+  time_buffer[18]=time_now.tm_sec%10+'0';
+  //秒
+
+  return time_buffer;
+}
+
+void LCD_Set_Time(unsigned char *set_buffer)
+{
+  time_now.tm_year = (*set_buffer-'0')*1000+(*(set_buffer+1)-'0')*100+(*(set_buffer+2)-'0')*10+(*(set_buffer+3)-'0');
+  time_now.tm_mon =  (*(set_buffer+5)-'0')*10+(*(set_buffer+6)-'0'-1);
+  time_now.tm_mday = (*(set_buffer+8)-'0')*10+(*(set_buffer+9)-'0');
+  time_now.tm_hour = (*(set_buffer+11)-'0')*10+(*(set_buffer+12)-'0');
+  time_now.tm_min =  (*(set_buffer+14)-'0')*10+(*(set_buffer+15)-'0');
+  time_now.tm_sec =  (*(set_buffer+17)-'0')*10+(*(set_buffer+18)-'0');
+  Time_SetCalendarTime(time_now);
+}
