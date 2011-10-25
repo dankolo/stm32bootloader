@@ -31,6 +31,8 @@
 #include "mass_storage.h"
 #include "sdcard.h"
 #include "RTC_Time.h"
+
+
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -96,6 +98,8 @@ void stat_file(const TCHAR *dir,const TCHAR *file_name)
       f_mount(0,NULL);
 }
 
+
+
 int main(void)
 {
   /*!< At this stage the microcontroller clock setting is already configured, 
@@ -127,6 +131,7 @@ int main(void)
   LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
   LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  
   
 //  LCD_Set_Time("2011-10-20 10:50:30");
   while (1)

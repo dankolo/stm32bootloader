@@ -29,6 +29,15 @@
 #include "ff.h"
 #include <assert.h>
 #include "RTC_Time.h"
+
+//#include <memory.h>
+#include <string.h> 
+
+
+u8 files_name[16][63];
+u8 num=0;
+u16 lcd_y=0;
+
 /**
   * @brief  Sets System clock frequency to 72MHz and configure HCLK, PCLK2 
   *         and PCLK1 prescalers. 
@@ -64,6 +73,53 @@ void delay(void)//延时函数，流水灯显示用
 }
 
 
+FRESULT scan_files (
+    char* path        /* Start node to be scanned (also used as work area) */
+)
+{
+  
+  FATFS fs;
+    FRESULT res;
+    FILINFO fno;
+    DIR dir;
+    int i;
+    
+    char *fn;   /* This function is assuming non-Unicode cfg. */
+#if _USE_LFN
+    static char lfn[_MAX_LFN + 1];
+    fno.lfname = lfn;
+    fno.lfsize = sizeof(lfn);
+#endif
+
+res = f_mount(0,&fs);
+    res = f_opendir(&dir, path);                       /* Open the directory */
+    if (res == FR_OK) {
+        i = strlen(path);
+        for (;;) {
+            res = f_readdir(&dir, &fno);                   /* Read a directory item */
+            if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
+            if (fno.fname[0] == '.') continue;             /* Ignore dot entry */
+#if _USE_LFN
+            fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+            fn = fno.fname;
+#endif
+            if (fno.fattrib & AM_DIR) {                    /* It is a directory */
+                sprintf(&path[i], "/%s", fn);
+                res = scan_files(path);
+                if (res != FR_OK) break;
+                path[i] = 0;
+            } else {                                       /* It is a file. */
+                //printf("%s/%s\n", path, fn);              
+              memcpy(files_name[num],fn,strlen(fn));
+              num+=1;
+            }
+        }
+    }
+f_mount(0,NULL);
+    return res;
+}
+ 
 
 
 /**
@@ -113,8 +169,9 @@ int main(void)
 //  printf("\n\r");
   
 //  list_file();
-  
-  
+
+
+
   
 
   uint16_t colour=4096;
@@ -148,6 +205,12 @@ int main(void)
   LCD_DrawFullCircle( 700,  400,  3,  0xaaaa, 1);
 
 #endif
+   scan_files("/");
+  while(num--!=0)
+  {
+    LCD_str(0,lcd_y,files_name[num], 16, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+    lcd_y+=16;
+  }
   
   
     /* To achieve GPIO toggling maximum frequency, the following  sequence is mandatory. 
