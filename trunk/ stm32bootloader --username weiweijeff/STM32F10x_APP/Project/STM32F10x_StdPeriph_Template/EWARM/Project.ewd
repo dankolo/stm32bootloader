@@ -803,6 +803,23 @@
         </option>
       </data>
     </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
@@ -1663,6 +1680,23 @@
         </option>
       </data>
     </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
@@ -1769,7 +1803,7 @@
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>RunToName</name>
@@ -1809,7 +1843,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>6.20.1.52589</state>
+          <state>6.21.1.52845</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -2519,6 +2553,23 @@
         </option>
         <option>
           <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
           <state>1</state>
         </option>
       </data>
@@ -3383,6 +3434,23 @@
         </option>
       </data>
     </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
@@ -4243,6 +4311,23 @@
         </option>
       </data>
     </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
@@ -5099,6 +5184,23 @@
         </option>
         <option>
           <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>XDS100_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCXDS100AttachSlave</name>
           <state>1</state>
         </option>
       </data>

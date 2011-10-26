@@ -5,9 +5,165 @@
 struct tm time_now;
 unsigned char time_buffer[20]="2010-11-13 20:47:30";
 
-unsigned char ADC_Value[12];
+unsigned char ADC_Value[6];
+unsigned char ADC_Value1[6];
+u16 ADCConvertedValue[64];
 
-vu16 ADCConvertedValue[1024];
+
+
+void RCC_Configuration(void)
+{
+  
+  ErrorStatus HSEStartUpStatus;
+  /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration -----------------------------*/   
+  /* RCC system reset(for debug purpose) */
+  RCC_DeInit();
+
+  /* Enable HSE */
+  RCC_HSEConfig(RCC_HSE_ON);
+
+  /* Wait till HSE is ready */
+  HSEStartUpStatus = RCC_WaitForHSEStartUp();
+
+  if (HSEStartUpStatus == SUCCESS)
+  {
+    /* Enable Prefetch Buffer */
+    FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
+
+    /* Flash 2 wait state */
+    FLASH_SetLatency(FLASH_Latency_2);
+ 
+    /* HCLK = SYSCLK */
+    RCC_HCLKConfig(RCC_SYSCLK_Div1); 
+  
+    /* PCLK2 = HCLK */
+    RCC_PCLK2Config(RCC_HCLK_Div1); 
+
+    /* PCLK1 = HCLK/2 */
+    RCC_PCLK1Config(RCC_HCLK_Div2);
+    
+    RCC_ADCCLKConfig(RCC_PCLK2_Div8); 
+    
+    RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9); 
+
+    /* Enable PLL */ 
+    RCC_PLLCmd(ENABLE);
+
+    /* Wait till PLL is ready */
+    while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+    {
+    }
+
+    /* Select PLL as system clock source */
+    RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+
+    /* Wait till PLL is used as system clock source */
+    while(RCC_GetSYSCLKSource() != 0x08)
+    {
+    }
+  }
+  else
+  { /* If HSE fails to start-up, the application will have wrong clock configuration.
+       User can add here some code to deal with this error */    
+
+    /* Go to infinite loop */
+    while (1)
+    {
+    }
+  }
+}
+
+/**
+  * @brief  Configures the nested vectored interrupt controller.
+  * @param  None
+  * @retval None
+  */
+void NVIC_Configuration(void)
+{
+//  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
+//  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
+  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0xF000);
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  
+  NVIC_InitTypeDef NVIC_InitStructure;
+  
+  /* Enable the TIM2 global Interrupt */
+  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+  
+  /* Enable the TIM3 global Interrupt */
+  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+
+  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+
+  NVIC_InitStructure.NVIC_IRQChannel = USB_HP_CAN1_TX_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);  
+  
+  NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+  
+}
+
+
+void TIM2_Config(void)
+{
+  /* TIM2 clock enable */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  
+  /* TIM2 configuration */
+  TIM_TimeBaseStructure.TIM_Period = 24000-1;          
+  TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
+  TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
+  TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+  /* TIM IT enable */
+  TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+  TIM2->EGR |=(1<<0);
+
+  /* TIM2 enable counter */
+  TIM_Cmd(TIM2, ENABLE);
+}
+
+void TIM3_Config(void)
+{
+  /* TIM2 clock enable */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  
+  /* TIM3 configuration */
+  TIM_TimeBaseStructure.TIM_Period = 2000-1;          
+  TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
+  TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
+  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+
+  /* TIM IT enable */
+  TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+  
+  TIM3->EGR |=(1<<0);
+
+  /* TIM3 enable counter */
+//  TIM_Cmd(TIM3, ENABLE);
+}
 
 void delay_nus(vu32 nCount)
 {
@@ -35,9 +191,9 @@ unsigned char *Get_ADC1_Value()
   u16 j=0,i=0;
   vu32 k=0,n=0,temp=0;
 
-  for(j=0;j<=1024;j+=2)
+  for(j=0;j<=64;j+=2)
   {
-    for (i=0;i<1024-j;i+=2)
+    for (i=0;i<64-j;i+=2)
     {
       if (ADCConvertedValue[i]>ADCConvertedValue[i+2])
       {
@@ -47,12 +203,11 @@ unsigned char *Get_ADC1_Value()
       }
     }
   }
-  for(i=256;i<768;i+=2)
+  for(i=16;i<48;i+=2)
   {
-    n+=(vu32)ADCConvertedValue[i+2];
+    n+=(u32)ADCConvertedValue[i+2];
   }
-//  printf("___%d,",n);
-  k= (vu32)(n/256*1000/4095*3.332/10/0.196);// n/256*1000/4095*3.332/10/0.196;
+  k= (u32)(n/16*1000/4095*2.45);// n/256*1000/4095*3.332/10/0.196;
   n=0;
   ADC_Value[0]=k/1000+'0';
   ADC_Value[1]='.';
@@ -69,10 +224,10 @@ unsigned char *Get_ADC1_Value()
         ADC_Value[4]='!';
           ADC_Value[5]='\0';
   }
-
-  for(j=0;j<=1024;j+=2)
+#if 1
+  for(j=0;j<=64;j+=2)
   {
-    for (i=0;i<1024-j;i+=2)
+    for (i=0;i<64-j;i+=2)
     {
       if (ADCConvertedValue[i]>ADCConvertedValue[i+2])
       {
@@ -82,20 +237,21 @@ unsigned char *Get_ADC1_Value()
       }
     }
   }
-  for(i=257;i<768;i+=2)
+#endif
+  for(i=17;i<48;i+=2)
   {
     n+=ADCConvertedValue[i+2];
   }
 //  printf("%d\t\r",n);
-  k=(vu32)(n/256*1000/4095*3.332);// n/256/4095*3.332*1000;
+  k=(u32)(n/16*1000/4095*2.45);// n/256/4095*3.332*1000;
 //  printf("%d\t\r",k);
   n=0;
-  ADC_Value[6]=k/1000+'0';
-  ADC_Value[7]='.';
-    ADC_Value[8]=(k%1000)/100+'0';
-      ADC_Value[9]=(k%100)/10+'0';
-        ADC_Value[10]=k%10+'0';
-          ADC_Value[11]='\0';
+  ADC_Value1[0]=k/1000+'0';
+  ADC_Value1[1]='.';
+    ADC_Value1[2]=(k%1000)/100+'0';
+      ADC_Value1[3]=(k%100)/10+'0';
+        ADC_Value1[4]=k%10+'0';
+          ADC_Value1[5]='\0';
   return ADC_Value;
 }
 
@@ -103,6 +259,7 @@ unsigned char *Get_ADC1_Value()
 
 void ADC1_Config(void)
 {
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitTypeDef ADC_InitStructure;
 
@@ -115,9 +272,9 @@ void ADC1_Config(void)
   ADC_Init(ADC1, &ADC_InitStructure);
 
   /* ADC1 regular channel8 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);
   /* ADC1 regular channel9 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_9, 2, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);
 
   /* Enable ADC1 DMA */
   ADC_DMACmd(ADC1, ENABLE);
@@ -138,6 +295,7 @@ void ADC1_Config(void)
 
 void ADC1_DMA_Config(void)
 {
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
   DMA_InitTypeDef DMA_InitStructure;
 
   /* DMA1 channel1 configuration ----------------------------------------------*/
@@ -145,7 +303,7 @@ void ADC1_DMA_Config(void)
   DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;
   DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADCConvertedValue;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-  DMA_InitStructure.DMA_BufferSize = 1024;
+  DMA_InitStructure.DMA_BufferSize = 64;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -161,194 +319,34 @@ void ADC1_DMA_Config(void)
 
 void ADC1_GPIO_Config(void)
 {
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
-
-  /* Configure PB.00 (ADC Channel8 9) as analog input -------------------------*/
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
-  GPIO_Init(GPIOB, &GPIO_InitStructure);
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 
 
-
-void RCC_Configuration(void)
+void PowerA_GPIO_Config(void)
 {
-  ErrorStatus HSEStartUpStatus;
-  //使能外部晶振
-  RCC_HSEConfig(RCC_HSE_ON);
-  //等待外部晶振稳定
-  HSEStartUpStatus = RCC_WaitForHSEStartUp();
-  //如果外部晶振启动成功，则进行下一步操作
-  if (HSEStartUpStatus==SUCCESS)
-  {
-    //FLASH时序控制
-    //推荐值：SYSCLK = 0~24MHz   Latency=0
-    //        SYSCLK = 24~48MHz  Latency=1
-    //        SYSCLK = 48~72MHz  Latency=2
-    FLASH_SetLatency(FLASH_Latency_2);
-    //开启FLASH预取指功能
-    FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
-    //预分频2 HSE25M/5=5M
-    RCC_PREDIV2Config(RCC_PREDIV2_Div5);
-    //锁相环2 5M*8=40M
-    RCC_PLL2Cmd(DISABLE);
-    RCC_PLL2Config(RCC_PLL2Mul_8);
-    //开启锁相环2
-    RCC_PLL2Cmd(ENABLE);
-    //预分频1 40M/5=8M
-    RCC_PREDIV1Config(RCC_PREDIV1_Source_PLL2,RCC_PREDIV1_Div5);
-    //PLL设置 8M*9 = 72MHz
-    RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
-    //USB时钟
-    RCC_OTGFSCLKConfig(RCC_OTGFSCLKSource_PLLVCO_Div3);
-    RCC_PLL3Cmd(DISABLE);
-    RCC_PLL3Config(RCC_PLL3Mul_10);
-    RCC_PLL3Cmd(ENABLE);
-    //以太网时钟MII模式
-    RCC_MCOConfig(RCC_MCO_XT1);
-    //设置HCLK（AHB时钟）=SYSCLK
-    RCC_HCLKConfig(RCC_SYSCLK_Div1);
-    //PCLK1(APB1) = HCLK/2
-    RCC_PCLK1Config(RCC_HCLK_Div2);
-    //PCLK2(APB2) = HCLK
-    RCC_PCLK2Config(RCC_HCLK_Div1);
-    //ADC时钟72M/6
-    RCC_ADCCLKConfig(RCC_PCLK2_Div6);
-    //启动PLL
-    RCC_PLLCmd(ENABLE);
-    //等待PLL稳定
-    while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET);
-    //系统时钟SYSCLK来自PLL输出
-    RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
-    //切换时钟后等待系统时钟稳定
-    while (RCC_GetSYSCLKSource()!=0x08);
-  }
-  return;
-}
-
-
-
-void NVIC_Config(void)
-{
-#ifdef RAM_DEBUG
-  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
-#endif
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-  NVIC_InitTypeDef NVIC_InitStructure;
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);//优先级分到第0组 总共5组		
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn; //使用外部中断
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;//阶级1
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		 //阶层0
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-
-}
-
-
-void EXTI_Config(void)
-{
-  EXTI_InitTypeDef EXTI_InitStructure;
-  EXTI_InitStructure.EXTI_Line = EXTI_Line5;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-  // Configure EXTI Line5 to generate an interrupt on falling edge
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
-//  GPIO_EXTILineConfig(GPIO_PortSourceGPIOC, GPIO_PinSource5);//PC5作为外部中断引
-}
-void TP_EXTI_DISABLE(void)
-{
-  (*((uint32_t*)0x40010400))=(*((uint32_t*)0x40010400))&~(1<<5);
-}
-void TP_EXTI_ENABLE(void)
-{
-  (*((uint32_t*)0x40010400))=(*((uint32_t*)0x40010400))|1<<5;
-}
-
-#ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(USART1, (uint8_t) ch);
-
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
-  {}
-
-  return ch;
-}
-
-void USART1_Init()
-{
-  /* USARTx configured as follow:
-        - BaudRate = 9600 baud
-        - Word Length = 8 Bits
-        - One Stop Bit
-        - No parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  USART_InitTypeDef USART_InitStructure;
-  USART_InitStructure.USART_BaudRate = 115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-
-
-  GPIO_InitTypeDef GPIO_InitStructure;
-  /* Enable GPIO clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
-
-  /* Enable UART clock */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-
-  /* Configure USART Tx as alternate function push-pull */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+  GPIO_InitTypeDef  GPIO_InitStructure;
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE, ENABLE);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  /* Configure USART Rx as input floating */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-  GPIO_Init( GPIOA, &GPIO_InitStructure);
-
-  /* USART configuration */
-  USART_Init(USART1, &USART_InitStructure);
-
-  /*********************************************/
-  //USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-  //USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-  /*********************************************/
-
-  /* Enable USART */
-  USART_Cmd(USART1, ENABLE);
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   //推挽输出
+  GPIO_Init(GPIOE,&GPIO_InitStructure);
 }
+
+
 
 void CD4067_GPIO_Config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   //推挽输出
-  GPIO_Init(GPIOD,&GPIO_InitStructure);
+  GPIO_Init(GPIOF,&GPIO_InitStructure);
 
 }
 
@@ -357,23 +355,7 @@ void CD4067_GPIO_Config(void)
 
 void draw_choosemodel(void)
 {
-  ili9320_Clear(Black);//清屏
-  ili9320_PutCN(104,0,"选择实验型号",Cyan,Black);
-  ili9320_writestr(0, 16, "SS4G_TKS9",Cyan,Black);
-  ili9320_writestr(0, 64, "TKS14A_I",Cyan,Black);
-  ili9320_writestr(0, 112, "TKS14A_II",Cyan,Black);
-  ili9320_writestr(0, 160, "TKS15A_I",Cyan,Black);
-  ili9320_writestr(0, 208, "TKS15A_II",Cyan,Black);
-  ili9320_writestr(104, 16, "SS7E_QS1_3",Cyan,Black);
-  ili9320_writestr(104, 64, "TKS231_1_II",Cyan,Black);
-  ili9320_writestr(104, 112, "TTKS31",Cyan,Black);
-  ili9320_writestr(104, 160, "TKS32",Cyan,Black);
-//  ili9320_writestr(104, 208, "   ",Cyan,Black);
-//  ili9320_writestr(216, 16, "   ",Cyan,Black);
-//  ili9320_writestr(216, 64, "  ",Cyan,Black);
-//  ili9320_writestr(216, 112, "  I",Cyan,Black);
-//  ili9320_writestr(216, 160, "  ",Cyan,Black);
-  write_str16(216, 160, "设置时间",Cyan,Black);
+  ;
 }
 
 
@@ -433,11 +415,10 @@ unsigned char time_set_flag=0,key_flag=0xff;
 unsigned char time_bit[14]={0,1,2,3,5,6,8,9,11,12,14,15,17,18};
 void draw_time_manger(void)
 {
-  BMP_view((const XCHAR*)"/",(const XCHAR*)"time.bmp",0,239);
-  ili9320_writestr(84,5,get_time_now(),Cyan,Black);
+  ;
 }
 
-
+#if 0
 void time_manager(int x,int y)
 {
 //  printf("\r\nx=%d,y=%d",x,y);
@@ -530,3 +511,4 @@ void time_manager(int x,int y)
   default:break;
   }
 }
+#endif

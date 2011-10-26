@@ -2100,6 +2100,7 @@
           <state>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\Common</state>
           <state>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL</state>
           <state>$PROJ_DIR$\..\..\..\ff8b</state>
+          <state>$PROJ_DIR$\..\..\..\jiche</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2492,7 +2493,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32f10x_flash_app.icf</state>
+          <state>$PROJ_DIR$\stm32f10x_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -5626,8 +5627,11 @@
   </group>
   <group>
     <name>User</name>
+    <group>
+      <name>jiche</name>
+    </group>
     <file>
-      <name>$PROJ_DIR$\..\ADC.c</name>
+      <name>$PROJ_DIR$\..\commonality.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\main.c</name>
