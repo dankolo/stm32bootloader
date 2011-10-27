@@ -12,7 +12,7 @@
           
           
           
-        <Column0>261</Column0><Column1>14</Column1><Column2>27</Column2><Column3>1307796</Column3></ColumnWidths>
+        <Column0>189</Column0><Column1>14</Column1><Column2>27</Column2><Column3>1307796</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -25,7 +25,7 @@
     <Windows>
       
       
-    <Wnd0>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-32422-21669</Identity>
@@ -37,7 +37,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-30393-22117</Identity>
@@ -47,20 +47,20 @@
           </Tab>
         <Tab><Identity>TabID-8671-26166</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\commonality.h</Filename><XPos>0</XPos><YPos>15</YPos><SelStart>1022</SelStart><SelEnd>1035</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_lcd.c</Filename><XPos>0</XPos><YPos>15</YPos><SelStart>1247</SelStart><SelEnd>1247</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>205</YPos><SelStart>3064</SelStart><SelEnd>3064</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\commonality.c</Filename><XPos>0</XPos><YPos>165</YPos><SelStart>5073</SelStart><SelEnd>5073</SelEnd></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\touch.c</Filename><XPos>0</XPos><YPos>81</YPos><SelStart>28</SelStart><SelEnd>40</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\sdcard.c</Filename><XPos>0</XPos><YPos>2333</YPos><SelStart>76610</SelStart><SelEnd>76610</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</Filename><XPos>0</XPos><YPos>429</YPos><SelStart>17060</SelStart><SelEnd>17060</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\ff.c</Filename><XPos>0</XPos><YPos>543</YPos><SelStart>31253</SelStart><SelEnd>31253</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\commonality.h</Filename><XPos>0</XPos><YPos>54</YPos><SelStart>1738</SelStart><SelEnd>1749</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>26</YPos><SelStart>1334</SelStart><SelEnd>1334</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\commonality.c</Filename><XPos>0</XPos><YPos>226</YPos><SelStart>5016</SelStart><SelEnd>5016</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\touch.c</Filename><XPos>0</XPos><YPos>81</YPos><SelStart>28</SelStart><SelEnd>40</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\sdcard.c</Filename><XPos>0</XPos><YPos>2333</YPos><SelStart>76700</SelStart><SelEnd>76700</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</Filename><XPos>0</XPos><YPos>429</YPos><SelStart>17060</SelStart><SelEnd>17060</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\ff.c</Filename><XPos>0</XPos><YPos>543</YPos><SelStart>31253</SelStart><SelEnd>31253</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_lcd.c</Filename><XPos>0</XPos><YPos>91</YPos><SelStart>2912</SelStart><SelEnd>2912</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00d34b40><key>iaridepm.enu1</key></Toolbar-00d34b40></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>576</Bottom><Right>339</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>199</yscreen><sizeHorzCX>138889</sizeHorzCX><sizeHorzCY>243276</sizeHorzCY><sizeVertCX>236806</sizeVertCX><sizeVertCY>706601</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>197</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>199</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>243276</sizeHorzCY><sizeVertCX>138889</sizeVertCX><sizeVertCY>243276</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0022e1a8><key>iaridepm.enu1</key></Toolbar-0022e1a8></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>637</Bottom><Right>250</Right><x>-2</x><y>-2</y><xscreen>148</xscreen><yscreen>138</yscreen><sizeHorzCX>102778</sizeHorzCX><sizeHorzCY>168704</sizeHorzCY><sizeVertCX>175000</sizeVertCX><sizeVertCY>781174</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>136</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>138</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>168704</sizeHorzCY><sizeVertCX>102778</sizeVertCX><sizeVertCY>168704</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

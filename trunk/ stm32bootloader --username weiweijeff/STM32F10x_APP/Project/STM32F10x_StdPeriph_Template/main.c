@@ -39,7 +39,7 @@
 void delay(void)
 {
  uint32_t i;
- for(i=0;i<0x1FFFF;i++);
+ for(i=0;i<0xffFFFF;i++);
 }
 
 
@@ -121,8 +121,8 @@ int main(void)
   ADC_GPIO_Config();
   ADC1_DMA_Config();
   ADC1_Config();
-  ADC3_DMA_Config();
-  ADC3_Config();
+//  ADC3_DMA_Config();
+//  ADC3_Config();
   
   
 //  LCD_Set_Time(time_buffer);
@@ -173,12 +173,13 @@ int main(void)
   Set_Scan_Channel(0);
   while (1)
   {
-//    get_time_now();
-//    LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
+    
+    get_time_now();
+    LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
     Get_ADC1_Value();
     LCD_str(100,100,ADC_V_Value,24,0xaaaa,0x00ff);
-    Get_ADC3_Value();
-    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
+//    Get_ADC3_Value();
+//    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
     delay();
   }
 }

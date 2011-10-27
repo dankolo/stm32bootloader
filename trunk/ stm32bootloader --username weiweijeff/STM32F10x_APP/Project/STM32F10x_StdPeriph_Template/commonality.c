@@ -241,7 +241,7 @@ unsigned char *Get_ADC3_Value()
   {
     n+=(u32)ADCConvertedValue2[i];
   }
-  k= (u32)((n*2500)>>19);
+  k= (u32)((n*2500)>>18);
   n=0;
   ADC_R_Value[0]=k/1000+'0';
   ADC_R_Value[1]='.';
@@ -277,7 +277,7 @@ void ADC1_Config(void)
   ADC_Init(ADC1, &ADC_InitStructure);
 
   /* ADC1 regular channel1 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_239Cycles5);
   /* ADC1 regular channel2 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);//
 
@@ -341,7 +341,7 @@ void ADC3_Config(void)
   /* ADC1 regular channel8 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);
   /* ADC1 regular channel9 configuration */
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_13, 1, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_10, 1, ADC_SampleTime_239Cycles5);
 
   /* Enable ADC3 DMA */
   ADC_DMACmd(ADC3, ENABLE);
