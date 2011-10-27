@@ -103,8 +103,8 @@ f_mount(0,NULL);
   * @retval None
   */
 char *str;
-extern unsigned char ADC_Value[6];
-extern unsigned char ADC_Value1[6];
+extern unsigned char ADC_R_Value[6];
+extern unsigned char ADC_V_Value[6];
 extern unsigned char time_buffer[20];
 int main(void)
 {
@@ -117,11 +117,14 @@ int main(void)
   TIM3_Config();
   LCD_Clear(LCD_COLOR_CYAN);
   PowerA_GPIO_Config();
-  CD4067_GPIO_Config();  
-  PowerA_EN();
+  CD4067_GPIO_Config();
+  ADC_GPIO_Config();
   ADC1_DMA_Config();
-  ADC1_GPIO_Config();
   ADC1_Config();
+  ADC3_DMA_Config();
+  ADC3_Config();
+  
+  
 //  LCD_Set_Time(time_buffer);
 //  creat_file("0123456789876543210.txt");
   
@@ -164,14 +167,18 @@ int main(void)
      If you need to fine tune this frequency, you can add more GPIO set/reset 
      cycles to minimize more the infinite loop timing.
      This code needs to be compiled with high speed optimization option.  */
-  
+   
+  PowerA_EN();
+  CD4067_EN();
+  Set_Scan_Channel(0);
   while (1)
   {
-    get_time_now();
-    LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
+//    get_time_now();
+//    LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
     Get_ADC1_Value();
-    LCD_str(100,100,ADC_Value,24,0xaaaa,0x00ff);
-    LCD_str(100,150,ADC_Value1,24,0xaaaa,0x00ff);
+    LCD_str(100,100,ADC_V_Value,24,0xaaaa,0x00ff);
+    Get_ADC3_Value();
+    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
     delay();
   }
 }
