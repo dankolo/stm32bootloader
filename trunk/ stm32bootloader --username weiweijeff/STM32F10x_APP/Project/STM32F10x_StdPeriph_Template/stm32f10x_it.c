@@ -197,6 +197,7 @@ void TIM2_IRQHandler(void)
     }    
   }   
 }
+
 void TIM3_IRQHandler(void)
 {
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
@@ -264,11 +265,29 @@ void DMA1_Channel6_IRQHandler(void)
   ;
 }
 
-
+#if 0
 void DMA1_Channel1_IRQHandler(void)
 {
-  ;
+  DMA_ClearITPendingBit(DMA1_IT_TC1);
+  ADC_DMACmd(ADC1, DISABLE);
+  ADC_Cmd(ADC1, DISABLE);
+  ADC_Cmd(ADC2, DISABLE);
+  ADC_SoftwareStartConvCmd(ADC1, DISABLE);
+  ADC_SoftwareStartConvCmd(ADC2, DISABLE);
 }
+
+void DMA2_Channel4_5_IRQHandler(void)
+{
+  DMA_ClearITPendingBit(DMA2_IT_TC5);
+  ADC_DMACmd(ADC3, DISABLE);
+  ADC_Cmd(ADC3, DISABLE);
+  ADC_SoftwareStartConvCmd(ADC3, DISABLE);
+}
+
+#endif
+
+
+
 
 void ADC1_2_IRQnHandler(void)
 {

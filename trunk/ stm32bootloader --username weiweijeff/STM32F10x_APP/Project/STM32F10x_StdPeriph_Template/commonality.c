@@ -3,7 +3,7 @@
 
 
 struct tm time_now;
-unsigned char time_buffer[20]="2011-11-27 09:07:10";
+unsigned char time_buffer[20]="2011-11-07 09:17:10";
 unsigned char Scan_Channels[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};//É¨ÃèÍ¨µÀ
 unsigned char ADC_R_Value[6];
 unsigned char ADC_V_Value[6];
@@ -41,7 +41,7 @@ void RCC_Configuration(void)
     /* PCLK1 = HCLK/2 */
     RCC_PCLK1Config(RCC_HCLK_Div2);
     
-    RCC_ADCCLKConfig(RCC_PCLK2_Div8); 
+    RCC_ADCCLKConfig(RCC_PCLK2_Div6); 
     
     RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9); 
 
@@ -207,7 +207,7 @@ unsigned char *Get_ADC1_Value()
   {
     n+=(u32)ADCConvertedValue1[i];
   }
-  k= (u32)((n*2500)>>18);
+  k= (u32)((n*3277)>>18);
   n=0;
   ADC_V_Value[0]=k/1000+'0';
   ADC_V_Value[1]='.';
@@ -241,7 +241,7 @@ unsigned char *Get_ADC3_Value()
   {
     n+=(u32)ADCConvertedValue2[i];
   }
-  k= (u32)((n*2500)>>18);
+  k= (u32)((n*3277)>>18);
   n=0;
   ADC_R_Value[0]=k/1000+'0';
   ADC_R_Value[1]='.';
@@ -277,7 +277,7 @@ void ADC1_Config(void)
   ADC_Init(ADC1, &ADC_InitStructure);
 
   /* ADC1 regular channel1 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_1Cycles5);
   /* ADC1 regular channel2 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);//
 
@@ -341,7 +341,7 @@ void ADC3_Config(void)
   /* ADC1 regular channel8 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);
   /* ADC1 regular channel9 configuration */
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_10, 1, ADC_SampleTime_239Cycles5);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
 
   /* Enable ADC3 DMA */
   ADC_DMACmd(ADC3, ENABLE);
