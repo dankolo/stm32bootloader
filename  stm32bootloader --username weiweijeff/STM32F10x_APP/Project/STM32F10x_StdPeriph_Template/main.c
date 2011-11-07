@@ -103,9 +103,7 @@ f_mount(0,NULL);
   * @retval None
   */
 char *str;
-extern unsigned char ADC_R_Value[6];
-extern unsigned char ADC_V_Value[6];
-extern unsigned char time_buffer[20];
+
 int main(void)
 {
   RCC_Configuration();
@@ -119,7 +117,9 @@ int main(void)
   PowerA_GPIO_Config();
   CD4067_GPIO_Config();
   ADC_GPIO_Config();
+  
   ADC1_DMA_Config();
+//  ADC2_Config();
   ADC1_Config();
 //  ADC3_DMA_Config();
 //  ADC3_Config();
@@ -171,16 +171,32 @@ int main(void)
   PowerA_EN();
   CD4067_EN();
   Set_Scan_Channel(0);
+  delay();
   while (1)
   {
     
     get_time_now();
     LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
-    Get_ADC1_Value();
-    LCD_str(100,100,ADC_V_Value,24,0xaaaa,0x00ff);
-//    Get_ADC3_Value();
-//    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
+    
+//    ADC_DMACmd(ADC1, ENABLE);
+//    ADC_DMACmd(ADC3, ENABLE);
     delay();
+//    ADC_DMACmd(ADC1, DISABLE);
+//    ADC_DMACmd(ADC3, DISABLE);
+    Get_ADC1_Value();
+//    Get_ADC3_Value();
+    LCD_str(100,100,ADC_V_Value,24,0xaaaa,0x00ff);
+//    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
+    
+#if 0    
+    
+    delay();
+    Get_ADC3_Value();
+    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
+    ADC_DMACmd(ADC3, ENABLE);
+    ADC_Cmd(ADC3, ENABLE);
+    ADC_SoftwareStartConvCmd(ADC3, ENABLE);
+#endif    
   }
 }
 

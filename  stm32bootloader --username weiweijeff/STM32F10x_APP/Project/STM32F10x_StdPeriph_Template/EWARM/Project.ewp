@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.41.2.51798</state>
+          <state>6.21.1.52845</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -695,7 +695,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32f10x_ram.icf</state>
+          <state>$PROJ_DIR$\stm32f10x_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -5578,14 +5578,6 @@
   <group>
     <name>STM32_EVAL</name>
     <file>
-      <name>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_fsmc_nand.c</name>
-      <excluded>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-      </excluded>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_fsmc_nor.c</name>
       <excluded>
         <configuration>STM3210C-EVAL</configuration>
@@ -5611,18 +5603,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\stm32_eval.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\Common\stm32_eval_i2c_tsensor.c</name>
-      <excluded>
-        <configuration>STM3210C-EVAL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Utilities\STM32_EVAL\Common\stm32_eval_spi_flash.c</name>
-      <excluded>
-        <configuration>STM3210C-EVAL</configuration>
-      </excluded>
     </file>
   </group>
   <group>

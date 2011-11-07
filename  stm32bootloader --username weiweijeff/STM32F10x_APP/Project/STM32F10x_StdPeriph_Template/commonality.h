@@ -38,7 +38,9 @@
 #define PowerA_EN()  GPIO_SetBits(GPIOE,GPIO_Pin_2)
 #define PowerA_DIS()  GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
-
+extern unsigned char ADC_R_Value[6];
+extern unsigned char ADC_V_Value[6];
+extern unsigned char time_buffer[20];
 
 
 struct contact  // 触点数据结构
@@ -66,6 +68,7 @@ unsigned char *Get_ADC3_Value();
 void ADC1_DMA_Config(void);
 void ADC_GPIO_Config(void);
 void ADC1_Config(void);
+void ADC2_Config(void);
 void ADC3_DMA_Config(void);
 void ADC3_Config(void);
 
