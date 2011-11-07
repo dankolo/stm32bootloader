@@ -1,6 +1,6 @@
 [DebugChecksum]
 <<<<<<< .mine
-Checksum=1985439608
+Checksum=1861996885
 =======
 Checksum=-1250662152
 >>>>>>> .r19
@@ -107,6 +107,7 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
+Exclusions=
 [Disassemble mode]
 mode=1
 [Breakpoints2]
