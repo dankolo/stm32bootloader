@@ -38,6 +38,8 @@
 #define PowerA_EN()  GPIO_SetBits(GPIOE,GPIO_Pin_2)
 #define PowerA_DIS()  GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
+#define ADC1_DMA_BufferSize 64;
+#define ADC3_DMA_BufferSize 64;
 extern unsigned char ADC_R_Value[6];
 extern unsigned char ADC_V_Value[6];
 extern unsigned char time_buffer[20];
