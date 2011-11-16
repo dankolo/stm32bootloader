@@ -39,7 +39,7 @@
 void delay(void)
 {
  uint32_t i;
- for(i=0;i<0xffFFFF;i++);
+ for(i=0;i<0xFFFF;i++);
 }
 
 
@@ -104,6 +104,7 @@ f_mount(0,NULL);
   */
 char *str;
 
+  u8 chx=0;
 int main(void)
 {
   RCC_Configuration();
@@ -118,9 +119,7 @@ int main(void)
   CD4067_GPIO_Config();
   ADC_GPIO_Config();
   
-  ADC1_DMA_Config();
-//  ADC2_Config();
-  ADC1_Config();
+  
 //  ADC3_DMA_Config();
 //  ADC3_Config();
   
@@ -168,35 +167,28 @@ int main(void)
      cycles to minimize more the infinite loop timing.
      This code needs to be compiled with high speed optimization option.  */
    
+  
+  ADC1_DMA_Config();
+  ADC1_Config();
   PowerA_EN();
   CD4067_EN();
-  Set_Scan_Channel(0);
   delay();
   while (1)
   {
-    
-    get_time_now();
-    LCD_str(10,10,time_buffer,24,0xaaaa,0x00ff);
-    
-//    ADC_DMACmd(ADC1, ENABLE);
-//    ADC_DMACmd(ADC3, ENABLE);
-    delay();
-//    ADC_DMACmd(ADC1, DISABLE);
-//    ADC_DMACmd(ADC3, DISABLE);
-    Get_ADC1_Value();
-//    Get_ADC3_Value();
-    LCD_str(100,100,ADC_V_Value,24,0xaaaa,0x00ff);
-//    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
-    
-#if 0    
-    
-    delay();
-    Get_ADC3_Value();
-    LCD_str(100,150,ADC_R_Value,24,0xaaaa,0x00ff);
-    ADC_DMACmd(ADC3, ENABLE);
-    ADC_Cmd(ADC3, ENABLE);
-    ADC_SoftwareStartConvCmd(ADC3, ENABLE);
-#endif    
+    for(chx=8;chx<16;chx++)
+    {  
+      Set_Scan_Channel(chx);      
+      delay();
+      ADC_DMACmd(ADC1, DISABLE);
+//      ADC_Cmd(ADC1, DISABLE);
+      ADC_SoftwareStartConvCmd(ADC1, DISABLE);
+      Get_ADC1_Value();
+      LCD_str(100,chx*24,ADC_R_Value,24,0xaaaa,0x00ff);
+      ADC_DMACmd(ADC1, ENABLE);
+//      ADC_Cmd(ADC1, ENABLE);
+      ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+    }
+    chx=0;
   }
 }
 
