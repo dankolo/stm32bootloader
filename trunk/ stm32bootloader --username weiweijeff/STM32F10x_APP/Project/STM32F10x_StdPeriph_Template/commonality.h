@@ -65,8 +65,8 @@ struct level   // 级位数据结构
 
 void delay_nus(vu32 nCount);
 void delay_long(void);
-unsigned char *Get_ADC1_Value();
-unsigned char *Get_ADC3_Value();
+extern void Get_ADC1_Value();
+extern unsigned char *Get_ADC3_Value();
 void ADC1_DMA_Config(void);
 void ADC_GPIO_Config(void);
 void ADC1_Config(void);
