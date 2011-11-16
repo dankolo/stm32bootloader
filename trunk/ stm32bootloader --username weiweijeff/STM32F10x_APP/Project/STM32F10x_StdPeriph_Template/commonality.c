@@ -7,9 +7,8 @@ unsigned char time_buffer[20]="2011-11-07 09:17:10";
 unsigned char Scan_Channels[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};//…®√ËÕ®µ¿
 unsigned char ADC_R_Value[6];
 unsigned char ADC_V_Value[6];
-u32 ADCConvertedValue1[64];
-u16 ADCConvertedValue2[64];
-u16 ADC1_result[64];
+u16 ADCConvertedValue1[ADC1_DMA_BufferSize];
+u16 ADCConvertedValue2[ADC3_DMA_BufferSize];
 
 void RCC_Configuration(void)
 {
@@ -42,7 +41,7 @@ void RCC_Configuration(void)
     /* PCLK1 = HCLK/2 */
     RCC_PCLK1Config(RCC_HCLK_Div2);
     
-    RCC_ADCCLKConfig(RCC_PCLK2_Div6); 
+    RCC_ADCCLKConfig(RCC_PCLK2_Div4); 
     
     RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9); 
 
@@ -119,17 +118,17 @@ void NVIC_Configuration(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
-  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel1_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+//  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel1_IRQn;
+//  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+//  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+//  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//  NVIC_Init(&NVIC_InitStructure);
   
-  NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel4_5_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+//  NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel4_5_IRQn;
+//  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+//  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+//  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//  NVIC_Init(&NVIC_InitStructure);
 }
 
 
@@ -202,9 +201,9 @@ unsigned char *Get_ADC1_Value()
 
   u16 j=0,i=0,temp=0;
   u32 k=0,n=0;
-  for(j=0;j<=64;j+=1)
+  for(j=0;j<=ADC1_DMA_BufferSize;j+=1)
   {
-    for (i=0;i<64-j;i+=1)
+    for (i=0;i<ADC1_DMA_BufferSize-j;i+=1)
     {
       if (ADCConvertedValue1[i]>ADCConvertedValue1[i+1])
       {
@@ -214,45 +213,11 @@ unsigned char *Get_ADC1_Value()
       }
     }
   }
-  for(i=16;i<48;i+=1)
+  for(i=ADC1_DMA_BufferSize>>2;i<(ADC1_DMA_BufferSize>>2)*3;i+=1)
   {
-    n+=ADCConvertedValue1[i]>>16;
+    n+=ADCConvertedValue1[i];
   }
   k= ((n*3277)>>17);
-  n=0;
-  ADC_V_Value[0]=k/1000+'0';
-  ADC_V_Value[1]='.';
-    ADC_V_Value[2]=(k%1000)/100+'0';
-      ADC_V_Value[3]=(k%100)/10+'0';
-        ADC_V_Value[4]=k%10+'0';
-          ADC_V_Value[5]='\0';  
-  return ADC_V_Value;
-}
-
-
-unsigned char *Get_ADC3_Value()
-{
-
-  u16 j=0,i=0;
-  vu32 k=0,n=0,temp=0;
-
-  for(j=0;j<=64;j+=1)
-  {
-    for (i=0;i<64-j;i+=1)
-    {
-      if (ADCConvertedValue2[i]>ADCConvertedValue2[i+1])
-      {
-        temp=ADCConvertedValue2[i];
-        ADCConvertedValue2[i]=ADCConvertedValue2[i+1];
-        ADCConvertedValue2[i+1]=temp;
-      }
-    }
-  }
-  for(i=16;i<48;i+=1)
-  {
-    n+=(u32)ADCConvertedValue2[i];
-  }
-  k= (u32)((n*3277)>>17);
   n=0;
   ADC_R_Value[0]=k/1000+'0';
   ADC_R_Value[1]='.';
@@ -263,11 +228,12 @@ unsigned char *Get_ADC3_Value()
   return ADC_R_Value;
 }
 
+
 void ADC_GPIO_Config(void)
 {
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_3;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
   GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
@@ -279,7 +245,7 @@ void ADC1_Config(void)
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitTypeDef ADC_InitStructure;
 
-  ADC_InitStructure.ADC_Mode = ADC_Mode_FastInterl;
+  ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
   ADC_InitStructure.ADC_ScanConvMode = ENABLE;
   ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
@@ -288,7 +254,7 @@ void ADC1_Config(void)
   ADC_Init(ADC1, &ADC_InitStructure);
 
   /* ADC1 regular channel1 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_1Cycles5);
   /* ADC1 regular channel2 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);//
 
@@ -322,8 +288,8 @@ void ADC1_DMA_Config(void)
   DMA_InitStructure.DMA_BufferSize = ADC1_DMA_BufferSize;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
-  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
@@ -333,42 +299,46 @@ void ADC1_DMA_Config(void)
   DMA_Cmd(DMA1_Channel1, ENABLE);
 //  DMA_ITConfig(DMA1_Channel1,DMA_IT_TC,ENABLE);
 }
-void ADC2_Config(void)
-{
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE);
-  /* ADC2 configuration ------------------------------------------------------*/
-  ADC_InitTypeDef ADC_InitStructure;
 
-  ADC_InitStructure.ADC_Mode = ADC_Mode_FastInterl;
-  ADC_InitStructure.ADC_ScanConvMode = ENABLE;
-  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
-  ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
-  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-  ADC_InitStructure.ADC_NbrOfChannel = 1;
-  ADC_Init(ADC2, &ADC_InitStructure);
-
-  /* ADC2 regular channel1 configuration */
-  ADC_RegularChannelConfig(ADC2, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
-  
-   /* Enable ADC2 external trigger conversion */
-  ADC_ExternalTrigConvCmd(ADC2, ENABLE);
-  
-  /* Enable ADC2 */
-  ADC_Cmd(ADC2, ENABLE);
-
-  /* Enable ADC2 reset calibaration register */
-  ADC_ResetCalibration(ADC2);
-  /* Check the end of ADC2 reset calibration register */
-  while(ADC_GetResetCalibrationStatus(ADC2));
-    /* Start ADC2 calibaration */
-  ADC_StartCalibration(ADC2);
-  /* Check the end of ADC2 calibration */
-  while(ADC_GetCalibrationStatus(ADC2));
-  /* Start ADC2 Software Conversion */
-  ADC_SoftwareStartConvCmd(ADC2, ENABLE);
-}
 
 //-------------------------------------------------------//
+
+
+
+unsigned char *Get_ADC3_Value()
+{
+
+  u16 j=0,i=0;
+  vu32 k=0,n=0,temp=0;
+
+  for(j=0;j<=64;j+=1)
+  {
+    for (i=0;i<64-j;i+=1)
+    {
+      if (ADCConvertedValue2[i]>ADCConvertedValue2[i+1])
+      {
+        temp=ADCConvertedValue2[i];
+        ADCConvertedValue2[i]=ADCConvertedValue2[i+1];
+        ADCConvertedValue2[i+1]=temp;
+      }
+    }
+  }
+  for(i=16;i<48;i+=1)
+  {
+    n+=ADCConvertedValue2[i];
+  }
+  k=((n*3277)>>17);
+  n=0;
+  ADC_V_Value[0]=k/1000+'0';
+  ADC_V_Value[1]='.';
+    ADC_V_Value[2]=(k%1000)/100+'0';
+      ADC_V_Value[3]=(k%100)/10+'0';
+        ADC_V_Value[4]=k%10+'0';
+          ADC_V_Value[5]='\0';  
+  return ADC_V_Value;
+  
+}
+
 void ADC3_Config(void)
 {
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
@@ -386,7 +356,7 @@ void ADC3_Config(void)
   /* ADC1 regular channel8 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);
   /* ADC1 regular channel9 configuration */
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_13, 1, ADC_SampleTime_1Cycles5);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
 
   /* Enable ADC3 DMA */
   ADC_DMACmd(ADC3, ENABLE);
@@ -429,7 +399,6 @@ void ADC3_DMA_Config(void)
   DMA_Cmd(DMA2_Channel5, ENABLE);
 //  DMA_ITConfig(DMA2_Channel5,DMA_IT_TC,ENABLE);
 }
-
 
 
 void PowerA_GPIO_Config(void)

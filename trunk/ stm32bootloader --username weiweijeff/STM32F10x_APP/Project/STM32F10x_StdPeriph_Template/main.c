@@ -169,7 +169,9 @@ int main(void)
    
   
   ADC1_DMA_Config();
+  ADC3_DMA_Config();  
   ADC1_Config();
+  ADC3_Config();
   PowerA_EN();
   CD4067_EN();
   delay();
@@ -180,13 +182,17 @@ int main(void)
       Set_Scan_Channel(chx);      
       delay();
       ADC_DMACmd(ADC1, DISABLE);
+      ADC_DMACmd(ADC3, DISABLE);
 //      ADC_Cmd(ADC1, DISABLE);
       ADC_SoftwareStartConvCmd(ADC1, DISABLE);
-      Get_ADC1_Value();
-      LCD_str(100,chx*24,ADC_R_Value,24,0xaaaa,0x00ff);
+      ADC_SoftwareStartConvCmd(ADC3, DISABLE);
+      LCD_str(100,chx*24,Get_ADC1_Value(),24,0xaaaa,0x00ff);
+      LCD_str(500,500,Get_ADC3_Value(),24,0xaaaa,0x00ff);
       ADC_DMACmd(ADC1, ENABLE);
+      ADC_DMACmd(ADC3, ENABLE);
 //      ADC_Cmd(ADC1, ENABLE);
       ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+      ADC_SoftwareStartConvCmd(ADC3, ENABLE);
     }
     chx=0;
   }

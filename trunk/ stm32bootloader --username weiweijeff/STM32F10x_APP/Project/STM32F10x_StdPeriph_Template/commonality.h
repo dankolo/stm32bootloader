@@ -38,8 +38,8 @@
 #define PowerA_EN()  GPIO_SetBits(GPIOE,GPIO_Pin_2)
 #define PowerA_DIS()  GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
-#define ADC1_DMA_BufferSize 64;
-#define ADC3_DMA_BufferSize 64;
+#define ADC1_DMA_BufferSize 64
+#define ADC3_DMA_BufferSize 64
 extern unsigned char ADC_R_Value[6];
 extern unsigned char ADC_V_Value[6];
 extern unsigned char time_buffer[20];
@@ -65,7 +65,7 @@ struct level   // 级位数据结构
 
 void delay_nus(vu32 nCount);
 void delay_long(void);
-extern void Get_ADC1_Value();
+extern unsigned char *Get_ADC1_Value();
 extern unsigned char *Get_ADC3_Value();
 void ADC1_DMA_Config(void);
 void ADC_GPIO_Config(void);
