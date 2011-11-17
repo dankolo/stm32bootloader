@@ -7,8 +7,8 @@ unsigned char time_buffer[20]="2011-11-07 09:17:10";
 unsigned char Scan_Channels[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};//É¨ÃèÍ¨µÀ
 unsigned char ADC_R_Value[6];
 unsigned char ADC_V_Value[6];
-u16 ADCConvertedValue1[ADC1_DMA_BufferSize];
-u16 ADCConvertedValue2[ADC3_DMA_BufferSize];
+u16 ADCConvertedValue_R[ADC_R_DMA_BufferSize];
+u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 
 void RCC_Configuration(void)
 {
@@ -118,7 +118,7 @@ void NVIC_Configuration(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
-//  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel1_IRQn;
+//  NVIC_InitStructure.NVIC_IRQChannel = ADC_R_DMA_Channel_IRQn;
 //  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
 //  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 //  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -187,35 +187,35 @@ void delay_nus(vu32 nCount)
   TIM_Cmd(TIM2, DISABLE);
 }
 
-void delay_long(void)
+void  delay(u32 t)
 {
-  unsigned long x=0xffff;
-    while(x>0)
-    {--x;}
+ uint32_t i;
+ for(i=0;i<t;i++);
 }
 
 
 
-unsigned char *Get_ADC1_Value()
+
+unsigned char *Get_ADC_R_Value()
 {
 
   u16 j=0,i=0,temp=0;
   u32 k=0,n=0;
-  for(j=0;j<=ADC1_DMA_BufferSize;j+=1)
+  for(j=0;j<=ADC_R_DMA_BufferSize;j+=1)
   {
-    for (i=0;i<ADC1_DMA_BufferSize-j;i+=1)
+    for (i=0;i<ADC_R_DMA_BufferSize-j;i+=1)
     {
-      if (ADCConvertedValue1[i]>ADCConvertedValue1[i+1])
+      if (ADCConvertedValue_R[i]>ADCConvertedValue_R[i+1])
       {
-        temp=ADCConvertedValue1[i];
-        ADCConvertedValue1[i]=ADCConvertedValue1[i+1];
-        ADCConvertedValue1[i+1]=temp;
+        temp=ADCConvertedValue_R[i];
+        ADCConvertedValue_R[i]=ADCConvertedValue_R[i+1];
+        ADCConvertedValue_R[i+1]=temp;
       }
     }
   }
-  for(i=ADC1_DMA_BufferSize>>2;i<(ADC1_DMA_BufferSize>>2)*3;i+=1)
+  for(i=ADC_R_DMA_BufferSize>>2;i<(ADC_R_DMA_BufferSize>>2)*3;i+=1)
   {
-    n+=ADCConvertedValue1[i];
+    n+=ADCConvertedValue_R[i];
   }
   k= ((n*3277)>>17);
   n=0;
@@ -275,17 +275,17 @@ void ADC1_Config(void)
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 }
 
-void ADC1_DMA_Config(void)
+void ADC_R_DMA_Config(void)
 {
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+  RCC_AHBPeriphClockCmd(ADC_R_DMA_RCC, ENABLE);
   DMA_InitTypeDef DMA_InitStructure;
 
   /* DMA1 channel1 configuration ----------------------------------------------*/
-  DMA_DeInit(DMA1_Channel1);
-  DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;
-  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADCConvertedValue1;
+  DMA_DeInit(ADC_R_DMA_Channel);
+  DMA_InitStructure.DMA_PeripheralBaseAddr = ADC_R_DR_Address;
+  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADCConvertedValue_R;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-  DMA_InitStructure.DMA_BufferSize = ADC1_DMA_BufferSize;
+  DMA_InitStructure.DMA_BufferSize = ADC_R_DMA_BufferSize;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -293,11 +293,11 @@ void ADC1_DMA_Config(void)
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-  DMA_Init(DMA1_Channel1, &DMA_InitStructure);
+  DMA_Init(ADC_R_DMA_Channel, &DMA_InitStructure);
 
   /* Enable DMA1 channel1 */
-  DMA_Cmd(DMA1_Channel1, ENABLE);
-//  DMA_ITConfig(DMA1_Channel1,DMA_IT_TC,ENABLE);
+  DMA_Cmd(ADC_R_DMA_Channel, ENABLE);
+//  DMA_ITConfig(ADC_R_DMA_Channel,DMA_IT_TC,ENABLE);
 }
 
 
@@ -305,27 +305,27 @@ void ADC1_DMA_Config(void)
 
 
 
-unsigned char *Get_ADC3_Value()
+unsigned char *Get_ADC_V_Value()
 {
 
   u16 j=0,i=0;
   vu32 k=0,n=0,temp=0;
 
-  for(j=0;j<=64;j+=1)
+  for(j=0;j<=ADC_V_DMA_BufferSize;j+=1)
   {
-    for (i=0;i<64-j;i+=1)
+    for (i=0;i<ADC_V_DMA_BufferSize-j;i+=1)
     {
-      if (ADCConvertedValue2[i]>ADCConvertedValue2[i+1])
+      if (ADCConvertedValue_V[i]>ADCConvertedValue_V[i+1])
       {
-        temp=ADCConvertedValue2[i];
-        ADCConvertedValue2[i]=ADCConvertedValue2[i+1];
-        ADCConvertedValue2[i+1]=temp;
+        temp=ADCConvertedValue_V[i];
+        ADCConvertedValue_V[i]=ADCConvertedValue_V[i+1];
+        ADCConvertedValue_V[i+1]=temp;
       }
     }
   }
-  for(i=16;i<48;i+=1)
+  for(i=ADC_V_DMA_BufferSize>>2;i<(ADC_V_DMA_BufferSize>>2)*3;i+=1)
   {
-    n+=ADCConvertedValue2[i];
+    n+=ADCConvertedValue_V[i];
   }
   k=((n*3277)>>17);
   n=0;
@@ -375,17 +375,17 @@ void ADC3_Config(void)
   ADC_SoftwareStartConvCmd(ADC3, ENABLE);
 }
 
-void ADC3_DMA_Config(void)
+void ADC_V_DMA_Config(void)
 {
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA2, ENABLE);
+  RCC_AHBPeriphClockCmd(ADC_V_DMA_RCC, ENABLE);
   DMA_InitTypeDef DMA_InitStructure;
 
   /* DMA2 channel5 configuration ----------------------------------------------*/
-  DMA_DeInit(DMA2_Channel5);
-  DMA_InitStructure.DMA_PeripheralBaseAddr = ADC3_DR_Address;
-  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADCConvertedValue2;
+  DMA_DeInit(ADC_V_DMA_Channel);
+  DMA_InitStructure.DMA_PeripheralBaseAddr = ADC_V_DR_Address;
+  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADCConvertedValue_V;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-  DMA_InitStructure.DMA_BufferSize = ADC3_DMA_BufferSize;
+  DMA_InitStructure.DMA_BufferSize = ADC_V_DMA_BufferSize;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -393,11 +393,11 @@ void ADC3_DMA_Config(void)
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-  DMA_Init(DMA2_Channel5, &DMA_InitStructure);
+  DMA_Init(ADC_V_DMA_Channel, &DMA_InitStructure);
 
   /* Enable DMA2 channel5 */
-  DMA_Cmd(DMA2_Channel5, ENABLE);
-//  DMA_ITConfig(DMA2_Channel5,DMA_IT_TC,ENABLE);
+  DMA_Cmd(ADC_V_DMA_Channel, ENABLE);
+//  DMA_ITConfig(ADC_V_DMA_Channel,DMA_IT_TC,ENABLE);
 }
 
 

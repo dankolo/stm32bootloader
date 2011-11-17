@@ -36,11 +36,6 @@
 
 
 
-void delay(void)
-{
- uint32_t i;
- for(i=0;i<0xFFFF;i++);
-}
 
 
 #if 0
@@ -174,20 +169,20 @@ int main(void)
   ADC3_Config();
   PowerA_EN();
   CD4067_EN();
-  delay();
+  delay(0xffff);
   while (1)
   {
     for(chx=8;chx<16;chx++)
     {  
       Set_Scan_Channel(chx);      
-      delay();
+      delay(0xffff);
       ADC_DMACmd(ADC1, DISABLE);
       ADC_DMACmd(ADC3, DISABLE);
 //      ADC_Cmd(ADC1, DISABLE);
       ADC_SoftwareStartConvCmd(ADC1, DISABLE);
       ADC_SoftwareStartConvCmd(ADC3, DISABLE);
       LCD_str(100,chx*24,Get_ADC1_Value(),24,0xaaaa,0x00ff);
-      LCD_str(500,500,Get_ADC3_Value(),24,0xaaaa,0x00ff);
+      LCD_str(500,300,Get_ADC3_Value(),24,0xaaaa,0x00ff);
       ADC_DMACmd(ADC1, ENABLE);
       ADC_DMACmd(ADC3, ENABLE);
 //      ADC_Cmd(ADC1, ENABLE);
