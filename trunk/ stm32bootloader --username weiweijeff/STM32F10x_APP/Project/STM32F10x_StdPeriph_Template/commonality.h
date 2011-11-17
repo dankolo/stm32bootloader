@@ -6,8 +6,7 @@
 #include "fatfs.h"
 
 
-#define ADC1_DR_Address    ((uint32_t)0x4001244C)
-#define ADC3_DR_Address    ((uint32_t)0x40013c4C)
+
 
 #define CD4067_RCC    RCC_APB2Periph_GPIOD 
 #define CD4067_PORT   GPIOF
@@ -21,25 +20,39 @@
 #define PowerA_PORT   GPIOE
 #define PowerA_pin    GPIO_Pin_2
 
-#define ADC_V         ADC1
-#define ADC_V_RCC     RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOC
-#define ADC_V_Channel ADC_Channel_10
-#define ADC_V_PORT    GPIOC
-#define ADC_V_pin     GPIO_Pin_0
-
-#define ADC_R         ADC3
-#define ADC_R_RCC     RCC_APB2Periph_ADC3 | RCC_APB2Periph_GPIOC
-#define ADC_R_Channel ADC_Channel_13
-#define ADC_R_PORT    GPIOC
-#define ADC_R_pin     GPIO_Pin_3
-
 #define CD4067_EN()  GPIO_ResetBits(GPIOF,GPIO_Pin_8)
 #define CD4067_DIS()  GPIO_SetBits(GPIOF,GPIO_Pin_8)
 #define PowerA_EN()  GPIO_SetBits(GPIOE,GPIO_Pin_2)
 #define PowerA_DIS()  GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
-#define ADC1_DMA_BufferSize 64
-#define ADC3_DMA_BufferSize 64
+#define ADC_R_DR_Address    ((uint32_t)0x4001244C)//adc1
+#define ADC_V_DR_Address    ((uint32_t)0x40013c4C)//adc3
+
+#define ADC_V         ADC3
+#define ADC_V_RCC     RCC_APB2Periph_ADC3 | RCC_APB2Periph_GPIOC
+#define ADC_V_Channel ADC_Channel_10
+#define ADC_V_PORT    GPIOC
+#define ADC_V_pin     GPIO_Pin_0
+#define ADC_V_DMA_RCC RCC_AHBPeriph_DMA2
+#define ADC_V_DMA_Channel DMA2_Channel5
+
+
+#define ADC_R         ADC1
+#define ADC_R_RCC     RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOC
+#define ADC_R_Channel ADC_Channel_13
+#define ADC_R_PORT    GPIOC
+#define ADC_R_pin     GPIO_Pin_3
+#define ADC_R_DMA_RCC RCC_AHBPeriph_DMA1
+#define ADC_R_DMA_Channel DMA1_Channel1
+
+#define ADC_R_DMA_BufferSize 64
+#define ADC_V_DMA_BufferSize 64
+
+#define ADC1_stop(); { ADC_DMACmd(ADC1, DISABLE);ADC_SoftwareStartConvCmd(ADC1, DISABLE);}
+#define ADC3_stop(); { ADC_DMACmd(ADC3, DISABLE);ADC_SoftwareStartConvCmd(ADC3, DISABLE);}
+#define ADC1_restart(); { ADC_DMACmd(ADC1, ENABLE);ADC_SoftwareStartConvCmd(ADC1, ENABLE);}
+#define ADC3_restart(); { ADC_DMACmd(ADC3, ENABLE);ADC_SoftwareStartConvCmd(ADC3, ENABLE);}
+
 extern unsigned char ADC_R_Value[6];
 extern unsigned char ADC_V_Value[6];
 extern unsigned char time_buffer[20];
@@ -64,15 +77,14 @@ struct level   // 级位数据结构
 
 
 void delay_nus(vu32 nCount);
-void delay_long(void);
-extern unsigned char *Get_ADC1_Value();
-extern unsigned char *Get_ADC3_Value();
-void ADC1_DMA_Config(void);
+void  delay(u32 t);
+extern unsigned char *Get_ADC_R_Value();
+extern unsigned char *Get_ADC3_V_Value();
+void ADC_R_DMA_Config(void);
 void ADC_GPIO_Config(void);
-void ADC1_Config(void);
-void ADC2_Config(void);
-void ADC3_DMA_Config(void);
-void ADC3_Config(void);
+void ADC_R_Config(void);
+void ADC_V_DMA_Config(void);
+void ADC_V_Config(void);
 
 void RCC_Configuration(void);
 void NVIC_Configuration(void);
