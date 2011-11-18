@@ -32,8 +32,7 @@
 #include <stdlib.h>
 #include "commonality.h"
 
-uint8_t tp_flag=0;
-uint16_t tp_x[5],tp_y[5],x,y;
+
 
 
 extern void TIM2_Config(void);
@@ -249,8 +248,9 @@ void TIM3_IRQHandler(void)
       y=(tp_y[1]+tp_y[2]+tp_y[3])/3;
      if((x<800)&&(y<479))
      {
-       LCD_DrawFullCircle(x,y,3,1,0xaaaa);
+       schedule(x,y);
      }
+     return;
     }
   }
 }

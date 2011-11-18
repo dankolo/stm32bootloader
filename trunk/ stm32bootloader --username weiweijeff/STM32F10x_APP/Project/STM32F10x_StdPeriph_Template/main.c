@@ -163,10 +163,11 @@ int main(void)
      This code needs to be compiled with high speed optimization option.  */
    
   
-  ADC1_DMA_Config();
-  ADC3_DMA_Config();  
-  ADC1_Config();
-  ADC3_Config();
+  
+ ADC_R_DMA_Config();
+ ADC_V_DMA_Config();
+ ADC_R_Config();
+ ADC_V_Config();
   PowerA_EN();
   CD4067_EN();
   delay(0xffff);
@@ -181,8 +182,8 @@ int main(void)
 //      ADC_Cmd(ADC1, DISABLE);
       ADC_SoftwareStartConvCmd(ADC1, DISABLE);
       ADC_SoftwareStartConvCmd(ADC3, DISABLE);
-      LCD_str(100,chx*24,Get_ADC1_Value(),24,0xaaaa,0x00ff);
-      LCD_str(500,300,Get_ADC3_Value(),24,0xaaaa,0x00ff);
+      LCD_str(100,chx*24,Get_ADC_R_Value(),24,0xaaaa,0x00ff);
+      LCD_str(500,300,Get_ADC_V_Value(),24,0xaaaa,0x00ff);
       ADC_DMACmd(ADC1, ENABLE);
       ADC_DMACmd(ADC3, ENABLE);
 //      ADC_Cmd(ADC1, ENABLE);
@@ -190,6 +191,69 @@ int main(void)
       ADC_SoftwareStartConvCmd(ADC3, ENABLE);
     }
     chx=0;
+  }
+  
+  
+  while(flag_pages==choose_model)
+    {
+      draw_choosemodel();
+//    BMP_view((const XCHAR*)"/",(const XCHAR*)"choose.bmp",0,239);
+//    printf("---%d---\r\n",ili9320_GetPoint(2,2));
+      while(flag_pages==choose_model)
+      {
+        ili9320_writestr12(103,227,get_time_now(),Cyan,Black);
+        delay();
+      }
+
+    }
+    while(flag_pages==set_time)
+    {
+      TP_EXTI_DISABLE();
+      draw_time_manger();
+      TP_EXTI_ENABLE();
+      while(flag_pages==set_time);
+    }
+    while(flag_pages==TKS14A_I)
+    {
+       TP_EXTI_DISABLE();
+       TKS14A_I_table();
+       draw_TKS14A_I();
+       TP_EXTI_ENABLE();
+       while(flag_pages==TKS14A_I)
+       {TKS14A_I_Scan();}
+    }
+    while(flag_pages==TKS14A_II)
+    {
+       TP_EXTI_DISABLE();
+       TKS14A_II_table();
+       draw_TKS14A_II();
+       TP_EXTI_ENABLE();
+      while(flag_pages==TKS14A_II);
+    }
+    while(flag_pages==TKS15A_I)
+    {
+       TP_EXTI_DISABLE();
+       TKS15A_I_table();
+       draw_TKS15A_I();
+       TP_EXTI_ENABLE();
+      while(flag_pages==TKS15A_I);
+    }
+    while(flag_pages==TKS15A_II)
+    {
+       TP_EXTI_DISABLE();
+       TKS15A_II_table();
+       draw_TKS15A_II();
+       TP_EXTI_ENABLE();
+      while(flag_pages==TKS15A_II);
+    }
+    while(flag_pages==TKS231_1_II)
+    {
+       TP_EXTI_DISABLE();
+       TKS231_1_II_table();
+       draw_TKS231_1_II();
+       TP_EXTI_ENABLE();
+      while(flag_pages==TKS231_1_II);
+    }
   }
 }
 
