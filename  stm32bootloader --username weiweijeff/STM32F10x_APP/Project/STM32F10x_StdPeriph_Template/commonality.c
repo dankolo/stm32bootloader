@@ -10,6 +10,15 @@ unsigned char ADC_V_Value[6];
 u16 ADCConvertedValue_R[ADC_R_DMA_BufferSize];
 u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 
+
+uint8_t     tp_flag=0;
+uint16_t    tp_x[5],tp_y[5],x,y;
+uint8_t     sys_flag=0;
+
+
+
+
+
 void RCC_Configuration(void)
 {
   
@@ -239,9 +248,9 @@ void ADC_GPIO_Config(void)
 }
 
 
-void ADC1_Config(void)
+void ADC_R_Config(void)
 {
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  RCC_APB2PeriphClockCmd(ADC_R_RCC, ENABLE);
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitTypeDef ADC_InitStructure;
 
@@ -251,28 +260,28 @@ void ADC1_Config(void)
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfChannel = 1;
-  ADC_Init(ADC1, &ADC_InitStructure);
+  ADC_Init(ADC_R, &ADC_InitStructure);
 
-  /* ADC1 regular channel1 configuration */
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_1Cycles5);
-  /* ADC1 regular channel2 configuration */
-//  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);//
+  /* ADC_R regular channel1 configuration */
+  ADC_RegularChannelConfig(ADC_R, ADC_Channel_13, 1, ADC_SampleTime_1Cycles5);
+  /* ADC_R regular channel2 configuration */
+//  ADC_RegularChannelConfig(ADC_R, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);//
 
-  /* Enable ADC1 DMA */
-  ADC_DMACmd(ADC1, ENABLE);
-  /* Enable ADC1 */
-  ADC_Cmd(ADC1, ENABLE);
+  /* Enable ADC_R DMA */
+  ADC_DMACmd(ADC_R, ENABLE);
+  /* Enable ADC_R */
+  ADC_Cmd(ADC_R, ENABLE);
 
-  /* Enable ADC1 reset calibaration register */
-  ADC_ResetCalibration(ADC1);
-  /* Check the end of ADC1 reset calibration register */
-  while(ADC_GetResetCalibrationStatus(ADC1));
-    /* Start ADC1 calibaration */
-  ADC_StartCalibration(ADC1);
-  /* Check the end of ADC1 calibration */
-  while(ADC_GetCalibrationStatus(ADC1));
-  /* Start ADC1 Software Conversion */
-  ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+  /* Enable ADC_R reset calibaration register */
+  ADC_ResetCalibration(ADC_R);
+  /* Check the end of ADC_R reset calibration register */
+  while(ADC_GetResetCalibrationStatus(ADC_R));
+    /* Start ADC_R calibaration */
+  ADC_StartCalibration(ADC_R);
+  /* Check the end of ADC_R calibration */
+  while(ADC_GetCalibrationStatus(ADC_R));
+  /* Start ADC_R Software Conversion */
+  ADC_SoftwareStartConvCmd(ADC_R, ENABLE);
 }
 
 void ADC_R_DMA_Config(void)
@@ -339,10 +348,10 @@ unsigned char *Get_ADC_V_Value()
   
 }
 
-void ADC3_Config(void)
+void ADC_V_Config(void)
 {
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
-  /* ADC1 configuration ------------------------------------------------------*/
+  RCC_APB2PeriphClockCmd(ADC_V_RCC, ENABLE);
+  /* ADC configuration ------------------------------------------------------*/
   ADC_InitTypeDef ADC_InitStructure;
 
   ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
@@ -351,28 +360,28 @@ void ADC3_Config(void)
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfChannel = 1;
-  ADC_Init(ADC3, &ADC_InitStructure);
+  ADC_Init(ADC_V, &ADC_InitStructure);
 
-  /* ADC1 regular channel8 configuration */
+  /* ADC regular channel8 configuration */
 //  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);
-  /* ADC1 regular channel9 configuration */
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
+  /* ADC regular channel9 configuration */
+  ADC_RegularChannelConfig(ADC_V, ADC_Channel_10, 1, ADC_SampleTime_1Cycles5);
 
-  /* Enable ADC3 DMA */
-  ADC_DMACmd(ADC3, ENABLE);
-  /* Enable ADC3 */
-  ADC_Cmd(ADC3, ENABLE);
+  /* Enable ADC_V DMA */
+  ADC_DMACmd(ADC_V, ENABLE);
+  /* Enable ADC_V */
+  ADC_Cmd(ADC_V, ENABLE);
 
-  /* Enable ADC3 reset calibaration register */
-  ADC_ResetCalibration(ADC3);
+  /* Enable ADC_V reset calibaration register */
+  ADC_ResetCalibration(ADC_V);
   /* Check the end of ADC1 reset calibration register */
-  while(ADC_GetResetCalibrationStatus(ADC3));
-    /* Start ADC3 calibaration */
-  ADC_StartCalibration(ADC3);
-  /* Check the end of ADC3 calibration */
-  while(ADC_GetCalibrationStatus(ADC3));
-  /* Start ADC3 Software Conversion */
-  ADC_SoftwareStartConvCmd(ADC3, ENABLE);
+  while(ADC_GetResetCalibrationStatus(ADC_V));
+    /* Start ADC_V calibaration */
+  ADC_StartCalibration(ADC_V);
+  /* Check the end of ADC_V calibration */
+  while(ADC_GetCalibrationStatus(ADC_V));
+  /* Start ADC_V Software Conversion */
+  ADC_SoftwareStartConvCmd(ADC_V, ENABLE);
 }
 
 void ADC_V_DMA_Config(void)
@@ -538,7 +547,151 @@ void Set_Scan_Channel(unsigned char x)
 
 
 
+void schedule(uint16_t x,uint16_t y)
+{
+  TP_stop();
+  
+  
+  
+  
+  if((x<0)||(x>799)||(y>479)||(y<0))
+  {
+    TP_restart();
+    return;
+  }
+  
+  
+  if(sys_flag==choose_model)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      TP_restart();
+      return;
+    }
+    //第一列
+    if((x<80)&&(y<48))
+    {
+      TP_restart();
+      return;
+    }
+    if((x<80)&&(y>48)&&(y<96))
+    {
 
+      sys_flag=TKS14A_I;
+      TP_restart();
+      return;
+    }
+    if((x<80)&&(y>96)&&(y<144))
+    {
+      sys_flag=TKS14A_II;
+      TP_restart();
+      return;
+    }
+    if((x<80)&&(y>144)&&(y<192))
+    {
+      sys_flag=TKS15A_I;
+      TP_restart();
+      return;
+    }
+    if((x<80)&&(y>192&&y<239))
+    {
+      sys_flag=TKS15A_II;
+      TP_restart();
+      return;
+    }
+    //第二列
+    if((x>80)&&(x< 200)&&(y<48))
+    {
+      TP_restart();
+      return;
+    }
+    if((x>80)&&(x<200)&&(y>48)&&(y<96))
+    {
+      sys_flag=TKS231_1_II;
+      TP_restart();
+      return;
+    }
+
+    if((x>200&&x<319)&&(y>144)&&(y<192))
+    {
+      sys_flag=set_time;
+      TP_restart();
+      return;
+    }
+  }
+/***********************************************************/
+  if(sys_flag==TKS14A_I)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      CD4067_DIS();
+      TP_restart();
+      return;
+    }
+  }
+/************************************************************/
+  if(sys_flag==TKS14A_II)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      CD4067_DIS();
+      TP_restart();
+      return;
+    }
+    measure_TKS14A_II(x,y);
+  }
+/************************************************************/
+  if(sys_flag==TKS15A_I)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      CD4067_DIS();
+      TP_restart();
+      return;
+    }
+    measure_TKS15A_I(x,y);
+  }
+/************************************************************/
+  if(sys_flag==TKS15A_II)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      CD4067_DIS();
+      TP_restart();
+      return;
+    }
+    measure_TKS15A_II(x,y);
+  }
+  if(sys_flag==TKS231_1_II)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      CD4067_DIS();
+      TP_restart();
+      return;
+    }
+    measure_TKS231_1_II(x,y);
+  }
+  if(sys_flag==set_time)
+  {
+    if(x>280&&x<320&&y>200&&y<239)
+    {
+      sys_flag=choose_model;
+      TP_restart();
+      return;
+    }
+    time_manager(x,y);
+  }
+
+
+
+TP_restart();
+}
 
 
 
