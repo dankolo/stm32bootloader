@@ -369,7 +369,6 @@ void LCD_CN(u16 x,u16 y,uc8 *p,uint8_t fon, u16 charColor,u16 bkColor)
   FIL	file;
   FRESULT res;
   DIR dirs;
-  u8 buffer[448]={0};
   uint32_t re;
   res = f_mount(0,&fs);
   res = f_opendir(&dirs,(const TCHAR*)"/");//打开根目录
@@ -552,7 +551,6 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
   {
   case 12:
     {
-      u8 buffer[12]={0};
       index = p*12;
       end_x=x+5;
       res = f_open(&file,(const TCHAR*)"ASCII12.FON",FA_READ);//打开在根目录的字库
@@ -580,7 +578,6 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
     break;
   case 16:
     {
-      u8 buffer[16]={0};
       index = p*16;
       end_x=x+7;
       res = f_open(&file,(const TCHAR*)"ASCII16.FON",FA_READ);//打开在根目录的字库
@@ -608,7 +605,6 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
     break;
   case 24:
     {
-      u8 buffer[48]={0};
       index = p*48;
       end_x=x+11;
       res = f_open(&file,(const TCHAR*)"ASCII24.FON",FA_READ);//打开在根目录的字库
@@ -648,7 +644,6 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
     break;
   case 32:
     {
-      u8 buffer[64]={0};
       index = p*64;
       end_x=x+15;
       res = f_open(&file,(const TCHAR*)"ASCII32.FON",FA_READ);//打开在根目录的字库
@@ -676,7 +671,6 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
     break;
     case 64:
     {
-      u8 buffer[256]={0};
       index = p*256;
       end_x=x+31;
       res = f_open(&file,(const TCHAR*)"ASCII64.FON",FA_READ);//打开在根目录的字库
@@ -737,4 +731,124 @@ void LCD_str(u16 x, u16 y, unsigned char *str, uint8_t fon, u16 Color, u16 bkCol
       str+=2;
     }    
   }
+}
+
+
+/*********************************************************************************
+//wdx:    1 Wingdings, 2 Wingdings2, 3 Wingdings3;
+//wide:   0 40*48, 1 80*96
+*********************************************************************************/
+
+void LCD_WD(u16 x,u16 y,u8 p,uint8_t wdx,uint8_t wide, u16 charColor,u16 bkColor)
+{
+  uint32_t index;//地址偏移量  
+  uint16_t i,n,end_x;
+  FATFS fs;
+  FIL	file;
+  FRESULT res;
+  DIR dirs;
+  uint32_t re;
+  res = f_mount(0,&fs);
+  res = f_opendir(&dirs,(const TCHAR*)"/");//打开根目录
+  
+  if(wide==0)
+  {
+    index = p*240;
+    end_x=x+39;
+    switch(wdx)
+    {
+    case 1:
+      res = f_open(&file,(const TCHAR*)"Wingdings.FON",FA_READ);//打开在根目录的字库
+      break;
+    case 2:
+      res = f_open(&file,(const TCHAR*)"Wingdings2.FON",FA_READ);//打开在根目录的字库
+      break;
+    case 3:
+      res = f_open(&file,(const TCHAR*)"Wingdings3.FON",FA_READ);//打开在根目录的字库
+      break;
+    default:break;
+    }
+    res = f_lseek (&file, index);//设置偏移量
+    res = f_read(&file,buffer,240,&re);//读出32字节字模数据
+    LCD_WriteReg(CUR_X,x); // .............. CUR_x
+    LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+    LCD_WriteReg(END_X,end_x); // ............ END_X
+    LCD_WriteRAM_Prepare(); // .............. PIXELS
+    for(n=0;n<240;n++)
+    {
+      for (i = 0; i < 8; i++)
+      {
+        if (buffer[n] & (0x01<<i))
+        {
+          LCD_WritePoint(charColor);//写有效点
+        }
+        else
+        {
+          LCD_WritePoint(bkColor);//写底色
+        }
+      }
+    }
+  }
+  else
+  {
+    index = p*960;
+    end_x=x+79;
+    switch(wdx)
+    {
+    case 1:
+      res = f_open(&file,(const TCHAR*)"BWingdings.FON",FA_READ);//打开在根目录的字库
+      break;
+    case 2:
+      res = f_open(&file,(const TCHAR*)"BWingdings2.FON",FA_READ);//打开在根目录的字库
+      break;
+    case 3:
+      res = f_open(&file,(const TCHAR*)"BWingdings3.FON",FA_READ);//打开在根目录的字库
+      break;
+    default:break;
+    }
+    res = f_lseek (&file, index);//设置偏移量
+    res = f_read(&file,buffer,480,&re);//读出480字节字模数据
+    LCD_WriteReg(CUR_X,x); // .............. CUR_x
+    LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+    LCD_WriteReg(END_X,end_x); // ............ END_X
+    LCD_WriteRAM_Prepare(); // .............. PIXELS
+    for(n=0;n<480;n++)
+    {
+      for (i = 0; i < 8; i++)
+      {
+        if (buffer[n] & (0x01<<i))
+        {
+          LCD_WritePoint(charColor);//写有效点
+        }
+        else
+        {
+          LCD_WritePoint(bkColor);//写底色
+        }
+      }
+    }
+    index+=480;
+    y+=48;
+    res = f_lseek (&file, index);//设置偏移量
+    res = f_read(&file,buffer,480,&re);//读出480字节字模数据
+    LCD_WriteReg(CUR_X,x); // .............. CUR_x
+    LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+    LCD_WriteReg(END_X,end_x); // ............ END_X
+    LCD_WriteRAM_Prepare(); // .............. PIXELS
+    for(n=0;n<480;n++)
+    {
+      for (i = 0; i < 8; i++)
+      {
+        if (buffer[n] & (0x01<<i))
+        {
+          LCD_WritePoint(charColor);//写有效点
+        }
+        else
+        {
+          LCD_WritePoint(bkColor);//写底色
+        }
+      }
+    }
+  }
+  f_close(&file);
+  f_mount(0,NULL);
 }
