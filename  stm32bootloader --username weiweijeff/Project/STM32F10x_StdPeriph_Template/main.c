@@ -51,8 +51,10 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 //#define BANK1_WRITE_END_ADDR    ((uint32_t)0x0807FFFF)
 uint32_t BANK1_WRITE_START_ADDR=0x0800F000;
 uint32_t BANK1_WRITE_END_ADDR;
+
 uint32_t APP_PROGRAM_FLAG=0x00;
 uint32_t Jump_To_App_flag=0x00;
+
 uint32_t EraseCounter = 0x00, Address = 0x00;
 uint32_t NbrOfPage = 0x00;
 volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
@@ -131,13 +133,12 @@ int main(void)
   LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
   LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-  
-  
 //  LCD_Set_Time("2011-10-20 10:50:30");
   while (1)
   {
     get_time_now();
     LCD_str(176,150,time_buffer, 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+    
     if(APP_PROGRAM_FLAG==0x01)
     {
       LCD_Clear(LCD_COLOR_BLACK);

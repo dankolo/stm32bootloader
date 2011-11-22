@@ -173,89 +173,61 @@ int main(void)
   delay(0xffff);
   while (1)
   {
-    for(chx=8;chx<16;chx++)
-    {  
-      Set_Scan_Channel(chx);      
-      delay(0xffff);
-      ADC_DMACmd(ADC1, DISABLE);
-      ADC_DMACmd(ADC3, DISABLE);
-//      ADC_Cmd(ADC1, DISABLE);
-      ADC_SoftwareStartConvCmd(ADC1, DISABLE);
-      ADC_SoftwareStartConvCmd(ADC3, DISABLE);
-      LCD_str(100,chx*24,Get_ADC_R_Value(),24,0xaaaa,0x00ff);
-      LCD_str(500,300,Get_ADC_V_Value(),24,0xaaaa,0x00ff);
-      ADC_DMACmd(ADC1, ENABLE);
-      ADC_DMACmd(ADC3, ENABLE);
-//      ADC_Cmd(ADC1, ENABLE);
-      ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-      ADC_SoftwareStartConvCmd(ADC3, ENABLE);
-    }
-    chx=0;
-  }
+    
   
   
-  while(flag_pages==choose_model)
+  while(sys_flag==choose_model)
     {
       draw_choosemodel();
-//    BMP_view((const XCHAR*)"/",(const XCHAR*)"choose.bmp",0,239);
-//    printf("---%d---\r\n",ili9320_GetPoint(2,2));
-      while(flag_pages==choose_model)
+      while(sys_flag==choose_model)
       {
-        ili9320_writestr12(103,227,get_time_now(),Cyan,Black);
-        delay();
+        LCD_str(200,460,get_time_now(),24,LCD_COLOR_CYAN,LCD_COLOR_BLACK);
+        delay(0xffff);
       }
-
     }
-    while(flag_pages==set_time)
+    while(sys_flag==set_time)
     {
-      TP_EXTI_DISABLE();
+      TP_stop();
       draw_time_manger();
-      TP_EXTI_ENABLE();
-      while(flag_pages==set_time);
+      TP_restart();
+      while(sys_flag==set_time);
     }
-    while(flag_pages==TKS14A_I)
+    while(sys_flag==TKS14A_I)
     {
-       TP_EXTI_DISABLE();
-       TKS14A_I_table();
-       draw_TKS14A_I();
-       TP_EXTI_ENABLE();
-       while(flag_pages==TKS14A_I)
-       {TKS14A_I_Scan();}
+       TP_stop();
+       TP_restart();
+       while(sys_flag==TKS14A_I)
+       {
+       }
     }
-    while(flag_pages==TKS14A_II)
+    while(sys_flag==TKS14A_II)
     {
-       TP_EXTI_DISABLE();
-       TKS14A_II_table();
-       draw_TKS14A_II();
-       TP_EXTI_ENABLE();
-      while(flag_pages==TKS14A_II);
+       TP_stop();
+       TP_restart();
+      while(sys_flag==TKS14A_II);
     }
-    while(flag_pages==TKS15A_I)
+    while(sys_flag==TKS15A_I)
     {
-       TP_EXTI_DISABLE();
-       TKS15A_I_table();
-       draw_TKS15A_I();
-       TP_EXTI_ENABLE();
-      while(flag_pages==TKS15A_I);
+       TP_stop();
+       TP_restart();
+      while(sys_flag==TKS15A_I);
     }
-    while(flag_pages==TKS15A_II)
+    while(sys_flag==TKS15A_II)
     {
-       TP_EXTI_DISABLE();
-       TKS15A_II_table();
-       draw_TKS15A_II();
-       TP_EXTI_ENABLE();
-      while(flag_pages==TKS15A_II);
+       TP_stop();
+       TP_restart();
+      while(sys_flag==TKS15A_II);
     }
-    while(flag_pages==TKS231_1_II)
+    while(sys_flag==TKS231_1_II)
     {
-       TP_EXTI_DISABLE();
-       TKS231_1_II_table();
-       draw_TKS231_1_II();
-       TP_EXTI_ENABLE();
-      while(flag_pages==TKS231_1_II);
+       TP_stop();
+       TP_restart();
+      while(sys_flag==TKS231_1_II);
     }
+  
   }
 }
+
 
 
 
