@@ -36,6 +36,7 @@ void format_disk(
 void LCD_CN(u16 x,u16 y,uc8 *p,uint8_t fon, u16 charColor,u16 bkColor);
 void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor);
 void LCD_str(u16 x, u16 y, unsigned char *str, uint8_t fon, u16 Color, u16 bkColor);
+void LCD_WD(u16 x,u16 y,u8 p,uint8_t wdx,uint8_t wide, u16 charColor,u16 bkColor);
 
 
 

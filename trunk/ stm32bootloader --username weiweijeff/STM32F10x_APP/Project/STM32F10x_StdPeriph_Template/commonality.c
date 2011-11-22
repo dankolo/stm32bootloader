@@ -554,7 +554,7 @@ void schedule(uint16_t x,uint16_t y)
   
   
   
-  if((x<0)||(x>799)||(y>479)||(y<0))
+  if((x>799)||(y>479))
   {
     TP_restart();
     return;
@@ -700,14 +700,17 @@ TP_restart();
 
 
 
-unsigned int time_coordinate[14][4]={
-{84,5,92,20},{92,5,100,20},{100,5,108,20},{108,5,116,20},
+unsigned int time_coordinate[14][4]=
+{
+{84,5,92,20},{92,5,100,20},
+{100,5,108,20},{108,5,116,20},
 {124,5,132,20},{132,5,140,20},
 {148,5,156,20},{156,5,164,20},
 {172,5,180,20},{180,5,188,20},
 {196,5,204,20},{204,5,212,20},
 {220,5,228,20},{228,5,235,20},
 };
+
 unsigned int action_tp[5][4]={
 {130,20,190,80},{60,90,120,150},{130,90,190,150},{200,90,260,150},{130,160,190,220}
 };//up,left,ok,right,down
@@ -718,98 +721,3 @@ void draw_time_manger(void)
 {
   ;
 }
-
-#if 0
-void time_manager(int x,int y)
-{
-//  printf("\r\nx=%d,y=%d",x,y);
-  unsigned char n;
-  for(n=0;n<5;n++)
-  {
-    if(x>action_tp[n][0]&&x<action_tp[n][2]&&y>action_tp[n][1]&&y<action_tp[n][3])
-    {
-      key_flag=n;
-    }
-  }
-//  printf("\r\n%d",n);
-  switch(key_flag)
-  {
-  case up:
-    {
-//      printf("\r\nup");
-      if((time_buffer[time_bit[time_set_flag]]=='0')||(time_buffer[time_bit[time_set_flag]]>'0')&&(time_buffer[time_bit[time_set_flag]]<'9'))
-      {
-        time_buffer[time_bit[time_set_flag]]+=1;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      else
-      {
-        time_buffer[time_bit[time_set_flag]]='0';
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      break;
-    }
-  case left:
-    {
-//      printf("\r\nleft");
-      if(time_set_flag>0&&time_set_flag<=13)
-      {
-        time_set_flag-=1;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      else
-      {
-        time_set_flag=0;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      break;
-    }
-  case ok:
-    {
-//      printf("\r\nok");
-      LCD_Set_Time(time_buffer);
-      ili9320_writestr(84,5,time_buffer,Cyan,Black);
-      break;
-    }
-  case right:
-    {
-//      printf("\r\nright");
-      if((time_set_flag==0)||(time_set_flag>0)&&(time_set_flag<13))
-      {
-        time_set_flag+=1;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      else
-      {
-        time_set_flag=0;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      break;
-    }
-  case down:
-    {
-//      printf("\r\ndown");
-      if((time_buffer[time_bit[time_set_flag]]>'0')&&(time_buffer[time_bit[time_set_flag]]<='9'))
-      {
-        time_buffer[time_bit[time_set_flag]]-=1;
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      else
-      {
-        time_buffer[time_bit[time_set_flag]]='0';
-        ili9320_writestr(84,5,time_buffer,Cyan,Black);
-        GUI_Rectangle(time_coordinate[time_set_flag][0],time_coordinate[time_set_flag][1],time_coordinate[time_set_flag][2],time_coordinate[time_set_flag][3],Red,0);
-      }
-      break;
-    }
-  default:break;
-  }
-}
-#endif
