@@ -31,7 +31,7 @@
 #include "RTC_Time.h"
 #include <string.h> 
 #include "commonality.h"
-
+#include"time_manage.h"
 
 
 
@@ -168,9 +168,11 @@ int main(void)
  ADC_V_DMA_Config();
  ADC_R_Config();
  ADC_V_Config();
-  PowerA_EN();
+  PowerA_DIS();
   CD4067_EN();
   delay(0xffff);
+  sys_flag=set_time;
+//  draw_time_manager();
   while (1)
   {
     
@@ -188,7 +190,7 @@ int main(void)
     while(sys_flag==set_time)
     {
       TP_stop();
-      draw_time_manger();
+      draw_time_manager();
       TP_restart();
       while(sys_flag==set_time);
     }

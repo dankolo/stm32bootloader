@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include "RTC_Time.h"
 #include "fatfs.h"
-
-
+#include "stm3210e_eval_lcd.h"
+#include"time_manage.h"
 
 
 #define CD4067_RCC               RCC_APB2Periph_GPIOD 
@@ -110,8 +110,6 @@ void schedule(uint16_t x,uint16_t y);
 
 
 void draw_choosemodel(void);
-void draw_time_manger(void);
-void time_manager(int x,int y);
 
 
 #endif

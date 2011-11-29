@@ -88,8 +88,8 @@ void RCC_Configuration(void)
   */
 void NVIC_Configuration(void)
 {
-//  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
-  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
+  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
+//  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
 //  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0xF000);
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   
@@ -148,7 +148,7 @@ void TIM2_Config(void)
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   
   /* TIM2 configuration */
-  TIM_TimeBaseStructure.TIM_Period = 24000-1;          
+  TIM_TimeBaseStructure.TIM_Period = 12000-1;          
   TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
   TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
@@ -169,7 +169,7 @@ void TIM3_Config(void)
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   
   /* TIM3 configuration */
-  TIM_TimeBaseStructure.TIM_Period = 2000-1;          
+  TIM_TimeBaseStructure.TIM_Period = 1000-1;          
   TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
   TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
@@ -549,16 +549,8 @@ void Set_Scan_Channel(unsigned char x)
 
 void schedule(uint16_t x,uint16_t y)
 {
-  TP_stop();
   
   
-  
-  
-  if((x>799)||(y>479))
-  {
-    TP_restart();
-    return;
-  }
   
   
   if(sys_flag==choose_model)
@@ -574,43 +566,7 @@ void schedule(uint16_t x,uint16_t y)
       TP_restart();
       return;
     }
-    if((x<80)&&(y>48)&&(y<96))
-    {
-
-      sys_flag=TKS14A_I;
-      TP_restart();
-      return;
-    }
-    if((x<80)&&(y>96)&&(y<144))
-    {
-      sys_flag=TKS14A_II;
-      TP_restart();
-      return;
-    }
-    if((x<80)&&(y>144)&&(y<192))
-    {
-      sys_flag=TKS15A_I;
-      TP_restart();
-      return;
-    }
-    if((x<80)&&(y>192&&y<239))
-    {
-      sys_flag=TKS15A_II;
-      TP_restart();
-      return;
-    }
-    //µÚ¶þÁÐ
-    if((x>80)&&(x< 200)&&(y<48))
-    {
-      TP_restart();
-      return;
-    }
-    if((x>80)&&(x<200)&&(y>48)&&(y<96))
-    {
-      sys_flag=TKS231_1_II;
-      TP_restart();
-      return;
-    }
+   
 
     if((x>200&&x<319)&&(y>144)&&(y<192))
     {
@@ -619,78 +575,38 @@ void schedule(uint16_t x,uint16_t y)
       return;
     }
   }
+  
+  
 /***********************************************************/
-  if(sys_flag==TKS14A_I)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-  }
-/************************************************************/
-  if(sys_flag==TKS14A_II)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-    measure_TKS14A_II(x,y);
-  }
-/************************************************************/
-  if(sys_flag==TKS15A_I)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-    measure_TKS15A_I(x,y);
-  }
-/************************************************************/
-  if(sys_flag==TKS15A_II)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-    measure_TKS15A_II(x,y);
-  }
-  if(sys_flag==TKS231_1_II)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-    measure_TKS231_1_II(x,y);
-  }
+
+
   if(sys_flag==set_time)
   {
+    time_manager(x,y);
+  }
+  
+  
+  
+    if(sys_flag==TKS14A_I)
+  {
     if(x>280&&x<320&&y>200&&y<239)
     {
       sys_flag=choose_model;
+      CD4067_DIS();
       TP_restart();
       return;
     }
-    time_manager(x,y);
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-
-
-TP_restart();
 }
 
 
@@ -699,25 +615,3 @@ TP_restart();
 
 
 
-
-unsigned int time_coordinate[14][4]=
-{
-{84,5,92,20},{92,5,100,20},
-{100,5,108,20},{108,5,116,20},
-{124,5,132,20},{132,5,140,20},
-{148,5,156,20},{156,5,164,20},
-{172,5,180,20},{180,5,188,20},
-{196,5,204,20},{204,5,212,20},
-{220,5,228,20},{228,5,235,20},
-};
-
-unsigned int action_tp[5][4]={
-{130,20,190,80},{60,90,120,150},{130,90,190,150},{200,90,260,150},{130,160,190,220}
-};//up,left,ok,right,down
-enum action{up,left,ok,right,down};
-unsigned char time_set_flag=0,key_flag=0xff;
-unsigned char time_bit[14]={0,1,2,3,5,6,8,9,11,12,14,15,17,18};
-void draw_time_manger(void)
-{
-  ;
-}

@@ -736,13 +736,13 @@ void LCD_str(u16 x, u16 y, unsigned char *str, uint8_t fon, u16 Color, u16 bkCol
 
 /*********************************************************************************
 //wdx:    1 Wingdings, 2 Wingdings2, 3 Wingdings3;
-//wide:   0 40*48, 1 80*96
+//wide:   0 40*48, 1 96*128
 *********************************************************************************/
 
 void LCD_WD(u16 x,u16 y,u8 p,uint8_t wdx,uint8_t wide, u16 charColor,u16 bkColor)
 {
   uint32_t index;//地址偏移量  
-  uint16_t i,n,end_x;
+  uint16_t i,m,n,end_x;
   FATFS fs;
   FIL	file;
   FRESULT res;
@@ -789,10 +789,10 @@ void LCD_WD(u16 x,u16 y,u8 p,uint8_t wdx,uint8_t wide, u16 charColor,u16 bkColor
       }
     }
   }
-  else
+  if(wide==1)
   {
-    index = p*960;
-    end_x=x+79;
+    index = p*1536;
+    end_x=x+95;
     switch(wdx)
     {
     case 1:
@@ -806,48 +806,35 @@ void LCD_WD(u16 x,u16 y,u8 p,uint8_t wdx,uint8_t wide, u16 charColor,u16 bkColor
       break;
     default:break;
     }
-    res = f_lseek (&file, index);//设置偏移量
-    res = f_read(&file,buffer,480,&re);//读出480字节字模数据
-    LCD_WriteReg(CUR_X,x); // .............. CUR_x
-    LCD_WriteReg(CUR_Y,y); // .............. CUR_y
-    LCD_WriteReg(END_X,end_x); // ............ END_X
-    LCD_WriteRAM_Prepare(); // .............. PIXELS
-    for(n=0;n<480;n++)
-    {
-      for (i = 0; i < 8; i++)
+    index-=384;
+        y-=32;
+    
+      for(m=0;m<4;m++)
       {
-        if (buffer[n] & (0x01<<i))
+        index+=384;
+        y+=32;
+        res = f_lseek (&file, index);//设置偏移量
+        res = f_read(&file,buffer,384,&re);//读出480字节字模数据
+        LCD_WriteReg(CUR_X,x); // .............. CUR_x
+        LCD_WriteReg(CUR_Y,y); // .............. CUR_y
+        LCD_WriteReg(END_X,end_x); // ............ END_X
+        LCD_WriteRAM_Prepare(); // .............. PIXELS
+        for(n=0;n<384;n++)
         {
-          LCD_WritePoint(charColor);//写有效点
-        }
-        else
-        {
-          LCD_WritePoint(bkColor);//写底色
+          for (i = 0; i < 8; i++)
+          {
+            if (buffer[n] & (0x01<<i))
+            {
+              LCD_WritePoint(charColor);//写有效点
+            }
+            else
+            {
+              LCD_WritePoint(bkColor);//写底色
+            }
+          }
         }
       }
-    }
-    index+=480;
-    y+=48;
-    res = f_lseek (&file, index);//设置偏移量
-    res = f_read(&file,buffer,480,&re);//读出480字节字模数据
-    LCD_WriteReg(CUR_X,x); // .............. CUR_x
-    LCD_WriteReg(CUR_Y,y); // .............. CUR_y
-    LCD_WriteReg(END_X,end_x); // ............ END_X
-    LCD_WriteRAM_Prepare(); // .............. PIXELS
-    for(n=0;n<480;n++)
-    {
-      for (i = 0; i < 8; i++)
-      {
-        if (buffer[n] & (0x01<<i))
-        {
-          LCD_WritePoint(charColor);//写有效点
-        }
-        else
-        {
-          LCD_WritePoint(bkColor);//写底色
-        }
-      }
-    }
+    
   }
   f_close(&file);
   f_mount(0,NULL);
