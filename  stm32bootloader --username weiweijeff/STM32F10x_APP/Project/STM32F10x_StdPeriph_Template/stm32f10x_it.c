@@ -200,7 +200,7 @@ void TIM2_IRQHandler(void)
 
 void TIM3_IRQHandler(void)
 {
-  TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+  
   
   if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)==0)
   {
@@ -250,6 +250,7 @@ void TIM3_IRQHandler(void)
      {
        schedule(x,y);
      }
+     TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
      return;
     }
   }
