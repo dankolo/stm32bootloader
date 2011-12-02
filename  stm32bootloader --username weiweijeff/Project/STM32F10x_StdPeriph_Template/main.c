@@ -423,7 +423,7 @@ void TIM2_Config(void)
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   
   /* TIM2 configuration */
-  TIM_TimeBaseStructure.TIM_Period = 24000-1;          
+  TIM_TimeBaseStructure.TIM_Period = 12000-1;          
   TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
   TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
@@ -444,7 +444,7 @@ void TIM3_Config(void)
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   
   /* TIM3 configuration */
-  TIM_TimeBaseStructure.TIM_Period = 2000-1;          
+  TIM_TimeBaseStructure.TIM_Period = 1000-1;          
   TIM_TimeBaseStructure.TIM_Prescaler = ((SystemCoreClock/120000) - 1);
   TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  

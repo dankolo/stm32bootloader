@@ -436,12 +436,6 @@ void CD4067_GPIO_Config(void)
 
 
 
-void draw_choosemodel(void)
-{
-  ;
-}
-
-
 unsigned char *get_time_now()
 {
 
@@ -550,31 +544,11 @@ void Set_Scan_Channel(unsigned char x)
 void schedule(uint16_t x,uint16_t y)
 {
   
-  
-  
-  
-  if(sys_flag==choose_model)
+  if(sys_flag==main_panel)
   {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      TP_restart();
-      return;
-    }
-    //µÚÒ»ÁÐ
-    if((x<80)&&(y<48))
-    {
-      TP_restart();
-      return;
-    }
-   
-
-    if((x>200&&x<319)&&(y>144)&&(y<192))
-    {
-      sys_flag=set_time;
-      TP_restart();
-      return;
-    }
+    main_panel_manager(x,y);
   }
+  
   
   
 /***********************************************************/
@@ -585,20 +559,7 @@ void schedule(uint16_t x,uint16_t y)
     time_manager(x,y);
   }
   
-  
-  
-    if(sys_flag==TKS14A_I)
-  {
-    if(x>280&&x<320&&y>200&&y<239)
-    {
-      sys_flag=choose_model;
-      CD4067_DIS();
-      TP_restart();
-      return;
-    }
-  }
-  
-  
+ 
   
   
   

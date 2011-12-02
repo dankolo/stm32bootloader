@@ -31,8 +31,6 @@
 #include "RTC_Time.h"
 #include <string.h> 
 #include "commonality.h"
-#include"time_manage.h"
-
 
 
 
@@ -109,7 +107,7 @@ int main(void)
   Touch_Config();
   TIM2_Config();
   TIM3_Config();
-  LCD_Clear(LCD_COLOR_CYAN);
+  LCD_Clear(LCD_COLOR_BLACK);
   PowerA_GPIO_Config();
   CD4067_GPIO_Config();
   ADC_GPIO_Config();
@@ -171,19 +169,17 @@ int main(void)
   PowerA_DIS();
   CD4067_EN();
   delay(0xffff);
-  sys_flag=set_time;
-//  draw_time_manager();
   while (1)
   {
     
   
   
-  while(sys_flag==choose_model)
+  while(sys_flag==main_panel)
     {
-      draw_choosemodel();
-      while(sys_flag==choose_model)
+      draw_main_panel();
+      while(sys_flag==main_panel)
       {
-        LCD_str(200,460,get_time_now(),24,LCD_COLOR_CYAN,LCD_COLOR_BLACK);
+        LCD_str(534,0,get_time_now(),24,LCD_COLOR_CYAN,LCD_COLOR_BLACK);
         delay(0xffff);
       }
     }
@@ -194,39 +190,7 @@ int main(void)
       TP_restart();
       while(sys_flag==set_time);
     }
-    while(sys_flag==TKS14A_I)
-    {
-       TP_stop();
-       TP_restart();
-       while(sys_flag==TKS14A_I)
-       {
-       }
-    }
-    while(sys_flag==TKS14A_II)
-    {
-       TP_stop();
-       TP_restart();
-      while(sys_flag==TKS14A_II);
-    }
-    while(sys_flag==TKS15A_I)
-    {
-       TP_stop();
-       TP_restart();
-      while(sys_flag==TKS15A_I);
-    }
-    while(sys_flag==TKS15A_II)
-    {
-       TP_stop();
-       TP_restart();
-      while(sys_flag==TKS15A_II);
-    }
-    while(sys_flag==TKS231_1_II)
-    {
-       TP_stop();
-       TP_restart();
-      while(sys_flag==TKS231_1_II);
-    }
-  
+    
   }
 }
 
