@@ -6,6 +6,7 @@
 #include "fatfs.h"
 #include "stm3210e_eval_lcd.h"
 #include"time_manage.h"
+#include "main_panel.h"
 
 
 #define CD4067_RCC               RCC_APB2Periph_GPIOD 
@@ -64,8 +65,8 @@ extern uint8_t     tp_flag;
 extern uint16_t    tp_x[5],tp_y[5],x,y;
 extern uint8_t     sys_flag;
 
-enum GUI_pages{choose_model,set_time,SS4G_TKS9,TKS14A_I,TKS14A_II,TKS15A_I,TKS15A_II,
-SS7E_QS1_3,TKS231_1_II,TKS31,TKS32};
+enum system_flag{main_panel,set_ref,set_time,tks640k1,tks14a};
+
 struct contact  // 触点数据结构
 {
   unsigned int point_coordinate[2];//打点圆心坐标值
@@ -108,8 +109,6 @@ void schedule(uint16_t x,uint16_t y);
 
 
 
-
-void draw_choosemodel(void);
 
 
 #endif

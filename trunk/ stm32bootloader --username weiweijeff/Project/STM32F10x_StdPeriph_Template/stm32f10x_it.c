@@ -282,7 +282,7 @@ void TIM3_IRQHandler(void)
      if((x<800)&&(y<479))
      {
        
-       LCD_DrawFullCircle(x,y,3,0xaaaa,1);
+//       LCD_DrawFullCircle(x,y,3,0xaaaa,1);
        if(x>24&&x<320&&y>320&&y<424)
        {
          APP_PROGRAM_FLAG=1;

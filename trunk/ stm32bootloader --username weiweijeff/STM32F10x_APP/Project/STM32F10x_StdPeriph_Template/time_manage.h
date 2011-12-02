@@ -7,16 +7,12 @@
 
 
 
-
+#include "commonality.h"
 
 void draw_time_manager(void);
 
 
-
-
-
-
-
+void time_manager(u16 x,u16 y);
 
 
 

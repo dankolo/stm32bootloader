@@ -1,7 +1,6 @@
 
 
 #include"time_manage.h"
-#include "commonality.h"
 
 
 unsigned char time_set_flag=0;
@@ -77,7 +76,7 @@ void time_manager(u16 x,u16 y)
       if(t==10)
       {
         LCD_Set_Time(time_buffer);
-        sys_flag=choose_model;
+        sys_flag=main_panel;
         LCD_Clear(LCD_COLOR_BLACK);
       }
       if(t==11)
