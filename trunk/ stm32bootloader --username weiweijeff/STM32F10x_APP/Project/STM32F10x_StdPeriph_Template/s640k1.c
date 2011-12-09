@@ -1,6 +1,48 @@
 #include "s640k1.h"
 
 
+struct level S640K1_levels[18];
+u16 S640K1_TP[21][4]=
+{
+  {128,64,160,96},{160,64,192,96},{192,64,224,96},{224,64,256,96},{256,64,288,96},{288,64,320,96},{320,64,352,96},
+  {352,64,384,96},
+  {384,64,416,96},{416,64,448,96},{448,64,480,96},{480,64,512,96},{512,64,544,96},{544,64,576,96},{576,64,608,96},
+  {128,224,160,256},{160,224,192,256},{192,224,224,256},{224,224,256,256},
+  {670,336,799,400},{670,416,799,479}
+};
+
+u16 S640K1_POINTS[43][2]=
+{
+  {144,272},          {144,336},{144,368},                    {144,464},
+  
+  {208,272},{208,304},          {208,368},          {208,432},
+  {240,272},          {240,336},          {240,400},{240,432},
+  /*********************************************************************/
+            {144,144},{144,176},
+            {176,144},{176,176},
+            {208,144},{208,176},
+            {240,144},{240,176},
+            {272,144},{272,176},
+            {304,144},{304,176},
+            {336,144},{336,176},
+  {368,112},
+            {400,144},{400,176},{400,208},
+            {432,144},{432,176},{432,208},
+            {464,144},{464,176},
+            {496,144},{496,176},
+            {528,144},{528,176},
+            {560,144},{560,176},
+            {592,144},{592,176}
+};
+
+u16 S640K1_value_disp[11][2]=
+{
+  {735,96},{735,128},{735,160},{735,192},
+  {384,256},{384,288},{384,320},{384,352},{384,384},{384,416},{384,447}
+};
+
+
+
 void draw_s640k1(void)
 {
   LCD_Clear(LCD_COLOR_BLACK);
@@ -76,4 +118,479 @@ void draw_s640k1(void)
   LCD_DrawUniLine( 608, 144,  608,  176,  LCD_COLOR_RED);
   LCD_DrawUniLine( 128, 144,  128,  272,  LCD_COLOR_RED);
   
+  for(n=0;n<43;n++)
+  {
+    LCD_DrawFullCircle( S640K1_POINTS[n][0],  S640K1_POINTS[n][1],  5,  LCD_COLOR_BLUE2,  1);
+  }
+  for(n=0;n<21;n++)
+  {
+    LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLUE2, 0);
+  }
+  LCD_str(671,352,"保存结果",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+  LCD_str(671,432,"退出实验",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
+  LCD_str(671,256,"级位电压",32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  
+}
+
+
+
+void S640K1_INIT(void)
+{
+  
+                     S640K1_levels[0].contacts[0].flag_last=0;
+                     S640K1_levels[0].contacts[0].channel=7;
+                     S640K1_levels[0].contacts[0].div=0.6667;
+                     S640K1_levels[0].contacts[0].point_coordinate[0]=S640K1_POINTS[12][0];
+                     S640K1_levels[0].contacts[0].point_coordinate[1]=S640K1_POINTS[12][1];
+                     S640K1_levels[0].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[0].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[0].contacts[1].flag_last=1;
+                     S640K1_levels[0].contacts[1].channel=7;
+                     S640K1_levels[0].contacts[1].div=0.6667;
+                     S640K1_levels[0].contacts[1].point_coordinate[0]=S640K1_POINTS[13][0];
+                     S640K1_levels[0].contacts[1].point_coordinate[1]=S640K1_POINTS[13][1];
+                     S640K1_levels[0].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[0].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+                     
+                     
+                     
+                     S640K1_levels[1].contacts[0].flag_last=0;
+                     S640K1_levels[1].contacts[0].channel=7;
+                     S640K1_levels[1].contacts[0].div=0.6667;
+                     S640K1_levels[1].contacts[0].point_coordinate[0]=S640K1_POINTS[14][0];
+                     S640K1_levels[1].contacts[0].point_coordinate[1]=S640K1_POINTS[14][1];
+                     S640K1_levels[1].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[1].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[1].contacts[1].flag_last=1;
+                     S640K1_levels[1].contacts[1].channel=7;
+                     S640K1_levels[1].contacts[1].div=0.6667;
+                     S640K1_levels[1].contacts[1].point_coordinate[0]=S640K1_POINTS[15][0];
+                     S640K1_levels[1].contacts[1].point_coordinate[1]=S640K1_POINTS[15][1];
+                     S640K1_levels[1].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[1].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+
+                     S640K1_levels[2].contacts[0].flag_last=0;
+                     S640K1_levels[2].contacts[0].channel=7;
+                     S640K1_levels[2].contacts[0].div=0.6667;
+                     S640K1_levels[2].contacts[0].point_coordinate[0]=S640K1_POINTS[16][0];
+                     S640K1_levels[2].contacts[0].point_coordinate[1]=S640K1_POINTS[16][1];
+                     S640K1_levels[2].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[2].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[2].contacts[1].flag_last=1;
+                     S640K1_levels[2].contacts[1].channel=7;
+                     S640K1_levels[2].contacts[1].div=0.6667;
+                     S640K1_levels[2].contacts[1].point_coordinate[0]=S640K1_POINTS[17][0];
+                     S640K1_levels[2].contacts[1].point_coordinate[1]=S640K1_POINTS[17][1];
+                     S640K1_levels[2].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[2].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+                     
+                     
+
+                     S640K1_levels[3].contacts[0].flag_last=0;
+                     S640K1_levels[3].contacts[0].channel=7;
+                     S640K1_levels[3].contacts[0].div=0.6667;
+                     S640K1_levels[3].contacts[0].point_coordinate[0]=S640K1_POINTS[18][0];
+                     S640K1_levels[3].contacts[0].point_coordinate[1]=S640K1_POINTS[18][1];
+                     S640K1_levels[3].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[3].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[3].contacts[1].flag_last=1;
+                     S640K1_levels[3].contacts[1].channel=7;
+                     S640K1_levels[3].contacts[1].div=0.6667;
+                     S640K1_levels[3].contacts[1].point_coordinate[0]=S640K1_POINTS[19][0];
+                     S640K1_levels[3].contacts[1].point_coordinate[1]=S640K1_POINTS[19][1];
+                     S640K1_levels[3].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[3].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+
+                     S640K1_levels[4].contacts[0].flag_last=0;
+                     S640K1_levels[4].contacts[0].channel=7;
+                     S640K1_levels[4].contacts[0].div=0.6667;
+                     S640K1_levels[4].contacts[0].point_coordinate[0]=S640K1_POINTS[20][0];
+                     S640K1_levels[4].contacts[0].point_coordinate[1]=S640K1_POINTS[20][1];
+                     S640K1_levels[4].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[4].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[4].contacts[1].flag_last=1;
+                     S640K1_levels[4].contacts[1].channel=7;
+                     S640K1_levels[4].contacts[1].div=0.6667;
+                     S640K1_levels[4].contacts[1].point_coordinate[0]=S640K1_POINTS[21][0];
+                     S640K1_levels[4].contacts[1].point_coordinate[1]=S640K1_POINTS[21][1];
+                     S640K1_levels[4].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[4].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+                     S640K1_levels[5].contacts[0].flag_last=0;
+                     S640K1_levels[5].contacts[0].channel=7;
+                     S640K1_levels[5].contacts[0].div=0.6667;
+                     S640K1_levels[5].contacts[0].point_coordinate[0]=S640K1_POINTS[22][0];
+                     S640K1_levels[5].contacts[0].point_coordinate[1]=S640K1_POINTS[22][1];
+                     S640K1_levels[5].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[5].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[5].contacts[1].flag_last=1;
+                     S640K1_levels[5].contacts[1].channel=7;
+                     S640K1_levels[5].contacts[1].div=0.6667;
+                     S640K1_levels[5].contacts[1].point_coordinate[0]=S640K1_POINTS[23][0];
+                     S640K1_levels[5].contacts[1].point_coordinate[1]=S640K1_POINTS[23][1];
+                     S640K1_levels[5].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[5].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+                     S640K1_levels[6].contacts[0].flag_last=0;
+                     S640K1_levels[6].contacts[0].channel=7;
+                     S640K1_levels[6].contacts[0].div=0.6667;
+                     S640K1_levels[6].contacts[0].point_coordinate[0]=S640K1_POINTS[24][0];
+                     S640K1_levels[6].contacts[0].point_coordinate[1]=S640K1_POINTS[24][1];
+                     S640K1_levels[6].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[6].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[6].contacts[1].flag_last=1;
+                     S640K1_levels[6].contacts[1].channel=7;
+                     S640K1_levels[6].contacts[1].div=0.6667;
+                     S640K1_levels[6].contacts[1].point_coordinate[0]=S640K1_POINTS[25][0];
+                     S640K1_levels[6].contacts[1].point_coordinate[1]=S640K1_POINTS[25][1];
+                     S640K1_levels[6].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[6].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+/**************************************************************************************************/                     
+
+                     S640K1_levels[7].contacts[0].flag_last=1;
+                     S640K1_levels[7].contacts[0].channel=0;
+                     S640K1_levels[7].contacts[0].div=1;
+                     S640K1_levels[7].contacts[0].point_coordinate[0]=S640K1_POINTS[26][0];
+                     S640K1_levels[7].contacts[0].point_coordinate[1]=S640K1_POINTS[26][1];
+                     S640K1_levels[7].contacts[0].value_coordinate[0]=S640K1_value_disp[0][0];
+                     S640K1_levels[7].contacts[0].value_coordinate[1]=S640K1_value_disp[0][1];
+                     
+/**************************************************************************************************/                     
+
+                     
+
+                     S640K1_levels[8].contacts[0].flag_last=0;
+                     S640K1_levels[8].contacts[0].channel=7;
+                     S640K1_levels[8].contacts[0].div=0.6667;
+                     S640K1_levels[8].contacts[0].point_coordinate[0]=S640K1_POINTS[27][0];
+                     S640K1_levels[8].contacts[0].point_coordinate[1]=S640K1_POINTS[27][1];
+                     S640K1_levels[8].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[8].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[8].contacts[1].flag_last=0;
+                     S640K1_levels[8].contacts[1].channel=7;
+                     S640K1_levels[8].contacts[1].div=0.6667;
+                     S640K1_levels[8].contacts[1].point_coordinate[0]=S640K1_POINTS[28][0];
+                     S640K1_levels[8].contacts[1].point_coordinate[1]=S640K1_POINTS[28][1];
+                     S640K1_levels[8].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[8].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     S640K1_levels[8].contacts[2].flag_last=1;
+                     S640K1_levels[8].contacts[2].channel=8;
+                     S640K1_levels[8].contacts[2].div=0.5;
+                     S640K1_levels[8].contacts[2].point_coordinate[0]=S640K1_POINTS[29][0];
+                     S640K1_levels[8].contacts[2].point_coordinate[1]=S640K1_POINTS[29][1];
+                     S640K1_levels[8].contacts[2].value_coordinate[0]=S640K1_value_disp[3][0];
+                     S640K1_levels[8].contacts[2].value_coordinate[1]=S640K1_value_disp[3][1];
+
+                     
+
+                     S640K1_levels[9].contacts[0].flag_last=0;
+                     S640K1_levels[9].contacts[0].channel=7;
+                     S640K1_levels[9].contacts[0].div=0.6667;
+                     S640K1_levels[9].contacts[0].point_coordinate[0]=S640K1_POINTS[30][0];
+                     S640K1_levels[9].contacts[0].point_coordinate[1]=S640K1_POINTS[30][1];
+                     S640K1_levels[9].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[9].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[9].contacts[1].flag_last=0;
+                     S640K1_levels[9].contacts[1].channel=7;
+                     S640K1_levels[9].contacts[1].div=0.6667;
+                     S640K1_levels[9].contacts[1].point_coordinate[0]=S640K1_POINTS[31][0];
+                     S640K1_levels[9].contacts[1].point_coordinate[1]=S640K1_POINTS[31][1];
+                     S640K1_levels[9].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[9].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     S640K1_levels[9].contacts[2].flag_last=1;
+                     S640K1_levels[9].contacts[2].channel=8;
+                     S640K1_levels[9].contacts[2].div=0.5;
+                     S640K1_levels[9].contacts[2].point_coordinate[0]=S640K1_POINTS[32][0];
+                     S640K1_levels[9].contacts[2].point_coordinate[1]=S640K1_POINTS[32][1];
+                     S640K1_levels[9].contacts[2].value_coordinate[0]=S640K1_value_disp[3][0];
+                     S640K1_levels[9].contacts[2].value_coordinate[1]=S640K1_value_disp[3][1];
+
+                    
+
+                     S640K1_levels[10].contacts[0].flag_last=0;
+                     S640K1_levels[10].contacts[0].channel=7;
+                     S640K1_levels[10].contacts[0].div=0.6667;
+                     S640K1_levels[10].contacts[0].point_coordinate[0]=S640K1_POINTS[33][0];
+                     S640K1_levels[10].contacts[0].point_coordinate[1]=S640K1_POINTS[33][1];
+                     S640K1_levels[10].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[10].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[10].contacts[1].flag_last=1;
+                     S640K1_levels[10].contacts[1].channel=7;
+                     S640K1_levels[10].contacts[1].div=0.6667;
+                     S640K1_levels[10].contacts[1].point_coordinate[0]=S640K1_POINTS[34][0];
+                     S640K1_levels[10].contacts[1].point_coordinate[1]=S640K1_POINTS[34][1];
+                     S640K1_levels[10].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[10].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+                     S640K1_levels[11].contacts[0].flag_last=0;
+                     S640K1_levels[11].contacts[0].channel=7;
+                     S640K1_levels[11].contacts[0].div=0.6667;
+                     S640K1_levels[11].contacts[0].point_coordinate[0]=S640K1_POINTS[35][0];
+                     S640K1_levels[11].contacts[0].point_coordinate[1]=S640K1_POINTS[35][1];
+                     S640K1_levels[11].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[11].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[11].contacts[1].flag_last=1;
+                     S640K1_levels[11].contacts[1].channel=7;
+                     S640K1_levels[11].contacts[1].div=0.6667;
+                     S640K1_levels[11].contacts[1].point_coordinate[0]=S640K1_POINTS[36][0];
+                     S640K1_levels[11].contacts[1].point_coordinate[1]=S640K1_POINTS[36][1];
+                     S640K1_levels[11].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[11].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+
+                     S640K1_levels[12].contacts[0].flag_last=0;
+                     S640K1_levels[12].contacts[0].channel=7;
+                     S640K1_levels[12].contacts[0].div=0.6667;
+                     S640K1_levels[12].contacts[0].point_coordinate[0]=S640K1_POINTS[37][0];
+                     S640K1_levels[12].contacts[0].point_coordinate[1]=S640K1_POINTS[37][1];
+                     S640K1_levels[12].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[12].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[12].contacts[1].flag_last=1;
+                     S640K1_levels[12].contacts[1].channel=7;
+                     S640K1_levels[12].contacts[1].div=0.6667;
+                     S640K1_levels[12].contacts[1].point_coordinate[0]=S640K1_POINTS[38][0];
+                     S640K1_levels[12].contacts[1].point_coordinate[1]=S640K1_POINTS[38][1];
+                     S640K1_levels[12].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[12].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+                     
+
+                     S640K1_levels[13].contacts[0].flag_last=0;
+                     S640K1_levels[13].contacts[0].channel=7;
+                     S640K1_levels[13].contacts[0].div=0.6667;
+                     S640K1_levels[13].contacts[0].point_coordinate[0]=S640K1_POINTS[39][0];
+                     S640K1_levels[13].contacts[0].point_coordinate[1]=S640K1_POINTS[39][1];
+                     S640K1_levels[13].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[13].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[13].contacts[1].flag_last=1;
+                     S640K1_levels[13].contacts[1].channel=7;
+                     S640K1_levels[13].contacts[1].div=0.6667;
+                     S640K1_levels[13].contacts[1].point_coordinate[0]=S640K1_POINTS[40][0];
+                     S640K1_levels[13].contacts[1].point_coordinate[1]=S640K1_POINTS[40][1];
+                     S640K1_levels[13].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[13].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];               
+
+                     S640K1_levels[14].contacts[0].flag_last=0;
+                     S640K1_levels[14].contacts[0].channel=7;
+                     S640K1_levels[14].contacts[0].div=0.6667;
+                     S640K1_levels[14].contacts[0].point_coordinate[0]=S640K1_POINTS[41][0];
+                     S640K1_levels[14].contacts[0].point_coordinate[1]=S640K1_POINTS[41][1];
+                     S640K1_levels[14].contacts[0].value_coordinate[0]=S640K1_value_disp[1][0];
+                     S640K1_levels[14].contacts[0].value_coordinate[1]=S640K1_value_disp[1][1];
+
+                     S640K1_levels[14].contacts[1].flag_last=1;
+                     S640K1_levels[14].contacts[1].channel=7;
+                     S640K1_levels[14].contacts[1].div=0.667;
+                     S640K1_levels[14].contacts[1].point_coordinate[0]=S640K1_POINTS[42][0];
+                     S640K1_levels[14].contacts[1].point_coordinate[1]=S640K1_POINTS[42][1];
+                     S640K1_levels[14].contacts[1].value_coordinate[0]=S640K1_value_disp[2][0];
+                     S640K1_levels[14].contacts[1].value_coordinate[1]=S640K1_value_disp[2][1];
+
+
+/*****************************************************************************************************/     
+                     
+                     
+                     
+
+                     
+
+                     S640K1_levels[15].contacts[0].flag_last=0;
+                     S640K1_levels[15].contacts[0].channel=7;
+                     S640K1_levels[15].contacts[0].div=0.6667;
+                     S640K1_levels[15].contacts[0].point_coordinate[0]=S640K1_POINTS[0][0];
+                     S640K1_levels[15].contacts[0].point_coordinate[1]=S640K1_POINTS[0][1];
+                     S640K1_levels[15].contacts[0].value_coordinate[0]=S640K1_value_disp[4][0];
+                     S640K1_levels[15].contacts[0].value_coordinate[1]=S640K1_value_disp[4][1];
+
+                     S640K1_levels[15].contacts[1].flag_last=0;
+                     S640K1_levels[15].contacts[1].channel=5;
+                     S640K1_levels[15].contacts[1].div=1;
+                     S640K1_levels[15].contacts[1].point_coordinate[0]=S640K1_POINTS[1][0];
+                     S640K1_levels[15].contacts[1].point_coordinate[1]=S640K1_POINTS[1][1];
+                     S640K1_levels[15].contacts[1].value_coordinate[0]=S640K1_value_disp[6][0];
+                     S640K1_levels[15].contacts[1].value_coordinate[1]=S640K1_value_disp[6][1];
+
+                     S640K1_levels[15].contacts[2].flag_last=0;
+                     S640K1_levels[15].contacts[2].channel=4;
+                     S640K1_levels[15].contacts[2].div=1;
+                     S640K1_levels[15].contacts[2].point_coordinate[0]=S640K1_POINTS[2][0];
+                     S640K1_levels[15].contacts[2].point_coordinate[1]=S640K1_POINTS[2][1];
+                     S640K1_levels[15].contacts[2].value_coordinate[0]=S640K1_value_disp[7][0];
+                     S640K1_levels[15].contacts[2].value_coordinate[1]=S640K1_value_disp[7][1];
+
+                     S640K1_levels[15].contacts[3].flag_last=1;
+                     S640K1_levels[15].contacts[3].channel=1;
+                     S640K1_levels[15].contacts[3].div=1;
+                     S640K1_levels[15].contacts[3].point_coordinate[0]=S640K1_POINTS[3][0];
+                     S640K1_levels[15].contacts[3].point_coordinate[1]=S640K1_POINTS[3][1];
+                     S640K1_levels[15].contacts[3].value_coordinate[0]=S640K1_value_disp[10][0];
+                     S640K1_levels[15].contacts[3].value_coordinate[1]=S640K1_value_disp[10][1];
+
+                     S640K1_levels[16].contacts[0].flag_last=0;
+                     S640K1_levels[16].contacts[0].channel=7;
+                     S640K1_levels[16].contacts[0].div=0.6667;
+                     S640K1_levels[16].contacts[0].point_coordinate[0]=S640K1_POINTS[4][0];
+                     S640K1_levels[16].contacts[0].point_coordinate[1]=S640K1_POINTS[4][1];
+                     S640K1_levels[16].contacts[0].value_coordinate[0]=S640K1_value_disp[4][0];
+                     S640K1_levels[16].contacts[0].value_coordinate[1]=S640K1_value_disp[4][1];
+
+                     S640K1_levels[16].contacts[1].flag_last=0;
+                     S640K1_levels[16].contacts[1].channel=6;
+                     S640K1_levels[16].contacts[1].div=1;
+                     S640K1_levels[16].contacts[1].point_coordinate[0]=S640K1_POINTS[5][0];
+                     S640K1_levels[16].contacts[1].point_coordinate[1]=S640K1_POINTS[5][1];
+                     S640K1_levels[16].contacts[1].value_coordinate[0]=S640K1_value_disp[5][0];
+                     S640K1_levels[16].contacts[1].value_coordinate[1]=S640K1_value_disp[5][1];
+
+                     S640K1_levels[16].contacts[2].flag_last=0;
+                     S640K1_levels[16].contacts[2].channel=4;
+                     S640K1_levels[16].contacts[2].div=1;
+                     S640K1_levels[16].contacts[2].point_coordinate[0]=S640K1_POINTS[6][0];
+                     S640K1_levels[16].contacts[2].point_coordinate[1]=S640K1_POINTS[6][1];
+                     S640K1_levels[16].contacts[2].value_coordinate[0]=S640K1_value_disp[7][0];
+                     S640K1_levels[16].contacts[2].value_coordinate[1]=S640K1_value_disp[7][1];
+
+                     S640K1_levels[16].contacts[3].flag_last=1;
+                     S640K1_levels[16].contacts[3].channel=2;
+                     S640K1_levels[16].contacts[3].div=1;
+                     S640K1_levels[16].contacts[3].point_coordinate[0]=S640K1_POINTS[7][0];
+                     S640K1_levels[16].contacts[3].point_coordinate[1]=S640K1_POINTS[7][1];
+                     S640K1_levels[16].contacts[3].value_coordinate[0]=S640K1_value_disp[9][0];
+                     S640K1_levels[16].contacts[3].value_coordinate[1]=S640K1_value_disp[9][1];
+                     
+                     
+                     S640K1_levels[17].contacts[0].flag_last=0;
+                     S640K1_levels[17].contacts[0].channel=7;
+                     S640K1_levels[17].contacts[0].div=0.6667;
+                     S640K1_levels[17].contacts[0].point_coordinate[0]=S640K1_POINTS[8][0];
+                     S640K1_levels[17].contacts[0].point_coordinate[1]=S640K1_POINTS[8][1];
+                     S640K1_levels[17].contacts[0].value_coordinate[0]=S640K1_value_disp[4][0];
+                     S640K1_levels[17].contacts[0].value_coordinate[1]=S640K1_value_disp[4][1];
+
+                     S640K1_levels[17].contacts[1].flag_last=0;
+                     S640K1_levels[17].contacts[1].channel=5;
+                     S640K1_levels[17].contacts[1].div=1;
+                     S640K1_levels[17].contacts[1].point_coordinate[0]=S640K1_POINTS[9][0];
+                     S640K1_levels[17].contacts[1].point_coordinate[1]=S640K1_POINTS[9][1];
+                     S640K1_levels[17].contacts[1].value_coordinate[0]=S640K1_value_disp[6][0];
+                     S640K1_levels[17].contacts[1].value_coordinate[1]=S640K1_value_disp[6][1];
+
+                     S640K1_levels[17].contacts[2].flag_last=0;
+                     S640K1_levels[17].contacts[2].channel=3;
+                     S640K1_levels[17].contacts[2].div=1;
+                     S640K1_levels[17].contacts[2].point_coordinate[0]=S640K1_POINTS[10][0];
+                     S640K1_levels[17].contacts[2].point_coordinate[1]=S640K1_POINTS[10][1];
+                     S640K1_levels[17].contacts[2].value_coordinate[0]=S640K1_value_disp[8][0];
+                     S640K1_levels[17].contacts[2].value_coordinate[1]=S640K1_value_disp[8][1];
+
+                     S640K1_levels[17].contacts[3].flag_last=1;
+                     S640K1_levels[17].contacts[3].channel=2;
+                     S640K1_levels[17].contacts[3].div=1;
+                     S640K1_levels[17].contacts[3].point_coordinate[0]=S640K1_POINTS[11][0];
+                     S640K1_levels[17].contacts[3].point_coordinate[1]=S640K1_POINTS[11][1];
+                     S640K1_levels[17].contacts[3].value_coordinate[0]=S640K1_value_disp[9][0];
+                     S640K1_levels[17].contacts[3].value_coordinate[1]=S640K1_value_disp[9][1];
+
+}
+
+
+
+void S640K1_TP_respond(int x,int y)
+{
+  unsigned char n;
+  for(n=0;n<29;n++)
+  {
+    if(x>S640K1_TP[n][0]&&x<S640K1_TP[n][2]&&y>S640K1_TP[n][1]&&y<S640K1_TP[n][3])
+    {
+      if(n==19)//保存
+      {
+        sys_flag=main_panel;
+        return;
+      }
+      else if(n==20)//（退出）
+      {
+        sys_flag=main_panel;
+        return;
+      }
+      else if(n==16)
+      {
+        ;
+      }
+      else 
+      {        
+        LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLACK, 0);
+        S640K1_measure_levels(n);
+        LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLUE2, 0);
+      } 
+    }
+  }
+}
+
+void S640K1_measure_levels(unsigned char n)
+{
+  unsigned char i=0,j=0,*v;
+  u16  *p,temp=0;
+  if((n==17)||(n==18))
+  {
+    n-=1;
+  }
+  while(1)
+  {
+    
+        Set_Scan_Channel(S640K1_levels[n].contacts[i].channel);
+        delay(0xfff);
+        p=Get_ADC_R_Value();
+        temp=(u16)((*p)*(S640K1_levels[n].contacts[i].div));
+        S640K1_levels[n].contacts[i].R[0]=temp/1000+'0';
+        S640K1_levels[n].contacts[i].R[1]=(temp%1000)/100+'0';
+        S640K1_levels[n].contacts[i].R[2]=(temp%100)/10+'0';
+        S640K1_levels[n].contacts[i].R[3]=temp%10+'0';
+        S640K1_levels[n].contacts[i].R[4]='\0'; 
+        if(S640K1_levels[n].contacts[i].R[0]=='0')
+        {
+          LCD_DrawFullCircle(S640K1_levels[n].contacts[i].point_coordinate[0],S640K1_levels[n].contacts[i].point_coordinate[1],5,LCD_COLOR_GREEN,0x01);
+        }
+        else
+        {
+          LCD_DrawFullCircle(S640K1_levels[n].contacts[i].point_coordinate[0],S640K1_levels[n].contacts[i].point_coordinate[1],5,LCD_COLOR_RED,0x01);
+        }
+        LCD_str(S640K1_levels[n].contacts[i].value_coordinate[0], S640K1_levels[n].contacts[i].value_coordinate[1],S640K1_levels[n].contacts[i].R,32,LCD_COLOR_BLUE2, LCD_COLOR_BLACK);
+      
+      if(S640K1_levels[n].contacts[i].flag_last==1)
+      {
+        v=Get_ADC_V_Value();
+        for(j=0;j<5;j++)
+        {
+          S640K1_levels[n].level_V[j]=*(v+j);
+        }
+        LCD_str(671,304,S640K1_levels[n].level_V,32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+        break;
+      }
+      i++;
+      
+  }
 }

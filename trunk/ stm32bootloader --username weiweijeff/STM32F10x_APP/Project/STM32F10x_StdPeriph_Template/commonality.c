@@ -5,8 +5,9 @@
 struct tm time_now;
 unsigned char time_buffer[20]="2011-11-07 09:17:10";
 unsigned char Scan_Channels[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};//扫描通道
-unsigned char ADC_R_Value[6];
-unsigned char ADC_V_Value[6];
+unsigned char ADC_R_Value[5];
+unsigned char ADC_V_Value[5];
+u16 R=0;
 u16 ADCConvertedValue_R[ADC_R_DMA_BufferSize];
 u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 
@@ -14,7 +15,7 @@ u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 uint8_t     tp_flag=0;
 uint16_t    tp_x[5],tp_y[5],x,y;
 uint8_t     sys_flag=0;
-
+uint16_t    ref=1234;
 
 
 
@@ -164,7 +165,7 @@ void TIM2_Config(void)
 
 void TIM3_Config(void)
 {
-  /* TIM2 clock enable */
+  /* TIM3 clock enable */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   
@@ -205,11 +206,11 @@ void  delay(u32 t)
 
 
 
-unsigned char *Get_ADC_R_Value()
+u16 *Get_ADC_R_Value()
 {
 
   u16 j=0,i=0,temp=0;
-  u32 k=0,n=0;
+  u32 n=0;
   for(j=0;j<=ADC_R_DMA_BufferSize;j+=1)
   {
     for (i=0;i<ADC_R_DMA_BufferSize-j;i+=1)
@@ -226,15 +227,12 @@ unsigned char *Get_ADC_R_Value()
   {
     n+=ADCConvertedValue_R[i];
   }
-  k= ((n*3277)>>17);
-  n=0;
-  ADC_R_Value[0]=k/1000+'0';
-  ADC_R_Value[1]='.';
-    ADC_R_Value[2]=(k%1000)/100+'0';
-      ADC_R_Value[3]=(k%100)/10+'0';
-        ADC_R_Value[4]=k%10+'0';
-          ADC_R_Value[5]='\0';  
-  return ADC_R_Value;
+  R= (u16)((n*3277)>>17);
+  ADC_R_Value[0]=R/1000+'0';
+  ADC_R_Value[1]=(R%1000)/100+'0';
+  ADC_R_Value[2]=(R%100)/10+'0';
+  ADC_R_Value[3]=R%10+'0';
+  return &R;
 }
 
 
@@ -339,11 +337,10 @@ unsigned char *Get_ADC_V_Value()
   k=((n*3277)>>17);
   n=0;
   ADC_V_Value[0]=k/1000+'0';
-  ADC_V_Value[1]='.';
-    ADC_V_Value[2]=(k%1000)/100+'0';
-      ADC_V_Value[3]=(k%100)/10+'0';
-        ADC_V_Value[4]=k%10+'0';
-          ADC_V_Value[5]='\0';  
+    ADC_V_Value[1]=(k%1000)/100+'0';
+      ADC_V_Value[2]=(k%100)/10+'0';
+        ADC_V_Value[3]=k%10+'0';
+          ADC_V_Value[4]='\0';  
   return ADC_V_Value;
   
 }
@@ -414,12 +411,11 @@ void PowerA_GPIO_Config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(PowerA_RCC, ENABLE);
-  GPIO_InitStructure.GPIO_Pin = PowerA_pin;
+  GPIO_InitStructure.GPIO_Pin = PowerA_Pin;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   //推挽输出
   GPIO_Init(PowerA_PORT,&GPIO_InitStructure);
 }
-
 
 
 void CD4067_GPIO_Config(void)
@@ -552,13 +548,21 @@ void schedule(uint16_t x,uint16_t y)
   
   
 /***********************************************************/
+  if(sys_flag==set_ref)
+  {
+    ref_manager(x,y);
+  }
 
-
+  
   if(sys_flag==set_time)
   {
     time_manager(x,y);
   }
   
+  if(sys_flag==tks640k1)
+  {
+    S640K1_TP_respond(x,y);
+  }
  
   
   

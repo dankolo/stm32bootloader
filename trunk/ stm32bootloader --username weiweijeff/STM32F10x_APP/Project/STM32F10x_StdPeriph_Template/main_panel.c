@@ -40,6 +40,7 @@ void main_panel_manager(u16 x,u16 y)
     if(((y>main_panel_tp[t][1])&&(y<main_panel_tp[t][3]))&&((x>main_panel_tp[t][0])&&(x<main_panel_tp[t][2])))
     {
       sys_flag=main_panel_flag[t];
+      return;
     }
   }
 }
