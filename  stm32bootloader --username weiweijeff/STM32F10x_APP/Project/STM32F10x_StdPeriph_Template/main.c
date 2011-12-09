@@ -100,16 +100,18 @@ char *str;
   u8 chx=0;
 int main(void)
 {
+  
+  sys_flag=main_panel;
   RCC_Configuration();
   RTC_Config();
   NVIC_Configuration();
-  STM3210E_LCD_Init();
   Touch_Config();
+  PowerA_GPIO_Config();
+  CD4067_GPIO_Config(); 
+  STM3210E_LCD_Init();  
   TIM2_Config();
   TIM3_Config();
-  LCD_Clear(LCD_COLOR_BLACK);
-  PowerA_GPIO_Config();
-  CD4067_GPIO_Config();
+  LCD_Clear(LCD_COLOR_CYAN);
   ADC_GPIO_Config();
   
   
@@ -166,14 +168,14 @@ int main(void)
  ADC_V_DMA_Config();
  ADC_R_Config();
  ADC_V_Config();
-  PowerA_DIS();
-  CD4067_EN();
-  delay(0xffff);
-  while (1)
-  {
-    
-  
-  
+// PowerA_DIS();
+ CD4067_EN();
+ PowerA_EN();
+ delay(0xffff); 
+ read_ref(); 
+ 
+ while (1)
+ { 
   while(sys_flag==main_panel)
     {
       draw_main_panel();
@@ -183,6 +185,13 @@ int main(void)
         delay(0xffff);
       }
     }
+   while(sys_flag==set_ref)
+   {
+     TP_stop();
+     draw_ref_manager();
+     TP_restart();
+     while(sys_flag==set_ref);
+   }
     while(sys_flag==set_time)
     {
       TP_stop();
@@ -190,7 +199,15 @@ int main(void)
       TP_restart();
       while(sys_flag==set_time);
     }
-    
+    while(sys_flag==tks640k1)
+    {
+      TP_stop();
+      S640K1_INIT();
+      draw_s640k1();
+      TP_restart();
+      while(sys_flag==tks640k1);
+      
+    }
   }
 }
 
