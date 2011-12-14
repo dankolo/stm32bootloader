@@ -117,13 +117,14 @@ int main(void)
   RTC_Config();
   Mass_Storage_Start();
   NVIC_Configuration();
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE); 
-  STM3210E_LCD_Init();
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);  
+  
+  delay();
   Touch_Config();  
-  delay();   
   TIM2_Config();
   TIM3_Config();  
   stat_file("/","app.bin");  
+  STM3210E_LCD_Init();
   LCD_Clear(LCD_COLOR_BLACK);
   LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 //  LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -133,6 +134,8 @@ int main(void)
   LCD_str(44,340,"升级软件", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_DrawFullRect( 480, 320, 776,  424,  LCD_COLOR_BLUE, 0);
   LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  APP_PROGRAM_FLAG=0x00;
+  Jump_To_App_flag=0x00;
 //  LCD_Set_Time("2011-10-20 10:50:30");
   while (1)
   {
@@ -218,7 +221,7 @@ int main(void)
       APP_PROGRAM_FLAG=0x00;      
       LCD_Clear(LCD_COLOR_BLACK);
       LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-      LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+      //LCD_str(176,150,"软件版本：ver0.1 beta", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
       LCD_str(176,200,"设计单位：武昌南机务段", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
       LCD_str(176,250,"技术支持：weiweijeff@gmail.com", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
       LCD_DrawFullRect( 24, 320, 320,  424,  LCD_COLOR_BLUE, 0);
@@ -491,27 +494,7 @@ void Run_App(void)
 
 
 
-#if 0
-void Set_Channel(unsigned char x)
-{
-  if((Channel[x]>>3)==0)
-  {GPIO_ResetBits(GPIOF,GPIO_Pin_6);}
-  else
-  {GPIO_SetBits(GPIOF,GPIO_Pin_6);}
-    if(((Channel[x]&0x04)>>2)==0)
-  {GPIO_ResetBits(GPIOF,GPIO_Pin_7);}
-  else
-  {GPIO_SetBits(GPIOF,GPIO_Pin_7);}
-    if(((Channel[x]&0x02)>>1)==0)
-  {GPIO_ResetBits(GPIOF,GPIO_Pin_9);}
-  else
-  {GPIO_SetBits(GPIOF,GPIO_Pin_9);}
-   if((Channel[x]&0x01)==0)
-  {GPIO_ResetBits(GPIOF,GPIO_Pin_10);}
-  else
-  {GPIO_SetBits(GPIOF,GPIO_Pin_10);}
-}
-#endif
+
 
 
 

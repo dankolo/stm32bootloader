@@ -708,24 +708,33 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
 void LCD_str(u16 x, u16 y, unsigned char *str, uint8_t fon, u16 Color, u16 bkColor)
 {
   while (*str)
-  {
-    if((x+fon)>799)//一行写满了
-    {
-      x=0;
-      y+=fon;
-    }
-    if((y+fon)>479)//整屏写满了
-    {
-      y=0;
-    }
+  {    
     if (*str < 128)
     {
+      if((x+(fon>>1))>799)//一行写满了
+      {
+        x=0;
+        y+=fon;
+      }
+      if((y+(fon>>1))>479)//整屏写满了
+      {
+        y=0;
+      }
       LCD_ASCII(x,y,*str,fon,Color,bkColor);
       x=x+fon/2;
       str+=1;
     }
     else
     {
+      if((x+fon)>799)//一行写满了
+      {
+        x=0;
+        y+=fon;
+      }
+      if((y+fon)>479)//整屏写满了
+      {
+        y=0;
+      }
       LCD_CN(x,y,str,fon,Color,bkColor);
       x+= fon;
       str+=2;
