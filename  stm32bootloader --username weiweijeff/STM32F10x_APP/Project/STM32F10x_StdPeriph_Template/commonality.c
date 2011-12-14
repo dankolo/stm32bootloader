@@ -89,9 +89,9 @@ void RCC_Configuration(void)
   */
 void NVIC_Configuration(void)
 {
-  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
+//  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0);
 //  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0); 
-//  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0xF000);
+  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0xF000);
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   
   NVIC_InitTypeDef NVIC_InitStructure;
@@ -227,7 +227,7 @@ u16 *Get_ADC_R_Value()
   {
     n+=ADCConvertedValue_R[i];
   }
-  R= (u16)((n*3277)>>17);
+  R= (u16)(((n*3277)>>17)/1.87);
   ADC_R_Value[0]=R/1000+'0';
   ADC_R_Value[1]=(R%1000)/100+'0';
   ADC_R_Value[2]=(R%100)/10+'0';

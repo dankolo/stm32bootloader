@@ -570,7 +570,7 @@ void S640K1_measure_levels(unsigned char n)
         S640K1_levels[n].contacts[i].R[2]=(temp%100)/10+'0';
         S640K1_levels[n].contacts[i].R[3]=temp%10+'0';
         S640K1_levels[n].contacts[i].R[4]='\0'; 
-        if(S640K1_levels[n].contacts[i].R[0]=='0')
+        if(temp<ref)
         {
           LCD_DrawFullCircle(S640K1_levels[n].contacts[i].point_coordinate[0],S640K1_levels[n].contacts[i].point_coordinate[1],5,LCD_COLOR_GREEN,0x01);
         }
@@ -594,3 +594,17 @@ void S640K1_measure_levels(unsigned char n)
       
   }
 }
+
+
+
+
+void sk640k1_scan(void)
+{
+  u8 chn;
+  for(chn=1;chn<8;chn++)
+    ;
+  
+}
+
+
+
