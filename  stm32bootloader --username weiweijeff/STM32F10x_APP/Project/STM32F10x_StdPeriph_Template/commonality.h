@@ -54,8 +54,6 @@
 #define ADC3_stop();             { ADC_DMACmd(ADC3, DISABLE);ADC_SoftwareStartConvCmd(ADC3, DISABLE);}
 #define ADC1_restart();          { ADC_DMACmd(ADC1, ENABLE);ADC_SoftwareStartConvCmd(ADC1, ENABLE);}
 #define ADC3_restart();          { ADC_DMACmd(ADC3, ENABLE);ADC_SoftwareStartConvCmd(ADC3, ENABLE);}
-#define TP_stop();               {TIM_Cmd(TIM2, DISABLE);TIM_Cmd(TIM3, DISABLE);}
-#define TP_restart();            {TIM_Cmd(TIM2, ENABLE);TIM_Cmd(TIM3, ENABLE);}
 
 #define CD4067_EN()              GPIO_ResetBits(GPIOF,GPIO_Pin_8)
 #define CD4067_DIS()             GPIO_SetBits(GPIOF,GPIO_Pin_8)
@@ -71,7 +69,7 @@ extern uint16_t    tp_x[5],tp_y[5],x,y;
 extern uint8_t     sys_flag;
 extern uint16_t    ref;
 
-enum system_flag{main_panel,set_ref,set_time,tks640k1,tks14a};
+enum system_flag{main_panel,set_ref,set_time,history,tks640k1,tks14a};
 
 struct contact  // 触点数据结构
 {
@@ -114,7 +112,8 @@ void LCD_Set_Time(unsigned char *set_buffer);
 
 void schedule(uint16_t x,uint16_t y);
 
-
+void TP_restart(void);
+void TP_stop(void);
 
 
 

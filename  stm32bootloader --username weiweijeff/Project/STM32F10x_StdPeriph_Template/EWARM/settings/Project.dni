@@ -1,6 +1,6 @@
 [DebugChecksum]
 <<<<<<< .mine
-Checksum=-1290768297
+Checksum=-1633895384
 =======
 Checksum=-1250662152
 >>>>>>> .r19
@@ -119,7 +119,6 @@ SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-SumSortOrder=0
 Title0=ITM1
 Setup0=1 1 1 1
 Title1=ITM2
@@ -128,6 +127,7 @@ Title2=ITM3
 Setup2=1 1 1 1
 Title3=ITM4
 Setup3=1 1 1 1
+SumSortOrder=0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -135,10 +135,6 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
-[Disassemble mode]
-mode=1
-[Breakpoints2]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -146,9 +142,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Aliases]
-Count=0
-SuppressDialog=0
 [Trace2]
 Enabled=0
 [SWOTraceWindow]
@@ -172,3 +165,10 @@ Mode=3
 Graph=0
 Symbiont=0
 Exclusions=
+[Disassemble mode]
+mode=1
+[Breakpoints2]
+Count=0
+[Aliases]
+Count=0
+SuppressDialog=0

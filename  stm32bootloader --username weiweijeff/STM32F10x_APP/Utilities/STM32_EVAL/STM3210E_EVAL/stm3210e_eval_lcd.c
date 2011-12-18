@@ -23,7 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm3210e_eval_lcd.h"
-#include "../Common/fonts.c"
+//#include "../Common/fonts.c"
 
 /** @addtogroup Utilities
   * @{
@@ -75,6 +75,32 @@ typedef struct
   * @}
   */ 
  
+u16 BK_PWM=0x3f;
+u16 coy_src=0x00;
+u16 cur_page=0x00;
+u16 opt_page=0x00;
+
+void ch_BK(u16 p)
+{
+  BK_PWM=p;
+  LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
+}
+
+void ch_coy_src(u16 p)
+{
+  cur_page=p;
+  LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
+}
+void ch_cur_page(u16 p)
+{
+  BK_PWM=p;
+  LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
+}
+void ch_opt_page(u16 p)
+{
+  opt_page=p;
+  LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
+}
 
 void STM3210E_LCD_Init(void)
 { 
@@ -83,7 +109,7 @@ void STM3210E_LCD_Init(void)
 /* Configure the FSMC Parallel interface -------------------------------------*/
   LCD_FSMCConfig();
   
-  LCD_WriteReg(PREF,0x3f);
+  LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
    
 }
 
