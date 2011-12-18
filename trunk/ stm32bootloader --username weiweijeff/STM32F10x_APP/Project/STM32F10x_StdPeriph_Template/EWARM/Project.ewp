@@ -614,7 +614,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -875,6 +875,18 @@
         <option>
           <name>IlinkOptForceVfe</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -1508,7 +1520,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1770,6 +1782,18 @@
           <name>IlinkOptForceVfe</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1884,7 +1908,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.21.1.52845</state>
+          <state>6.30.1.53141</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -2412,7 +2436,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2493,7 +2517,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32f10x_flash.icf</state>
+          <state>$PROJ_DIR$\stm32f10x_flash_app.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -2673,6 +2697,18 @@
         <option>
           <name>IlinkOptForceVfe</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -3306,7 +3342,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3567,6 +3603,18 @@
         <option>
           <name>IlinkOptForceVfe</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -4200,7 +4248,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4461,6 +4509,18 @@
         <option>
           <name>IlinkOptForceVfe</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -5094,7 +5154,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5356,6 +5416,18 @@
           <name>IlinkOptForceVfe</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -5403,85 +5475,12 @@
   <group>
     <name>EWARMv5</name>
     <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_cl.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_hd.s</name>
       <excluded>
         <configuration>STM3210C-EVAL</configuration>
         <configuration>STM3210B-EVAL</configuration>
         <configuration>STM32100E-EVAL</configuration>
         <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_hd_vl.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_ld.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_ld_vl.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_md.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_md_vl.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
-        <configuration>STM3210E-EVAL_XL</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar\startup_stm32f10x_xl.s</name>
-      <excluded>
-        <configuration>STM32100B-EVAL</configuration>
-        <configuration>STM3210C-EVAL</configuration>
-        <configuration>STM3210E-EVAL</configuration>
-        <configuration>STM3210B-EVAL</configuration>
-        <configuration>STM32100E-EVAL</configuration>
       </excluded>
     </file>
   </group>
@@ -5609,6 +5608,9 @@
     <name>User</name>
     <group>
       <name>jiche</name>
+      <file>
+        <name>$PROJ_DIR$\..\s640k1.c</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\..\commonality.c</name>
@@ -5617,10 +5619,19 @@
       <name>$PROJ_DIR$\..\main.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\main_panel.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\ref_manage.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\RTC_Time.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\stm32f10x_it.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\time_manage.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\touch.c</name>

@@ -42,7 +42,7 @@ void write_ref(void)
 
 void draw_ref_manager(void)
 {
-  LCD_Clear(LCD_COLOR_CYAN);
+  //LCD_Clear(LCD_COLOR_CYAN);
   LCD_Clear(LCD_COLOR_BLACK);
   LCD_str(272,0,"…Ë÷√∑ß÷µ",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   
@@ -88,9 +88,11 @@ void ref_manager(u16 x,u16 y)
       }
       if(t==10)
       {
+        TP_stop();
         write_ref();
+        TP_restart();
         sys_flag=main_panel;
-        LCD_Clear(LCD_COLOR_BLACK);
+//        return;
       }
       if(t==11)
       {

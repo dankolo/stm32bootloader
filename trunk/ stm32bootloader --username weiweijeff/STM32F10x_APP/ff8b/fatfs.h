@@ -7,9 +7,12 @@
 #include <string.h>
 #include "ff.h"
 #include "diskio.h"
-
+extern u8 files_name[16][63];
+extern uint8_t files_num;
 //void stat_file(const TCHAR *dir,const TCHAR *file_name);
-
+FRESULT scan_files (
+    char* path        /* Start node to be scanned (also used as work area) */
+);
 void list_file(void);
 
 char *read_file(const TCHAR *dir,const TCHAR *file_name,int offset,int length);

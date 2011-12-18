@@ -4,11 +4,12 @@
 
 
 unsigned char time_set_flag=0;
-unsigned char time_bit[12]={2,3,5,6,8,9,11,12,14,15,17,18};
+unsigned char time_bit[14]={0,1,2,3,5,6,8,9,11,12,14,15,17,18};
 unsigned char time_keypad[11]="ijklmnopqr";
 unsigned char time_keypad_flash[11]="tuvwxyz{|}";
-unsigned int time_coordinate[12][4]=
+unsigned int time_coordinate[14][4]=
 {
+{416,248,432,279},{432,248,448,279},
 {448,248,464,279},{464,248,480,279},
 {496,248,512,279},{512,248,528,279},
 {544,248,560,279},{560,248,576,279},
@@ -85,7 +86,7 @@ void time_manager(u16 x,u16 y)
         LCD_WD( 416,328, 'B', 2, 1, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
         if(time_set_flag==0)
         {
-          time_set_flag=11;
+          time_set_flag=13;
         }
         time_set_flag-=1;
         LCD_str(416,248,time_buffer,32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -95,7 +96,7 @@ void time_manager(u16 x,u16 y)
       {
         LCD_WD( 576,328, 'E', 2, 1, LCD_COLOR_CYAN,LCD_COLOR_BLACK);
         LCD_WD( 576,328, 'C', 2, 1, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-        if(time_set_flag==11)
+        if(time_set_flag==13)
         {
           time_set_flag=0;
         }

@@ -539,41 +539,57 @@ void Set_Scan_Channel(unsigned char x)
 
 void schedule(uint16_t x,uint16_t y)
 {
-  
-  if(sys_flag==main_panel)
+  switch(sys_flag)
   {
-    main_panel_manager(x,y);
+  case set_ref:
+    {
+      ref_manager(x,y);
+      break;
+    }
+  case set_time:
+    {
+       time_manager(x,y);
+       break;
+    }
+  case history:
+    {
+      sys_flag=main_panel;
+      break;
+    }
+  case tks640k1:
+    {
+      S640K1_TP_respond(x,y);
+      break;
+    }
+  default:
+    {
+      main_panel_manager(x,y);
+      break;
+    }
   }
-  
-  
-  
-/***********************************************************/
-  if(sys_flag==set_ref)
-  {
-    ref_manager(x,y);
-  }
-
-  
-  if(sys_flag==set_time)
-  {
-    time_manager(x,y);
-  }
-  
-  if(sys_flag==tks640k1)
-  {
-    S640K1_TP_respond(x,y);
-  }
- 
-  
-  
-  
-  
-  
-  
-  
-
 }
 
+
+void TP_restart(void) 
+{ 
+  GPIO_InitTypeDef  GPIO_InitStructure; 
+  
+  /***PB11->TOUCH-INT***/
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; 
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+}
+
+void TP_stop(void)
+{ 
+  GPIO_InitTypeDef  GPIO_InitStructure;  
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; 
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+  GPIO_SetBits(GPIOB,GPIO_Pin_11);
+}
 
 
 

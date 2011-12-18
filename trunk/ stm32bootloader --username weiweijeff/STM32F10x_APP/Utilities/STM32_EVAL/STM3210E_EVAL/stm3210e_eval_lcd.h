@@ -196,7 +196,10 @@ void DrawPixel(uint16_t x, uint16_t y, uint16_t colour);
 
 
 
-
+void ch_BK(u16 p);
+void ch_coy_src(u16 p);
+void ch_cur_page(u16 p);
+void ch_opt_page(u16 p);
 
 
 /**

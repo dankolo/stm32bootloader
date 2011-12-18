@@ -36,58 +36,7 @@
 
 
 
-#if 0
-u8 files_name[16][63];
-u8 num=0;
-u16 lcd_y=0;
 
-FRESULT scan_files (
-    char* path        /* Start node to be scanned (also used as work area) */
-)
-{
-  
-  FATFS fs;
-    FRESULT res;
-    FILINFO fno;
-    DIR dir;
-    int i;
-    
-    char *fn;   /* This function is assuming non-Unicode cfg. */
-#if _USE_LFN
-    static char lfn[_MAX_LFN + 1];
-    fno.lfname = lfn;
-    fno.lfsize = sizeof(lfn);
-#endif
-
-res = f_mount(0,&fs);
-    res = f_opendir(&dir, path);                       /* Open the directory */
-    if (res == FR_OK) {
-        i = strlen(path);
-        for (;;) {
-            res = f_readdir(&dir, &fno);                   /* Read a directory item */
-            if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
-            if (fno.fname[0] == '.') continue;             /* Ignore dot entry */
-#if _USE_LFN
-            fn = *fno.lfname ? fno.lfname : fno.fname;
-#else
-            fn = fno.fname;
-#endif
-            if (fno.fattrib & AM_DIR) {                    /* It is a directory */
-                sprintf(&path[i], "/%s", fn);
-                res = scan_files(path);
-                if (res != FR_OK) break;
-                path[i] = 0;
-            } else {                                       /* It is a file. */
-                //printf("%s/%s\n", path, fn);              
-              memcpy(files_name[num],fn,strlen(fn));
-              num+=1;
-            }
-        }
-    }
-f_mount(0,NULL);
-    return res;
-}
-#endif 
 
 
 /**
@@ -100,8 +49,6 @@ char *str;
   u8 chx=0;
 int main(void)
 {
-  
-  sys_flag=main_panel;
   RCC_Configuration();
   RTC_Config();
   NVIC_Configuration();
@@ -147,14 +94,6 @@ int main(void)
   
 
   
-#if 0  
-  scan_files("/");
-  while(num--!=0)
-  {
-    LCD_str(0,lcd_y,files_name[num], 16, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-    lcd_y+=16;
-  }
-#endif  
   
     /* To achieve GPIO toggling maximum frequency, the following  sequence is mandatory. 
      You can monitor PD0 or PD2 on the scope to measure the output signal. 
@@ -173,12 +112,14 @@ int main(void)
  PowerA_EN();
  delay(0xffff); 
  read_ref(); 
- 
+ sys_flag=main_panel;
  while (1)
- { 
-  while(sys_flag==main_panel)
+ {
+   while(sys_flag==main_panel)
     {
+      TP_stop();
       draw_main_panel();
+      delay(0xffff);TP_restart();
       while(sys_flag==main_panel)
       {
         LCD_str(534,0,get_time_now(),24,LCD_COLOR_CYAN,LCD_COLOR_BLACK);
@@ -189,24 +130,42 @@ int main(void)
    {
      TP_stop();
      draw_ref_manager();
-     TP_restart();
+     delay(0xffff);TP_restart();
      while(sys_flag==set_ref);
    }
-    while(sys_flag==set_time)
+   while(sys_flag==set_time)
+   {
+     TP_stop();
+     draw_time_manager();
+     delay(0xffff);TP_restart();
+     while(sys_flag==set_time);
+   }
+   while(sys_flag==history)
     {
       TP_stop();
-      draw_time_manager();
+      scan_files("data");
+      LCD_Clear(LCD_COLOR_BLACK);
+      u16 lcd_y=0;
+      while(files_num--!=0)
+      {
+        LCD_str(0,lcd_y,files_name[files_num], 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+        lcd_y+=64;
+      }
+
       TP_restart();
-      while(sys_flag==set_time);
+      while(sys_flag==history)
+      {
+        LCD_str(534,0,get_time_now(),24,LCD_COLOR_CYAN,LCD_COLOR_BLACK);
+        delay(0xffff);
+      }
     }
-    while(sys_flag==tks640k1)
-    {
-      TP_stop();
-      S640K1_INIT();
-      draw_s640k1();
-      TP_restart();
-      while(sys_flag==tks640k1);
-      
+   while(sys_flag==tks640k1)
+   {
+     TP_stop();
+     S640K1_INIT();
+     draw_s640k1();
+     delay(0xffff);TP_restart();
+     while(sys_flag==tks640k1);     
     }
   }
 }

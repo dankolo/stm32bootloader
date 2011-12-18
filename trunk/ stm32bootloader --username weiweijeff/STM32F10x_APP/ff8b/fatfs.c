@@ -6,6 +6,58 @@
 #include "stm3210e_eval_lcd.h"
 char buffer[512]={0};
 
+
+#if 1
+u8 files_name[16][63];
+uint8_t files_num=0;
+FRESULT scan_files (
+    char* path        /* Start node to be scanned (also used as work area) */
+)
+{
+  
+    FATFS fs;
+    FRESULT res;
+    FILINFO fno;
+    DIR dir;
+    int i;
+    
+    char *fn;   /* This function is assuming non-Unicode cfg. */
+#if _USE_LFN
+    static char lfn[_MAX_LFN + 1];
+    fno.lfname = lfn;
+    fno.lfsize = sizeof(lfn);
+#endif
+
+res = f_mount(0,&fs);
+    res = f_opendir(&dir, path);                       /* Open the directory */
+    if (res == FR_OK) {
+        i = strlen(path);
+        for (;;) {
+            res = f_readdir(&dir, &fno);                   /* Read a directory item */
+            if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
+            if (fno.fname[0] == '.') continue;             /* Ignore dot entry */
+#if _USE_LFN
+            fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+            fn = fno.fname;
+#endif
+            if (fno.fattrib & AM_DIR) {                    /* It is a directory */
+                sprintf(&path[i], "/%s", fn);
+                res = scan_files(path);
+                if (res != FR_OK) break;
+                path[i] = 0;
+            } else {                                       /* It is a file. */
+                //printf("%s/%s\n", path, fn);              
+              memcpy(files_name[files_num],fn,strlen(fn));
+              files_num+=1;
+            }
+        }
+    }
+f_mount(0,NULL);
+    return res;
+}
+#endif 
+
 void list_file(void)
 {
         FATFS fs;

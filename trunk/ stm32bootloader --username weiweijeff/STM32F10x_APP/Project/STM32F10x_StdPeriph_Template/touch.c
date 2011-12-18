@@ -36,7 +36,7 @@ void Touch_Config(void)
   
   GPIO_SetBits(GPIOB,GPIO_Pin_11);
    
-  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource11);//PB11作为外部中断引 
+//  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource11);//PB11作为外部中断引 
 
   // SPI2 Config
   //SPI2 Periph clock enable 
