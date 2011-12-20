@@ -522,7 +522,7 @@ void S640K1_INIT(void)
 void S640K1_TP_respond(int x,int y)
 {
   unsigned char n;
-  for(n=0;n<29;n++)
+  for(n=0;n<21;n++)
   {
     if(x>S640K1_TP[n][0]&&x<S640K1_TP[n][2]&&y>S640K1_TP[n][1]&&y<S640K1_TP[n][3])
     {
