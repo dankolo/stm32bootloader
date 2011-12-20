@@ -1997,7 +1997,7 @@
         </option>
         <option>
           <name>UseFlashLoader</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
@@ -2328,7 +2328,7 @@
         <option>
           <name>CCJLinkResetList</name>
           <version>6</version>
-          <state>7</state>
+          <state>13</state>
         </option>
         <option>
           <name>CCJLinkInterfaceCmdLine</name>
