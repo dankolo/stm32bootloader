@@ -107,9 +107,9 @@ int main(void)
  ADC_V_DMA_Config();
  ADC_R_Config();
  ADC_V_Config();
-// PowerA_DIS();
+ PowerA_DIS();
  CD4067_EN();
- PowerA_EN();
+// PowerA_EN();
  delay(0xffff); 
  read_ref(); 
  sys_flag=main_panel;
@@ -165,7 +165,19 @@ int main(void)
      S640K1_INIT();
      draw_s640k1();
      delay(0xffff);TP_restart();
-     while(sys_flag==tks640k1);     
+     while(sys_flag==tks640k1)
+     {
+       if(auto_scan_flag==0xff)
+       {
+         LCD_str(671,352,"自动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+         sk640k1_scan();
+       }
+       else
+       {
+         LCD_str(671,352,"手动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+       }
+       delay(0x7fffff);
+     }
     }
   }
 }

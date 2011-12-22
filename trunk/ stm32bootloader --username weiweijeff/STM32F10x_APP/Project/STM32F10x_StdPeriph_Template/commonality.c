@@ -6,12 +6,12 @@ struct tm time_now;
 unsigned char time_buffer[20]="2011-11-07 09:17:10";
 unsigned char Scan_Channels[16]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};//É¨ÃèÍ¨µÀ
 unsigned char ADC_R_Value[5];
-unsigned char ADC_V_Value[5];
-u16 R=0;
+unsigned char ADC_V_Value[7];
+u16 R=0,V=0;
 u16 ADCConvertedValue_R[ADC_R_DMA_BufferSize];
 u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 
-
+uint8_t     auto_scan_flag=0x00;
 uint8_t     tp_flag=0;
 uint16_t    tp_x[5],tp_y[5],x,y;
 uint8_t     sys_flag=0;
@@ -227,7 +227,7 @@ u16 *Get_ADC_R_Value()
   {
     n+=ADCConvertedValue_R[i];
   }
-  R= (u16)(((n*3277)>>17)/1.87);
+  R= (u16)(((n*3277)>>17)/1.87)-123;
   ADC_R_Value[0]=R/1000+'0';
   ADC_R_Value[1]=(R%1000)/100+'0';
   ADC_R_Value[2]=(R%100)/10+'0';
@@ -312,11 +312,11 @@ void ADC_R_DMA_Config(void)
 
 
 
-unsigned char *Get_ADC_V_Value()
+u16 *Get_ADC_V_Value()
 {
 
   u16 j=0,i=0;
-  vu32 k=0,n=0,temp=0;
+  vu32 n=0,temp=0;
 
   for(j=0;j<=ADC_V_DMA_BufferSize;j+=1)
   {
@@ -334,14 +334,20 @@ unsigned char *Get_ADC_V_Value()
   {
     n+=ADCConvertedValue_V[i];
   }
-  k=((n*3277)>>17);
+  V=6*(((n*3277)>>17)*41/40-27);
   n=0;
-  ADC_V_Value[0]=k/1000+'0';
-    ADC_V_Value[1]=(k%1000)/100+'0';
-      ADC_V_Value[2]=(k%100)/10+'0';
-        ADC_V_Value[3]=k%10+'0';
-          ADC_V_Value[4]='\0';  
-  return ADC_V_Value;
+  ADC_V_Value[0]=V/10000+'0';
+  if(ADC_V_Value[0]=='0')
+  {
+    ADC_V_Value[0]=' ';
+  }
+  ADC_V_Value[1]=(V%10000)/1000+'0';
+  ADC_V_Value[2]='.';
+  ADC_V_Value[3]=(V%1000)/100+'0';
+  ADC_V_Value[4]=(V%100)/10+'0';
+  ADC_V_Value[5]='V';
+  ADC_V_Value[6]='\0';
+  return &V;
   
 }
 

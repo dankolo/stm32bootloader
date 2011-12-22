@@ -40,6 +40,9 @@ u16 S640K1_value_disp[11][2]=
   {735,96},{735,128},{735,160},{735,192},
   {384,256},{384,288},{384,320},{384,352},{384,384},{384,416},{384,447}
 };
+u16 sk640_jiwei_v[19]={0,194,1094,1995,2895,3795,4696,5596,6496,7397,8297,9197,10098,10998,11898,12799,13699,14599,15000};
+u8 sk640_jiwei_flag=0x7f;
+u8 sk640_jiwei[8]={0,1,3,6,9,12,15,17};
 
 
 
@@ -126,7 +129,8 @@ void draw_s640k1(void)
   {
     LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLUE2, 0);
   }
-  LCD_str(671,352,"保存结果",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+  //LCD_str(671,352,"保存结果",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+  LCD_str(671,352,"手动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
   LCD_str(671,432,"退出实验",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
   LCD_str(671,256,"级位电压",32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   
@@ -528,7 +532,9 @@ void S640K1_TP_respond(int x,int y)
     {
       if(n==19)//保存
       {
-        sys_flag=main_panel;
+        //sys_flag=main_panel;
+        //return;
+        auto_scan_flag=~auto_scan_flag;        
         return;
       }
       else if(n==20)//（退出）
@@ -543,7 +549,9 @@ void S640K1_TP_respond(int x,int y)
       else 
       {        
         LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLACK, 0);
+        PowerA_EN();
         S640K1_measure_levels(n);
+        PowerA_DIS();
         LCD_DrawFullRect( S640K1_TP[n][0],   S640K1_TP[n][1],   S640K1_TP[n][2],   S640K1_TP[n][3],  LCD_COLOR_BLUE2, 0);
       } 
     }
@@ -552,7 +560,7 @@ void S640K1_TP_respond(int x,int y)
 
 void S640K1_measure_levels(unsigned char n)
 {
-  unsigned char i=0,j=0,*v;
+  unsigned char i=0,j=0;
   u16  *p,temp=0;
   if((n==17)||(n==18))
   {
@@ -582,10 +590,10 @@ void S640K1_measure_levels(unsigned char n)
       
       if(S640K1_levels[n].contacts[i].flag_last==1)
       {
-        v=Get_ADC_V_Value();
-        for(j=0;j<5;j++)
+        p=Get_ADC_V_Value();
+        for(j=0;j<7;j++)
         {
-          S640K1_levels[n].level_V[j]=*(v+j);
+          S640K1_levels[n].level_V[j]=ADC_V_Value[j];
         }
         LCD_str(671,304,S640K1_levels[n].level_V,32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
         break;
@@ -598,12 +606,177 @@ void S640K1_measure_levels(unsigned char n)
 
 
 
+
 void sk640k1_scan(void)
 {
-  u8 chn;
-  for(chn=1;chn<8;chn++)
-    ;
+  u16  *p;
+  u8 m,n,k;
   
+  for(n=0;n<7;n++)
+  {
+    Set_Scan_Channel((7-n));
+    PowerA_EN();
+    delay(0xfff);
+    p=Get_ADC_R_Value();
+    PowerA_DIS();
+    if((*p)<1600)
+    {
+      sk640_jiwei_flag=sk640_jiwei_flag|1<<n;
+    }
+    else
+    {
+      sk640_jiwei_flag=sk640_jiwei_flag&~(1<<n);      
+    }
+  }
+  switch(sk640_jiwei_flag)
+  {
+  case 0x00://级位为0
+    {
+      //S640K1_measure_levels(7);
+      LCD_DrawFullRect( 520,   350,   650,   385,  LCD_COLOR_BLACK, 1);
+      for(k=0;k<21;k++)
+      {
+        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+      }
+      LCD_DrawFullRect( S640K1_TP[16][0],   S640K1_TP[16][1],   S640K1_TP[16][2],   S640K1_TP[16][3],  LCD_COLOR_RED, 0);
+      break;
+    }
+  case 0x4D://后
+    {
+      LCD_DrawFullRect( 520,   350,   650,   385,  LCD_COLOR_BLACK, 1);
+      for(k=0;k<21;k++)
+      {
+        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+      }
+      PowerA_EN();
+      S640K1_measure_levels(15);
+      PowerA_DIS();
+      LCD_DrawFullRect( S640K1_TP[15][0],   S640K1_TP[15][1],   S640K1_TP[15][2],   S640K1_TP[15][3],  LCD_COLOR_RED, 0);
+      PowerA_EN();
+      delay(0xfff);
+      p=Get_ADC_V_Value();
+      PowerA_DIS();
+      for(n=0;n<18;n++)
+      {
+        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        {
+          for(m=0;m<8;m++)
+          {
+            if(n==sk640_jiwei[m])
+            {
+              PowerA_EN();
+              S640K1_measure_levels((7+m));
+              PowerA_DIS();
+              for(k=7;k<15;k++)
+              {
+                LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+              }
+              LCD_DrawFullRect( S640K1_TP[7+m][0],   S640K1_TP[7+m][1],   S640K1_TP[7+m][2],   S640K1_TP[7+m][3],  LCD_COLOR_RED, 0);
+            }
+          }
+        }
+      }
+      
+      break;
+    }
+  case 0x2B://前
+    {
+      LCD_DrawFullRect( 520,   350,   650,   385,  LCD_COLOR_BLACK, 1);
+      for(k=0;k<21;k++)
+      {
+        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+      }
+      PowerA_EN();
+      S640K1_measure_levels(16);
+      PowerA_DIS();
+      LCD_DrawFullRect( S640K1_TP[17][0],   S640K1_TP[17][1],   S640K1_TP[17][2],   S640K1_TP[17][3],  LCD_COLOR_RED, 0);
+      PowerA_EN();
+      delay(0xfff);
+      p=Get_ADC_V_Value();
+      PowerA_DIS();
+      for(n=0;n<18;n++)
+      {
+        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        {
+          for(m=0;m<8;m++)
+          {
+            if(n==sk640_jiwei[m])
+            {
+              PowerA_EN();
+              S640K1_measure_levels((7+m));
+              PowerA_DIS();
+              for(k=7;k<15;k++)
+              {
+                LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+              }
+              LCD_DrawFullRect( S640K1_TP[7+m][0],   S640K1_TP[7+m][1],   S640K1_TP[7+m][2],   S640K1_TP[7+m][3],  LCD_COLOR_RED, 0);
+            }
+          }
+        }
+      }
+      
+      break;
+    }
+  case 0x35://制
+    {
+      LCD_DrawFullRect( 520,   350,   650,   385,  LCD_COLOR_BLACK, 1);
+      for(k=0;k<21;k++)
+      {
+        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+      }
+      PowerA_EN();
+      S640K1_measure_levels(17);
+      PowerA_DIS();
+      LCD_DrawFullRect( S640K1_TP[18][0],   S640K1_TP[18][1],   S640K1_TP[18][2],   S640K1_TP[18][3],  LCD_COLOR_RED, 0);
+      PowerA_EN();
+      delay(0xfff);
+      p=Get_ADC_V_Value();
+      PowerA_DIS();
+      for(n=0;n<18;n++)
+      {
+        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        {
+          for(m=0;m<8;m++)
+          {
+            if(n==sk640_jiwei[m])
+            {
+              PowerA_EN();
+              if(n==0)
+              {
+                S640K1_measure_levels((7));
+                PowerA_DIS();
+                for(k=0;k<7;k++)
+                {
+                  LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+                }
+                LCD_DrawFullRect( S640K1_TP[7][0],   S640K1_TP[7][1],   S640K1_TP[7][2],   S640K1_TP[7][3],  LCD_COLOR_RED, 0);
+              }
+              else
+              {
+                S640K1_measure_levels((m));
+                PowerA_DIS();
+                for(k=0;k<7;k++)
+                {
+                  LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+                }
+                LCD_DrawFullRect( S640K1_TP[m][0],   S640K1_TP[m][1],   S640K1_TP[m][2],   S640K1_TP[m][3],  LCD_COLOR_RED, 0);
+              }
+            }
+          }
+        }
+      }
+      break;
+    }
+  default:
+    {
+      for(k=0;k<21;k++)
+      {
+        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
+      }
+      LCD_str(521,352,"级位错误",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
+      break;
+    }
+  }
 }
 
 
