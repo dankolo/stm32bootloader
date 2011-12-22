@@ -61,9 +61,10 @@
 #define PowerA_DIS()             GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
 extern unsigned char ADC_R_Value[5];
-extern unsigned char ADC_V_Value[5];
+extern unsigned char ADC_V_Value[7];
 extern unsigned char time_buffer[20];
 extern unsigned char Scan_Channels[16];
+extern uint8_t     auto_scan_flag;
 extern uint8_t     tp_flag;
 extern uint16_t    tp_x[5],tp_y[5],x,y;
 extern uint8_t     sys_flag;
@@ -85,7 +86,7 @@ struct contact  // 触点数据结构
 struct level   // 级位数据结构
 {
   //unsigned char level_index[];//级位索引
-  unsigned char level_V[6];//级位电压
+  unsigned char level_V[7];//级位电压
   struct contact contacts[5];//级位触点
 };
 
@@ -93,7 +94,7 @@ struct level   // 级位数据结构
 void delay_nus(vu32 nCount);
 void  delay(u32 t);
 u16 *Get_ADC_R_Value();
-extern unsigned char *Get_ADC_V_Value();
+u16 *Get_ADC_V_Value();
 void ADC_GPIO_Config(void);
 void ADC_R_DMA_Config(void);
 void ADC_R_Config(void);
