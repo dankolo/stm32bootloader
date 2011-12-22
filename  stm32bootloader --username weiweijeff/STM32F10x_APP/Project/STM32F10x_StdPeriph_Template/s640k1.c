@@ -79,7 +79,7 @@ void draw_s640k1(void)
   {
     LCD_DrawUniLine( (144+32*n),  256,  (144+32*n),  479,  LCD_COLOR_CYAN);
   }
-  LCD_DrawUniLine( 256, 272,  256,  464,  LCD_COLOR_RED);
+  LCD_DrawUniLine( 256, 272,  256,  464,  LCD_COLOR_GREEN);
   
   
 //  LCD_str(384,64,"¿ØÖÆÊÖ±ú",32,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -118,8 +118,8 @@ void draw_s640k1(void)
   {
     LCD_DrawUniLine( (144+32*n),  96,  (144+32*n),  224,  LCD_COLOR_CYAN);
   }
-  LCD_DrawUniLine( 608, 144,  608,  176,  LCD_COLOR_RED);
-  LCD_DrawUniLine( 128, 144,  128,  272,  LCD_COLOR_RED);
+  LCD_DrawUniLine( 608, 144,  608,  176,  LCD_COLOR_GREEN);
+  LCD_DrawUniLine( 128, 144,  128,  272,  LCD_COLOR_GREEN);
   
   for(n=0;n<43;n++)
   {
@@ -687,7 +687,7 @@ void sk640k1_scan(void)
         LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
       }
       PowerA_EN();
-      S640K1_measure_levels(16);
+      S640K1_measure_levels(17);
       PowerA_DIS();
       LCD_DrawFullRect( S640K1_TP[17][0],   S640K1_TP[17][1],   S640K1_TP[17][2],   S640K1_TP[17][3],  LCD_COLOR_RED, 0);
       PowerA_EN();
@@ -725,7 +725,7 @@ void sk640k1_scan(void)
         LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
       }
       PowerA_EN();
-      S640K1_measure_levels(17);
+      S640K1_measure_levels(18);
       PowerA_DIS();
       LCD_DrawFullRect( S640K1_TP[18][0],   S640K1_TP[18][1],   S640K1_TP[18][2],   S640K1_TP[18][3],  LCD_COLOR_RED, 0);
       PowerA_EN();
