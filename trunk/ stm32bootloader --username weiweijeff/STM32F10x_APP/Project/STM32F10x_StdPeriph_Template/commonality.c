@@ -11,7 +11,7 @@ u16 R=0,V=0;
 u16 ADCConvertedValue_R[ADC_R_DMA_BufferSize];
 u16 ADCConvertedValue_V[ADC_V_DMA_BufferSize];
 
-uint8_t     auto_scan_flag=0x00;
+uint8_t     auto_scan_flag=0xff;
 uint8_t     tp_flag=0;
 uint16_t    tp_x[5],tp_y[5],x,y;
 uint8_t     sys_flag=0;
@@ -227,7 +227,7 @@ u16 *Get_ADC_R_Value()
   {
     n+=ADCConvertedValue_R[i];
   }
-  R= (u16)(((n*3277)>>17)/1.87)-123;
+  R= (u16)(((n*3277)>>17)*0.52)-120;
   ADC_R_Value[0]=R/1000+'0';
   ADC_R_Value[1]=(R%1000)/100+'0';
   ADC_R_Value[2]=(R%100)/10+'0';
@@ -334,7 +334,7 @@ u16 *Get_ADC_V_Value()
   {
     n+=ADCConvertedValue_V[i];
   }
-  V=6*(((n*3277)>>17)*41/40-27);
+  V=6*(((n*3277)>>17)*41/40-19);
   n=0;
   ADC_V_Value[0]=V/10000+'0';
   if(ADC_V_Value[0]=='0')
