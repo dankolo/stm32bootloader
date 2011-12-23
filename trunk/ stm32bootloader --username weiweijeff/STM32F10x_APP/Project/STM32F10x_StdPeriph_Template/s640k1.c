@@ -598,6 +598,7 @@ void S640K1_measure_levels(unsigned char n)
         }
         else
         {
+          temp=58;
           S640K1_levels[n].contacts[i].R[0]='0';
           S640K1_levels[n].contacts[i].R[1]='0';
           S640K1_levels[n].contacts[i].R[2]='5';
