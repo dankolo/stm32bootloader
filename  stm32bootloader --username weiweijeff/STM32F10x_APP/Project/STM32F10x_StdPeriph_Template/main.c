@@ -169,14 +169,14 @@ int main(void)
      {
        if(auto_scan_flag==0xff)
        {
-         LCD_str(671,352,"自动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+        // LCD_str(671,352,"自动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
          sk640k1_scan();
        }
-       else
+       else if(auto_scan_flag==0x00)
        {
-         LCD_str(671,352,"手动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+        // LCD_str(671,352,"手动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
        }
-       delay(0x7fffff);
+       delay(0x7ffff);
      }
     }
   }
