@@ -583,6 +583,7 @@ void S640K1_measure_levels(unsigned char n)
         p=Get_ADC_R_Value();
         if((*p)==1583)
         {
+          temp=*p;
           S640K1_levels[n].contacts[i].R[0]=' ';
           S640K1_levels[n].contacts[i].R[1]='_';
           S640K1_levels[n].contacts[i].R[2]='/';
@@ -723,6 +724,9 @@ void sk640k1_scan(void)
           LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
         }
         LCD_str(521,352,"级位错误",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
+        S640K1_measure_levels(15);
+        S640K1_measure_levels(17);
+        S640K1_measure_levels(18);
         break;
       }
     }
@@ -867,6 +871,9 @@ void sk640k1_scan(void)
         LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
       }
       LCD_str(521,352,"级位错误",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
+      S640K1_measure_levels(15);
+      S640K1_measure_levels(17);
+      S640K1_measure_levels(18);
       break;
       }
     }
