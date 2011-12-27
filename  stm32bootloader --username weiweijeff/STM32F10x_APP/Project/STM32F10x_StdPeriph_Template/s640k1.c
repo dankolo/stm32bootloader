@@ -737,15 +737,8 @@ void sk640k1_scan(void)
     {
     case 0x00://级位为0
       {
-      S640K1_measure_levels(7);
-      LCD_DrawFullRect( S640K1_TP[7][0],   S640K1_TP[7][1],   S640K1_TP[7][2],   S640K1_TP[7][3],  LCD_COLOR_RED, 0);
-      LCD_DrawFullRect( 520,   350,   650,   385,  LCD_COLOR_BLACK, 1);
-      for(k=0;k<21;k++)
-      {
-        LCD_DrawFullRect( S640K1_TP[k][0],   S640K1_TP[k][1],   S640K1_TP[k][2],   S640K1_TP[k][3],  LCD_COLOR_BLUE2, 0);
-      }
-      LCD_DrawFullRect( S640K1_TP[16][0],   S640K1_TP[16][1],   S640K1_TP[16][2],   S640K1_TP[16][3],  LCD_COLOR_RED, 0);
-      break;
+        LCD_str(521,352,"无司控器",32,LCD_COLOR_RED,LCD_COLOR_BLACK);
+        break;
       }
     case 0x4D://后
       {
