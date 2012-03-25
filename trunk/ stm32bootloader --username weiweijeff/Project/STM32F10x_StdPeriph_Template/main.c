@@ -78,6 +78,20 @@ void SetSysClockTo72(void);
 void TIM2_Config(void);
 void TIM3_Config(void);
 
+
+
+
+
+void LCD_RESET_PIN_CONFIG(void);
+void LCD_reset(void);
+
+
+
+
+
+
+
+
 void delay(void)//延时函数，流水灯显示用
 {
  uint32_t i;
@@ -118,10 +132,14 @@ int main(void)
   Mass_Storage_Start();
   NVIC_Configuration();
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
+  LCD_RESET_PIN_CONFIG();
   Touch_Config();  
   TIM2_Config();
   TIM3_Config();  
-  delay();  
+  
+  GPIO_ResetBits(GPIOG, GPIO_Pin_7);
+  delay();
+   GPIO_SetBits(GPIOG, GPIO_Pin_7);
   STM3210E_LCD_Init();
   LCD_Clear(LCD_COLOR_BLACK);
   LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -243,6 +261,12 @@ int main(void)
     
     if(Jump_To_App_flag==0x01)
     {
+      TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+      TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
+      TIM_Cmd(TIM2, DISABLE);
+      TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+      TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+      TIM_Cmd(TIM3, DISABLE);
       Run_App();
     }
   }
@@ -474,6 +498,27 @@ void LED_GPIO_Configuration(void)
   GPIO_Init(GPIOF, &GPIO_InitStructure);
 }
 
+void LCD_RESET_PIN_CONFIG(void)
+{
+  /* GPIOF Periph clock enable */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOG, ENABLE);
+  
+  GPIO_InitTypeDef GPIO_InitStructure;
+  
+  GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+
+  GPIO_Init(GPIOG, &GPIO_InitStructure);
+}
+void LCD_reset(void)
+{
+  GPIO_SetBits(GPIOG, GPIO_Pin_7);
+  
+  GPIO_ResetBits(GPIOG, GPIO_Pin_7);
+  
+   GPIO_SetBits(GPIOG, GPIO_Pin_7);
+}
 
 void Run_App(void)
 {    
