@@ -34,7 +34,19 @@
 
 
 
+void LCD_RESET_PIN_CONFIG(void)
+{
+  /* GPIOF Periph clock enable */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOG, ENABLE);
+  
+  GPIO_InitTypeDef GPIO_InitStructure;
+  
+  GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
+  GPIO_Init(GPIOG, &GPIO_InitStructure);
+}
 
 
 
@@ -55,6 +67,10 @@ int main(void)
   Touch_Config();
   PowerA_GPIO_Config();
   CD4067_GPIO_Config(); 
+  LCD_RESET_PIN_CONFIG();  
+  GPIO_ResetBits(GPIOG, GPIO_Pin_7);
+  delay(0xfff);
+   GPIO_SetBits(GPIOG, GPIO_Pin_7);
   STM3210E_LCD_Init();  
   TIM2_Config();
   TIM3_Config();
@@ -179,6 +195,52 @@ int main(void)
        delay(0x7ffff);
      }
     }
+   
+   
+   while(sys_flag==hxd3c)
+   {
+     TP_stop();
+     hxd3c_INIT();
+     draw_hxd3c();
+     delay(0xffff);
+     TP_restart();
+     while(sys_flag==hxd3c)
+     {
+       if(auto_scan_flag==0xff)
+       {
+        // LCD_str(671,352,"自动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+//         hxd3c_scan();
+       }
+       else if(auto_scan_flag==0x00)
+       {
+        // LCD_str(671,352,"手动模式",32,LCD_COLOR_BLUE2,LCD_COLOR_BLACK);
+       }
+       delay(0x7ffff);
+     }
+    }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
   }
 }
 

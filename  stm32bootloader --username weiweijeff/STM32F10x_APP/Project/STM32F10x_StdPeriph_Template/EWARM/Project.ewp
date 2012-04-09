@@ -5609,6 +5609,9 @@
     <group>
       <name>jiche</name>
       <file>
+        <name>$PROJ_DIR$\..\hxd3c.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\s640k1.c</name>
       </file>
     </group>
