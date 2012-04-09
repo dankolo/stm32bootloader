@@ -3,7 +3,7 @@
 #include"main_panel.h"
 
 
-unsigned char main_panel_flag[12]={set_ref,set_time,history,tks640k1,tks14a};
+unsigned char main_panel_flag[12]={set_ref,set_time,history,tks640k1,hxd3c};
 
 
 
@@ -25,7 +25,8 @@ void draw_main_panel(void)
   LCD_str(0,112,"设置阀值",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(267,112,"设置时间",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(533,112,"历史数据",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-  LCD_str(0,208,"S640K1",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(0,208,"-SS7E-",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
+  LCD_str(267,208,"-HXD3C-",64,LCD_COLOR_BLUE,LCD_COLOR_BLACK);
 }
 
 

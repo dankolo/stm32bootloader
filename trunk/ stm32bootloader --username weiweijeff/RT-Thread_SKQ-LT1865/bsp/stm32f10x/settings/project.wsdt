@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>project/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>408</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1035</ColumnWidth1><ColumnWidth2>276</ColumnWidth2><ColumnWidth3>69</ColumnWidth3></Build>
+      <TerminalIO/>
+    <Debug-Log><ColumnWidth0>19</ColumnWidth0><ColumnWidth1>1382</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-28226-4737</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>project</ExpandedNode><ExpandedNode>project/STM32</ExpandedNode><ExpandedNode>project/Startup</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-20970-5282</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-6709-19565</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\led.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\lcd.h</Filename><XPos>0</XPos><YPos>24</YPos><SelStart>1222</SelStart><SelEnd>1231</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\gel.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>174</SelStart><SelEnd>174</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\hxd3c.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>128</SelStart><SelEnd>148</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\src\kservice.c</Filename><XPos>0</XPos><YPos>416</YPos><SelStart>8562</SelStart><SelEnd>8562</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\components\dfs\filesystems\elmfat\ff.c</Filename><XPos>0</XPos><YPos>538</YPos><SelStart>31262</SelStart><SelEnd>31262</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\serial.c</Filename><XPos>0</XPos><YPos>212</YPos><SelStart>5254</SelStart><SelEnd>5254</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\src\idle.c</Filename><XPos>0</XPos><YPos>136</YPos><SelStart>3480</SelStart><SelEnd>3480</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h</Filename><XPos>0</XPos><YPos>193</YPos><SelStart>10403</SelStart><SelEnd>10403</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\gel.c</Filename><XPos>0</XPos><YPos>36</YPos><SelStart>2251</SelStart><SelEnd>2251</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\analog.c</Filename><XPos>0</XPos><YPos>83</YPos><SelStart>2489</SelStart><SelEnd>2489</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\application.c</Filename><XPos>0</XPos><YPos>281</YPos><SelStart>6097</SelStart><SelEnd>6097</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\hxd3c.c</Filename><XPos>0</XPos><YPos>336</YPos><SelStart>10118</SelStart><SelEnd>10118</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\include\rtdef.h</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>1249</SelStart><SelEnd>1249</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\analog.h</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>1860</SelStart><SelEnd>1872</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\LTC1865.c</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>730</SelStart><SelEnd>730</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\touch.c</Filename><XPos>0</XPos><YPos>18</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\led.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\lcd.c</Filename><XPos>0</XPos><YPos>381</YPos><SelStart>12094</SelStart><SelEnd>12094</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\s640k1.c</Filename><XPos>0</XPos><YPos>30</YPos><SelStart>1592</SelStart><SelEnd>1592</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\startup.c</Filename><XPos>0</XPos><YPos>118</YPos><SelStart>2953</SelStart><SelEnd>2953</SelEnd></Tab><ActiveTab>20</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01184558><key>iaridepm.enu1</key></Toolbar-01184558></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>634</Bottom><Right>482</Right><x>-2</x><y>-2</y><xscreen>1701</xscreen><yscreen>1790</yscreen><sizeHorzCX>1181250</sizeHorzCX><sizeHorzCY>2188264</sizeHorzCY><sizeVertCX>336111</sizeVertCX><sizeVertCY>777506</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>139</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>141</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>172372</sizeHorzCY><sizeVertCX>1181250</sizeVertCX><sizeVertCY>2188264</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

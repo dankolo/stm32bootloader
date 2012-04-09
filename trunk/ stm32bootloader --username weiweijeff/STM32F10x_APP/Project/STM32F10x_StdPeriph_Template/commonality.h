@@ -70,7 +70,7 @@ extern uint16_t    tp_x[5],tp_y[5],x,y;
 extern uint8_t     sys_flag;
 extern uint16_t    ref;
 
-enum system_flag{main_panel,set_ref,set_time,history,tks640k1,tks14a};
+enum system_flag{main_panel,set_ref,set_time,history,tks640k1,hxd3c};
 
 struct contact  // 触点数据结构
 {
