@@ -241,6 +241,7 @@ void TIM3_IRQHandler(void)
     {
       tp_x[tp_flag]=TP_MeasureX();
       tp_y[tp_flag]=TP_MeasureY();
+//      printf("%d\t%d\r\n",tp_x[tp_flag],tp_y[tp_flag]);
       if((-10<(tp_x[tp_flag]-tp_x[tp_flag-1])<10)&&(-10<(tp_y[tp_flag]-tp_y[tp_flag-1])<10))
       {tp_flag+=1;}
       else
@@ -279,10 +280,13 @@ void TIM3_IRQHandler(void)
       }
       x=(tp_x[1]+tp_x[2]+tp_x[3])/3;
       y=(tp_y[1]+tp_y[2]+tp_y[3])/3;
+      x=800-x;
+      y=480-y;
+//      printf("%d\t%d\r\n",x,y);
      if((x<800)&&(y<479))
      {
        
-//       LCD_DrawFullCircle(x,y,3,0xaaaa,1);
+//      LCD_DrawFullCircle(x,y,5,0xaaaa,1);
        if(x>24&&x<320&&y>320&&y<424)
        {
          APP_PROGRAM_FLAG=1;

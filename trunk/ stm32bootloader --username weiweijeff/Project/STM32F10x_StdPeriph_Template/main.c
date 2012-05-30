@@ -86,16 +86,63 @@ void LCD_RESET_PIN_CONFIG(void);
 void LCD_reset(void);
 
 
-
-
-
-
-
-
-void delay(void)//延时函数，流水灯显示用
+void USART1_Init()
 {
- uint32_t i;
- for(i=0;i<0xfFFFF;i++);
+  /* USARTx configured as follow:
+        - BaudRate = 9600 baud
+        - Word Length = 8 Bits
+        - One Stop Bit
+        - No parity
+        - Hardware flow control disabled (RTS and CTS signals)
+        - Receive and transmit enabled
+  */
+  USART_InitTypeDef USART_InitStructure;
+  USART_InitStructure.USART_BaudRate = 115200;
+  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+  USART_InitStructure.USART_StopBits = USART_StopBits_1;
+  USART_InitStructure.USART_Parity = USART_Parity_No;
+  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+
+
+  GPIO_InitTypeDef GPIO_InitStructure;
+  /* Enable GPIO clock */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+
+  /* Enable UART clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+
+  /* Configure USART Tx as alternate function push-pull */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* Configure USART Rx as input floating */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  GPIO_Init( GPIOA, &GPIO_InitStructure);
+
+  /* USART configuration */
+  USART_Init(USART1, &USART_InitStructure);
+
+  /*********************************************/
+  //USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  //USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+  /*********************************************/
+
+  /* Enable USART */
+  USART_Cmd(USART1, ENABLE);
+}
+
+
+
+
+
+static void delay_nus(uint16_t n)
+{
+  n=n*8;
+  while(--n);
 }
 
       FILINFO file_info;
@@ -136,12 +183,15 @@ int main(void)
   Touch_Config();  
   TIM2_Config();
   TIM3_Config();  
-  
+  USART1_Init();
   GPIO_ResetBits(GPIOG, GPIO_Pin_7);
-  delay();
-   GPIO_SetBits(GPIOG, GPIO_Pin_7);
+  delay_nus(500);
+  GPIO_SetBits(GPIOG, GPIO_Pin_7);
+  delay_nus(200);
+  
   STM3210E_LCD_Init();
   LCD_Clear(LCD_COLOR_BLACK);
+//  delay_nus(2000);
   LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(176,200,"设计单位：武昌南机务段", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   LCD_str(176,250,"技术支持：weiweijeff@gmail.com", 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -151,6 +201,7 @@ int main(void)
   LCD_str(500,340,"选择实验", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
   APP_PROGRAM_FLAG=0x00;
   Jump_To_App_flag=0x00;
+  LCD_WriteReg(PREF,0x30);
   while (1)
   {
     get_time_now();
@@ -232,7 +283,7 @@ int main(void)
       
       LCD_Clear(LCD_COLOR_BLACK);
       LCD_str(10,50,"软件升级成功！请稍候...", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-      delay();
+      delay_nus(10000);
       APP_PROGRAM_FLAG=0x00;      
       LCD_Clear(LCD_COLOR_BLACK);
       LCD_str(144,50,"司机控制器测试仪", 64, LCD_COLOR_BLUE,LCD_COLOR_BLACK);

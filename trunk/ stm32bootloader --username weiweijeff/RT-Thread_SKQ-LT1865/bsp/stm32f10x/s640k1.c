@@ -47,7 +47,7 @@ u16 S640K1_value_disp[11][2]=
 u16 sk640_jiwei_v[19]={0,200,1085,1966,2847,3728,4609,5490,6371,7252,8133,9014,9895,10776,11657,12538,13419,14300,15000};
 u8 sk640_jiwei_flag=0x7f;
 u8 sk640_jiwei_q[7]={0,3,6,9,12,15,17};
-u8 sk640_jiwei_z[7]={17,15,12,9,6,3,1};
+u8 sk640_jiwei_z[7]={17,15,12,9,6,3,0};
 
 
 void draw_s640k1(void)
@@ -77,11 +77,11 @@ void draw_s640k1(void)
   u8 n=0;
   for(n=0;n<7;n++)
   {
-    LCD_DrawUniLine( 128,  (272+32*n),  256,  (272+32*n),  Cyan);
+    LCD_DrawUniLine( 128,  (272+32*n),  256,  (272+32*n),  Green);
   }
   for(n=0;n<4;n++)
   {
-    LCD_DrawUniLine( (144+32*n),  256,  (144+32*n),  479,  Cyan);
+    LCD_DrawUniLine( (144+32*n),  256,  (144+32*n),  479,  Green);
   }
   LCD_DrawUniLine( 256, 272,  256,  464,  Green);
   
@@ -116,11 +116,11 @@ void draw_s640k1(void)
   
   for(n=0;n<4;n++)
   {
-    LCD_DrawUniLine( 128,  (112+32*n),  608,  (112+32*n),  Cyan);
+    LCD_DrawUniLine( 128,  (112+32*n),  608,  (112+32*n),  Green);
   }
   for(n=0;n<15;n++)
   {
-    LCD_DrawUniLine( (144+32*n),  96,  (144+32*n),  224,  Cyan);
+    LCD_DrawUniLine( (144+32*n),  96,  (144+32*n),  224,  Green);
   }
   LCD_DrawUniLine( 608, 144,  608,  176,  Green);
   LCD_DrawUniLine( 128, 144,  128,  272,  Green);
@@ -635,8 +635,9 @@ void S640K1_measure_levels(unsigned char n)
         S640K1_levels[n].level_V[2]='.';
         S640K1_levels[n].level_V[3]=(*p%1000)/100+'0';
         S640K1_levels[n].level_V[4]=(*p%100)/10+'0';
-        S640K1_levels[n].level_V[5]='V';
-        S640K1_levels[n].level_V[6]='\0';
+        S640K1_levels[n].level_V[5]=*p%10+'0';
+        S640K1_levels[n].level_V[6]='V';
+        S640K1_levels[n].level_V[7]='\0';
         
         
         LCD_str(671,304,S640K1_levels[n].level_V,32,Blue,Black);
@@ -775,7 +776,7 @@ void sk640k1_scan(void)
       p=Get_ADC_V_Value();*p=6*(*p);
       for(n=0;n<18;n++)
       {
-        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        if(((*p)>= sk640_jiwei_v[n])&&((*p)< sk640_jiwei_v[n+1]))
         {
           for(m=0;m<7;m++)
           {
@@ -812,7 +813,7 @@ void sk640k1_scan(void)
       p=Get_ADC_V_Value();*p=6*(*p);
       for(n=0;n<18;n++)
       {
-        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        if(((*p)>= sk640_jiwei_v[n])&&((*p)< sk640_jiwei_v[n+1]))
         {
           for(m=0;m<7;m++)
           {
@@ -849,7 +850,7 @@ void sk640k1_scan(void)
       p=Get_ADC_V_Value();*p=6*(*p);
       for(n=0;n<18;n++)
       {
-        if(((*p)> sk640_jiwei_v[n])&&((*p)<= sk640_jiwei_v[n+1]))
+        if(((*p)>= sk640_jiwei_v[n])&&((*p)< sk640_jiwei_v[n+1]))
         {
 
           for(m=0;m<7;m++)

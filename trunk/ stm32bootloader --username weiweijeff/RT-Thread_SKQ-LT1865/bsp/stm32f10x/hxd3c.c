@@ -291,8 +291,9 @@ void hxd3c_measure_levels(unsigned char n)
         hxd3c_levels[n].level_V[2]='.';
         hxd3c_levels[n].level_V[3]=(*p%1000)/100+'0';
         hxd3c_levels[n].level_V[4]=(*p%100)/10+'0';
-        hxd3c_levels[n].level_V[5]='V';
-        hxd3c_levels[n].level_V[6]='\0';
+        hxd3c_levels[n].level_V[5]=*p%10+'0';
+        hxd3c_levels[n].level_V[6]='V';
+        hxd3c_levels[n].level_V[7]='\0';
         
         
         LCD_str(671,304,hxd3c_levels[n].level_V,32,Blue,Black);
@@ -447,7 +448,7 @@ void hxd3c_scan(void)
         p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
         for(n=0;n<15;n++)
         {
-          if(((*p)> hxd3c_jiwei_qv[n])&&((*p)<= hxd3c_jiwei_qv[n+1]))
+          if(((*p)>= hxd3c_jiwei_qv[n])&&((*p)< hxd3c_jiwei_qv[n+1]))
           {
             for(m=0;m<8;m++)
             {
@@ -482,7 +483,7 @@ void hxd3c_scan(void)
         p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
         for(n=0;n<15;n++)
         {
-          if(((*p)> hxd3c_jiwei_qv[n])&&((*p)<= hxd3c_jiwei_qv[n+1]))
+          if(((*p)>= hxd3c_jiwei_qv[n])&&((*p)< hxd3c_jiwei_qv[n+1]))
           {
             for(m=0;m<8;m++)
             {
@@ -517,7 +518,7 @@ void hxd3c_scan(void)
 //        rt_kprintf("jiwei_v=%d\r\n",(*p));
         for(n=0;n<14;n++)
         {
-          if(((*p)> hxd3c_jiwei_zv[n])&&((*p)<= hxd3c_jiwei_zv[n+1]))
+          if(((*p)>= hxd3c_jiwei_zv[n])&&((*p)< hxd3c_jiwei_zv[n+1]))
           {
 //             rt_kprintf("jiwei_n=%x\r\n",n);
             for(m=0;m<8;m++)
@@ -553,7 +554,7 @@ void hxd3c_scan(void)
         p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
         for(n=0;n<14;n++)
         {
-          if(((*p)> hxd3c_jiwei_zv[n])&&((*p)<= hxd3c_jiwei_zv[n+1]))
+          if(((*p)>= hxd3c_jiwei_zv[n])&&((*p)< hxd3c_jiwei_zv[n+1]))
           {
             for(m=0;m<8;m++)
             {

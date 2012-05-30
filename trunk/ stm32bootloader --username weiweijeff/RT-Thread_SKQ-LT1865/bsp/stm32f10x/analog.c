@@ -130,6 +130,7 @@ rt_int16_t *Get_ADC_V_Value()
   delay_nus(100);
   rt_uint16_t j=0,i=0,temp=0;
   rt_uint32_t n=0;
+  double ftemp=0;
   for(j=0;j<ADC_V_DMA_BufferSize;j+=1)
   {
     ADCConvertedValue_V[j]=ltc1865_read_ch(1,1);
@@ -152,12 +153,20 @@ rt_int16_t *Get_ADC_V_Value()
     n+=ADCConvertedValue_V[i];
   }
 //  rt_kprintf("vn=%d\n",n);
-  V=(rt_int16_t)(n/32*3298/65356);
-  V=(rt_int16_t)(V*1.00565+10.2712);
-  if(V<0)
+  ftemp=((n>>5)*3298)>>16;
+  if(ftemp<1)
   {
-    V=0;
+    ftemp=0;
   }
+  else if(ftemp<1500)
+  {
+    ftemp=ftemp*0.9985+32;
+  }
+  else
+  {
+    ftemp=ftemp*1.01978+0.4;
+  }
+  V=(rt_int16_t)ftemp;
   return &V;  
 }
 
