@@ -25,7 +25,7 @@
 #include <dfs_posix.h>
 
 
-rt_uint16_t BK_PWM=0x3f;
+rt_uint16_t BK_PWM=0x2f;
 rt_uint16_t coy_src=0x00;
 rt_uint16_t cur_page=0x00;
 rt_uint16_t opt_page=0x00;
@@ -59,7 +59,7 @@ typedef struct
 rt_inline void LCD_WriteRAM(rt_uint16_t RGB_Code)
 {
 	/* Write 16-bit GRAM Reg */
-	LCD->LCD_RAM = (RGB_Code>>8);
+//	LCD->LCD_RAM = (RGB_Code>>8);
         LCD->LCD_RAM = RGB_Code;
 }
 
@@ -478,7 +478,7 @@ void DrawPixel(rt_uint16_t x, rt_uint16_t y, rt_uint16_t colour)
   LCD_WriteReg(CUR_X,x); // .............. CUR_X  
   LCD_WriteReg(CUR_Y,y); // .............. CUR_Y
   LCD->LCD_REG=PIXELS; // .............. PIXELS
-  LCD->LCD_RAM = colour>>8;
+//  LCD->LCD_RAM = colour>>8;
   LCD->LCD_RAM = colour;
 }
 

@@ -171,8 +171,8 @@ static void touch_thread_entry(void* parameter)
         x=TP_MeasureX();
         y=TP_MeasureY();
         x=(signed short int)(KX1*(x)+KX2*(y)+KX3+0.5);
-        y=(signed short int)(KY1*(x)+KY2*(y)+KY3+0.5);
-        x=800-x;
+        y=480-(signed short int)(KY1*(x)+KY2*(y)+KY3+0.5);
+//        x=800-x;
 //        LCD_DrawFullCircle( x, y, 2,  Red,  1);
         touch_schedule(x,y);
       }

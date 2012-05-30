@@ -83,7 +83,7 @@ void STM3210E_LCD_Init(void)
 /* Configure the FSMC Parallel interface -------------------------------------*/
   LCD_FSMCConfig();
   
-  LCD_WriteReg(PREF,0x3f);
+  LCD_WriteReg(PREF,0x00);
    
 }
 
@@ -104,7 +104,7 @@ void LCD_Clear(uint16_t Color)
   
   for(index = 0; index < 384000; index++)
   {
-    LCD->LCD_RAM = Color>>8;
+//    LCD->LCD_RAM = Color>>8;
     LCD->LCD_RAM = Color;
   }  
 }
@@ -122,7 +122,7 @@ void LCD_WriteReg(uint8_t LCD_Reg, uint16_t LCD_RegValue)
   /* Write 16-bit Index, then Write Reg */
   LCD->LCD_REG = LCD_Reg;
   /* Write 16-bit Reg */
-  LCD->LCD_RAM = (LCD_RegValue>>8);
+//  LCD->LCD_RAM = (LCD_RegValue>>8);
   LCD->LCD_RAM = LCD_RegValue;
 }
 
@@ -151,7 +151,7 @@ uint16_t LCD_ReadReg(uint8_t LCD_Reg)
 void LCD_WriteRAM(uint16_t RGB_Code)
 {
   /* Write 16-bit GRAM Reg */
-  LCD->LCD_RAM = RGB_Code>>8;
+//  LCD->LCD_RAM = RGB_Code>>8;
   LCD->LCD_RAM = RGB_Code;
 }
 
@@ -316,7 +316,7 @@ void LCD_WriteRAM_Prepare(void)
 
 void LCD_WritePoint(uint16_t color)
 {
-  LCD->LCD_RAM = color>>8;
+//  LCD->LCD_RAM = color>>8;
   LCD->LCD_RAM = color;
 }
 
@@ -326,7 +326,7 @@ void DrawPixel(uint16_t x, uint16_t y, uint16_t colour)
   LCD_WriteReg(CUR_X,x); // .............. CUR_X  
   LCD_WriteReg(CUR_Y,y); // .............. CUR_Y
   LCD->LCD_REG=PIXELS; // .............. PIXELS
-  LCD->LCD_RAM = colour>>8;
+//  LCD->LCD_RAM = colour>>8;
   LCD->LCD_RAM = colour;
 }
 
@@ -425,7 +425,7 @@ void LCD_DrawFullRect(uint16_t Xpos, uint16_t Ypos, uint16_t Xend, uint16_t Yend
     index_end = (Xend-Xpos+1)*(Yend-Ypos+1);
     for(index = 0; index < index_end; index++)
     {
-      LCD->LCD_RAM = Rect_colour>>8;
+//      LCD->LCD_RAM = Rect_colour>>8;
       LCD->LCD_RAM = Rect_colour;
     }
   }
@@ -447,7 +447,7 @@ static void LCD_DrawLine_HORIZONTAL(uint16_t Xpos, uint16_t Ypos, uint16_t Lengt
   uint32_t index;
   for(index = 0; index < Length; index++)
   {
-    LCD->LCD_RAM = colour>>8;
+//    LCD->LCD_RAM = colour>>8;
     LCD->LCD_RAM = colour;
   }
 }

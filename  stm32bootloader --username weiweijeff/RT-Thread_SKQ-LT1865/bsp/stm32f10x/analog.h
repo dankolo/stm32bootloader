@@ -72,7 +72,7 @@ struct contact  // 触点数据结构
 struct level   // 级位数据结构
 {
   //unsigned char level_index[];//级位索引
-  unsigned char level_V[7];//级位电压
+  unsigned char level_V[8];//级位电压
   struct contact contacts[5];//级位触点
 };
 

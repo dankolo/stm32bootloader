@@ -1,6 +1,6 @@
 
 #include "touch.h"
-
+#include <stdio.h>
 
 
 void Touch_Config(void) 
@@ -18,7 +18,7 @@ void Touch_Config(void)
   //Configure SPI2 pins: MISO
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14; 
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;   //上拉输入
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;   //上拉输入
   GPIO_Init(GPIOB,&GPIO_InitStructure);
   
   //Configure TP_PINS:TP_CS PB12
@@ -95,6 +95,7 @@ int16_t TPReadX(void)
    SpiDelay(10);
    TP_DCS(); 
    x = x>>3;
+//   printf("x=%d\r\n",x);
    return (x);
 }
 
@@ -110,7 +111,9 @@ int16_t TPReadY(void)
   y+=SPI_WriteByte(0x00);
   SpiDelay(10);
   TP_DCS();
-  y = y>>3; 
+  y = y>>3;
+//  printf("y=%d\r\n",y);
+  
   return (y);
 }
 
