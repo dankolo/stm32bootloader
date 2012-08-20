@@ -56,7 +56,7 @@
 #define PowerA_DIS()             GPIO_ResetBits(GPIOE,GPIO_Pin_2)
 
 
-
+extern char R_value[6];
 
 struct contact  // 触点数据结构
 {
@@ -76,7 +76,7 @@ struct level   // 级位数据结构
   struct contact contacts[5];//级位触点
 };
 
-extern rt_uint8_t     auto_scan_flag;
+//extern rt_uint8_t     auto_scan_flag;
 
 
 
@@ -87,6 +87,21 @@ rt_int16_t *Get_ADC_V_Value();
 void CD4067_GPIO_Config(void);
 void PowerA_GPIO_Config(void);
 void Set_Scan_Channel(unsigned char x);
+
+void GPIO_config(void);
+
+void measure_R(void);
+
+void set_24V(void);
+void reset_24V(void);
+
+void set_110V(void);
+void reset_110V(void);
+
+
+
+
+
 
 
 

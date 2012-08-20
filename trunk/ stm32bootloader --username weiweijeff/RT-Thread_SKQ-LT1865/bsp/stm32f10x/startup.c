@@ -67,7 +67,7 @@ void rtthread_startup(void)
 	/* init board */
 	rt_hw_board_init();
         
-    rt_hw_lcd_init();
+    
 
 	/* show version */
 	rt_show_version();
@@ -126,6 +126,7 @@ void rtthread_startup(void)
 
     /* init timer thread */
     rt_system_timer_thread_init();
+    rt_hw_lcd_init();
 
 	/* init idle thread */
 	rt_thread_idle_init();

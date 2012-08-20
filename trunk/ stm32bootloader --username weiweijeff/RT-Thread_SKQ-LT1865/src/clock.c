@@ -21,7 +21,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 
-static rt_tick_t rt_tick;
+static volatile rt_tick_t rt_tick;
 
 extern void rt_timer_check(void);
 

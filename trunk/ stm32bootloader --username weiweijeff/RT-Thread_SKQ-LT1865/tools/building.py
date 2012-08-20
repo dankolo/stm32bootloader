@@ -261,7 +261,7 @@ def MDK4Project(target, script):
         # get each group's definitions
         if group.has_key('CPPDEFINES') and group['CPPDEFINES']:
             if CPPDEFINES:
-                CPPDEFINES += ';' + group['CPPDEFINES']
+                CPPDEFINES += group['CPPDEFINES']
             else:
                 CPPDEFINES += group['CPPDEFINES']
         
@@ -435,17 +435,22 @@ class Win32Spawn:
         newargs = string.join(args[1:], ' ')
         cmdline = cmd + " " + newargs
         startupinfo = subprocess.STARTUPINFO()
-        # startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        #startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        penv = {}
+        for key, value in env.iteritems():
+            penv[key] = str(value)
+
         proc = subprocess.Popen(cmdline, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, startupinfo=startupinfo, shell = False)
+            stderr=subprocess.PIPE, startupinfo=startupinfo, shell = False, env=penv)
         data, err = proc.communicate()
         rv = proc.wait()
-        if rv:
-            print err
-            return rv
-
         if data:
             print data
+        if err:
+            print err
+
+        if rv:
+            return rv
         return 0
 
 def PrepareBuilding(env, root_directory, has_libcpu=False):
@@ -497,7 +502,7 @@ def PrepareBuilding(env, root_directory, has_libcpu=False):
                     (tgt_name, ', '.join(tgt_dict.keys()))
             sys.exit(1)
     elif (GetDepend('RT_USING_NEWLIB') == False and GetDepend('RT_USING_NOLIBC') == False) \
-	   and rtconfig.PLATFORM == 'gcc':
+        and rtconfig.PLATFORM == 'gcc':
         AddDepend('RT_USING_MINILIBC')
 
     #env['CCCOMSTR'] = "CC $TARGET"
@@ -513,7 +518,7 @@ def PrepareBuilding(env, root_directory, has_libcpu=False):
     if not has_libcpu:
         objs.append(SConscript('libcpu/SConscript', variant_dir='build/libcpu', duplicate=0))
     # include components
-    objs.append(SConscript('components/SConscript', variant_dir='build/components', duplicate=0))
+    objs.append(SConscript(os.path.join(Rtt_Root, 'components/SConscript'), variant_dir='build/components', duplicate=0))
 
     return objs
 
@@ -657,3 +662,26 @@ def SrcRemove(src, remove):
 	for item in src:
 		if os.path.basename(item.rstr()) in remove:
 			src.remove(item)
+
+def GetVersion():
+    import SCons.cpp
+    import string
+
+    rtdef = os.path.join(Rtt_Root, 'include', 'rtdef.h')
+
+    # parse rtdef.h to get RT-Thread version 
+    prepcessor = SCons.cpp.PreProcessor()
+    f = file(rtdef, 'r')
+    contents = f.read()
+    f.close()
+    prepcessor.process_contents(contents)
+    def_ns = prepcessor.cpp_namespace
+
+    version = int(filter(lambda ch: ch in '0123456789.', def_ns['RT_VERSION']))
+    subversion = int(filter(lambda ch: ch in '0123456789.', def_ns['RT_SUBVERSION']))
+
+    if def_ns.has_key('RT_REVISION'):
+        revision = int(filter(lambda ch: ch in '0123456789.', def_ns['RT_REVISION']))
+        return '%d.%d.%d' % (version, subversion, revision)
+
+    return '0.%d.%d' % (version, subversion)

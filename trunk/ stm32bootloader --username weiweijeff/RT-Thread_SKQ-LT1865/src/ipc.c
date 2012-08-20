@@ -73,8 +73,9 @@ rt_inline rt_err_t rt_ipc_object_init(struct rt_ipc_object *ipc)
  * This function will suspend a thread to a specified list. IPC object or some double-queue
  * object (mailbox etc.) contains this kind of list.
  *
- * @param ipc the IPC object
+ * @param list the IPC suspended thread list
  * @param thread the thread object to be suspended
+ * @param flag the IPC object flag, which shall be RT_IPC_FLAG_FIFO/RT_IPC_FLAG_PRIO.
  *
  * @return the operation status, RT_EOK on successful
  */
@@ -465,6 +466,8 @@ rt_err_t rt_sem_control(rt_sem_t sem, rt_uint8_t cmd, void *arg)
 
 		/* enable interrupt */
 		rt_hw_interrupt_enable(level);
+
+		rt_schedule();
 
 		return RT_EOK;
 	}
@@ -1150,6 +1153,8 @@ rt_err_t rt_event_control(rt_event_t event, rt_uint8_t cmd, void *arg)
 		/* enable interrupt */
 		rt_hw_interrupt_enable(level);
 
+		rt_schedule();
+
 		return RT_EOK;
 	}
 
@@ -1352,7 +1357,7 @@ rt_err_t rt_mb_send_wait(rt_mailbox_t mb, rt_uint32_t value, rt_int32_t timeout)
 			rt_hw_interrupt_enable(temp);
 			return -RT_EFULL;
 		}
-	
+
 		RT_DEBUG_NOT_IN_INTERRUPT;
 		/* suspend current thread */
 		rt_ipc_list_suspend(&(mb->suspend_sender_thread), thread, mb->parent.parent.flag);
@@ -1589,7 +1594,6 @@ rt_err_t rt_mb_control(rt_mailbox_t mb, rt_uint8_t cmd, void *arg)
 
 		/* resume all waiting thread */
 		rt_ipc_list_resume_all(&(mb->parent.suspend_thread));
-
 		/* also resume all mailbox private suspended thread */
 		rt_ipc_list_resume_all(&(mb->suspend_sender_thread));
 
@@ -1600,6 +1604,8 @@ rt_err_t rt_mb_control(rt_mailbox_t mb, rt_uint8_t cmd, void *arg)
 
 		/* enable interrupt */
 		rt_hw_interrupt_enable(level);
+
+		rt_schedule();
 
 		return RT_EOK;
 	}
@@ -2129,6 +2135,8 @@ rt_err_t rt_mq_control(rt_mq_t mq, rt_uint8_t cmd, void *arg)
 
 		/* enable interrupt */
 		rt_hw_interrupt_enable(level);
+
+		rt_schedule();
 
 		return RT_EOK;
 	}

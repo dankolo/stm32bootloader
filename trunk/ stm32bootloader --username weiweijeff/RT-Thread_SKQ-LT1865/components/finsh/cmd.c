@@ -166,7 +166,7 @@ static long _list_event(struct rt_list_node *list)
 		e = (struct rt_event*)(rt_list_entry(node, struct rt_object, list));
 		if( !rt_list_isempty(&e->parent.suspend_thread) )
 		{
-			rt_kprintf("%-8s  0x%08x %03d\n", e->parent.parent.name, e->set, rt_list_len(&e->parent.suspend_thread));
+			rt_kprintf("%-8s  0x%08x %03d:", e->parent.parent.name, e->set, rt_list_len(&e->parent.suspend_thread));
 			show_wait_queue(&(e->parent.suspend_thread));
 			rt_kprintf("\n");
 		}

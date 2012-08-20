@@ -1,7 +1,7 @@
 /*
  * File      : timer.c
  * This file is part of RT-Thread RTOS
- * COPYRIGHT (C) 2006 - 2011, RT-Thread Development Team
+ * COPYRIGHT (C) 2006 - 2012, RT-Thread Development Team
  *
  * The license and distribution terms for this file may be
  * found in the file LICENSE in this distribution or at
@@ -76,14 +76,27 @@ static void _rt_timer_init(rt_timer_t timer,
 	rt_list_init(&(timer->list));
 }
 
+static rt_tick_t rt_timer_list_next_timeout(rt_list_t *timer_list)
+{
+	struct rt_timer *timer;
+
+	if (rt_list_isempty(timer_list))
+		return RT_TICK_MAX;
+	
+	timer = rt_list_entry(timer_list->next, struct rt_timer, list);
+
+	return timer->timeout_tick;
+}
+
 /**
  * @addtogroup Clock
  */
+
 /*@{*/
 
 /**
- * This function will initialize a timer, normally this function is used to initialize
- * a static timer object.
+ * This function will initialize a timer, normally this function is used to
+ * initialize a static timer object.
  *
  * @param timer the static timer object
  * @param name the name of timer
@@ -398,6 +411,16 @@ void rt_timer_check(void)
 #endif
 
 	RT_DEBUG_LOG(RT_DEBUG_TIMER, ("timer check leave\n"));
+}
+
+/**
+ * This function will return the next timeout tick in the system.
+ *
+ * @return the next timeout tick in the system
+ */
+rt_tick_t rt_timer_next_timeout_tick(void)
+{
+	return rt_timer_list_next_timeout(&rt_timer_list);
 }
 
 #ifdef RT_USING_TIMER_SOFT

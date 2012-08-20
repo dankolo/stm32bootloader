@@ -82,8 +82,8 @@ void TIM3_Config(void);
 
 
 
-void LCD_RESET_PIN_CONFIG(void);
-void LCD_reset(void);
+void USB_SW_CONFIG(void);
+void USB_SW(unsigned char s);
 
 
 void USART1_Init()
@@ -179,16 +179,11 @@ int main(void)
   Mass_Storage_Start();
   NVIC_Configuration();
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
-  LCD_RESET_PIN_CONFIG();
+  USB_SW_CONFIG();
   Touch_Config();  
   TIM2_Config();
   TIM3_Config();  
-  USART1_Init();
-  GPIO_ResetBits(GPIOG, GPIO_Pin_7);
-  delay_nus(500);
-  GPIO_SetBits(GPIOG, GPIO_Pin_7);
-  delay_nus(200);
-  
+  USART1_Init();  
   STM3210E_LCD_Init();
   LCD_Clear(LCD_COLOR_BLACK);
 //  delay_nus(2000);
@@ -202,13 +197,15 @@ int main(void)
   APP_PROGRAM_FLAG=0x00;
   Jump_To_App_flag=0x00;
   LCD_WriteReg(PREF,0x30);
+  USB_SW(1);
   while (1)
   {
     get_time_now();
     LCD_str(176,150,time_buffer, 24, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
-    
+    delay_nus(10000);
     if(APP_PROGRAM_FLAG==0x01)
     {
+      USB_SW(0);
       LCD_Clear(LCD_COLOR_BLACK);
       stat_file("/","app.bin");
       LCD_str(200,50,"开始升级，请等待...", 32, LCD_COLOR_BLUE,LCD_COLOR_BLACK);
@@ -312,6 +309,7 @@ int main(void)
     
     if(Jump_To_App_flag==0x01)
     {
+      USB_SW(0);
       TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
       TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
       TIM_Cmd(TIM2, DISABLE);
@@ -549,7 +547,7 @@ void LED_GPIO_Configuration(void)
   GPIO_Init(GPIOF, &GPIO_InitStructure);
 }
 
-void LCD_RESET_PIN_CONFIG(void)
+void USB_SW_CONFIG(void)
 {
   /* GPIOF Periph clock enable */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOG, ENABLE);
@@ -562,13 +560,16 @@ void LCD_RESET_PIN_CONFIG(void)
 
   GPIO_Init(GPIOG, &GPIO_InitStructure);
 }
-void LCD_reset(void)
+void USB_SW(unsigned char s)
 {
-  GPIO_SetBits(GPIOG, GPIO_Pin_7);
-  
-  GPIO_ResetBits(GPIOG, GPIO_Pin_7);
-  
-   GPIO_SetBits(GPIOG, GPIO_Pin_7);
+  if(s!=0)
+  {
+    GPIO_ResetBits(GPIOG, GPIO_Pin_7);
+  }
+  else
+  {
+    GPIO_SetBits(GPIOG, GPIO_Pin_7);
+  }
 }
 
 void Run_App(void)
