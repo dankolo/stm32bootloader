@@ -277,7 +277,7 @@ int dfs_mount(const char *device_name, const char *path,
 		}
 	}
 
-	/* find out en empty filesystem table entry */
+	/* find out an empty filesystem table entry */
 	for (index = 0; index < DFS_FILESYSTEMS_MAX && filesystem_table[index].ops != RT_NULL;
 		index++) ;
 	if (index == DFS_FILESYSTEMS_MAX)	/* can't find en empty filesystem table entry */
@@ -369,6 +369,9 @@ int dfs_unmount(const char *specialfile)
 	/* close device, but do not check the status of device */
 	if (fs->dev_id != RT_NULL)
 		rt_device_close(fs->dev_id);
+
+	if (fs->path != RT_NULL)
+		rt_free(fs->path);
 
 	/* clear this filesystem table entry */
 	rt_memset(fs, 0, sizeof(struct dfs_filesystem));

@@ -281,7 +281,7 @@ void TIM3_IRQHandler(void)
       x=(tp_x[1]+tp_x[2]+tp_x[3])/3;
       y=(tp_y[1]+tp_y[2]+tp_y[3])/3;
       x=800-x;
-      y=480-y;
+      //y=480-y;
 //      printf("%d\t%d\r\n",x,y);
      if((x<800)&&(y<479))
      {

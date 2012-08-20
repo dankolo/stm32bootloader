@@ -60,6 +60,7 @@ static void led_thread_entry(void* parameter)
 /* 调度器上锁，上锁后，将不再切换到其他线程，仅响应中断 */
 	rt_enter_critical();
         ADC_GPIO_Config();
+        GPIO_config();
         CD4067_GPIO_Config();
         PowerA_GPIO_Config();
         PowerA_EN();
@@ -141,10 +142,10 @@ static struct rt_thread touch_thread;
 static void touch_thread_entry(void* parameter)
 {
   read_ref();
-  double KX1=0.221578, KX2=0.000183458, KX3=-54.4787, KY1=-0.000401399, KY2=0.135246, KY3=-48.2589;
+  double KX1=0.204287,KX2=-0.000007,KX3=-23.878503,KY1=0.001424,KY2=0.125727,KY3=-34.621546;
   rt_int16_t x=0,y=0;
   Touch_Config();
-  
+  GPIO_config();
   ltc1865_init();
   CD4067_GPIO_Config();
   PowerA_GPIO_Config();
@@ -159,7 +160,8 @@ static void touch_thread_entry(void* parameter)
   rt_enter_critical();
   draw_main_panel();
   /* 调度器解锁 */
-  rt_exit_critical();
+  rt_exit_critical();  
+  
   while (1)
   {
     rt_thread_delay(10);
@@ -168,10 +170,10 @@ static void touch_thread_entry(void* parameter)
       rt_thread_delay(5);
       if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)==0)
       {
-        x=TP_MeasureX();
-        y=TP_MeasureY();
+        y=TP_MeasureX();
+        x=TP_MeasureY();
         x=(signed short int)(KX1*(x)+KX2*(y)+KX3+0.5);
-        y=480-(signed short int)(KY1*(x)+KY2*(y)+KY3+0.5);
+        y=(signed short int)(KY1*(x)+KY2*(y)+KY3+0.5);
 //        x=800-x;
 //        LCD_DrawFullCircle( x, y, 2,  Red,  1);
         touch_schedule(x,y);
@@ -307,8 +309,11 @@ int rt_application_init()
 		(rt_uint8_t*)&ltc1865_stack[0], sizeof(ltc1865_stack), 15, 5);
 	if (result == RT_EOK)
 	{
-//        rt_thread_startup(&ltc1865_thread);
+        //rt_thread_startup(&ltc1865_thread);
 	}
+        
+        skq_scan_thread_create();
+        rt_thread_suspend(skq_scan_thread);
         
 #if (RT_THREAD_PRIORITY_MAX == 32)
 	init_thread = rt_thread_create("init",

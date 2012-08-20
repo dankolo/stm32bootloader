@@ -19,7 +19,7 @@ void tcp_senddata(const char* url, int port, int length)
 		return;
 	}
 
-	/* 神奇内存 */
+	/* 申请内存 */
 	buffer_ptr = rt_malloc(length);
 	/* 构造发生数据 */
 	for (index = 0; index < length; index ++)

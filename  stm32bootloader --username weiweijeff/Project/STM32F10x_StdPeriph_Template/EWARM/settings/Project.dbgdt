@@ -25,13 +25,13 @@
         
         
         
-      <MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow><InstrProfShow>0</InstrProfShow><col-names><item>Disassembly</item><item>_I0</item></col-names><col-widths><item>500</item><item>20</item></col-widths><DisasmHistory><item>files_num</item><item>fn</item><item>y</item><item>dir</item><item>fno.lfsize</item><item>lfn</item><item>fno.lfname</item><item>fno</item><item>0x0800F200</item><item>0x0800F0200</item><item>0x0800F790</item><item>0x0800F180</item><item>0x0800F0c0</item><item>0x0800F030</item><item>0x0800F000</item><item>0x08015654</item><item>BANK1_WRITE_END_ADDR</item><item>0x0801654</item><item>test</item><item>p</item></DisasmHistory><ShowCodeCoverage>0</ShowCodeCoverage><ShowInstrProfiling>0</ShowInstrProfiling></Disassembly>
+      <MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow><InstrProfShow>0</InstrProfShow><col-names><item>Disassembly</item><item>_I0</item></col-names><col-widths><item>500</item><item>20</item></col-widths><DisasmHistory><item>x</item><item>files_num</item><item>fn</item><item>y</item><item>dir</item><item>fno.lfsize</item><item>lfn</item><item>fno.lfname</item><item>fno</item><item>0x0800F200</item><item>0x0800F0200</item><item>0x0800F790</item><item>0x0800F180</item><item>0x0800F0c0</item><item>0x0800F030</item><item>0x0800F000</item><item>0x08015654</item><item>BANK1_WRITE_END_ADDR</item><item>0x0801654</item><item>test</item></DisasmHistory><ShowCodeCoverage>0</ShowCodeCoverage><ShowInstrProfiling>0</ShowInstrProfiling></Disassembly>
     </Static>
     <Windows>
       
       
       
-    <Wnd0>
+    <Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-17554-22152</Identity>
@@ -47,7 +47,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
         <Tabs>
           <Tab>
             <Identity>TabID-28302-22156</Identity>
@@ -55,11 +55,11 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>Project</ExpandedNode><ExpandedNode>Project/STM32_EVAL</ExpandedNode><ExpandedNode>Project/STM32_USB-FS-Device_Driver</ExpandedNode><ExpandedNode>Project/User</ExpandedNode><ExpandedNode>Project/ff8b</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>Project</ExpandedNode><ExpandedNode>Project/STM32_EVAL</ExpandedNode><ExpandedNode>Project/User</ExpandedNode><ExpandedNode>Project/ff8b</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1><Wnd2>
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
         <Tabs>
           <Tab>
             <Identity>TabID-6283-22159</Identity>
@@ -69,20 +69,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2></Windows>
+      <SelectedTab>0</SelectedTab></Wnd5></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\system_stm32f10x.c</Filename><XPos>0</XPos><YPos>1045</YPos><SelStart>34832</SelStart><SelEnd>34832</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h</Filename><XPos>0</XPos><YPos>58</YPos><SelStart>2380</SelStart><SelEnd>2393</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\diskio.c</Filename><XPos>0</XPos><YPos>19</YPos><SelStart>1449</SelStart><SelEnd>1449</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\touch.c</Filename><XPos>0</XPos><YPos>15</YPos><SelStart>3078</SelStart><SelEnd>3078</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\option\ccsbcs.c</Filename><XPos>0</XPos><YPos>502</YPos><SelStart>26001</SelStart><SelEnd>26001</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>260</YPos><SelStart>6909</SelStart><SelEnd>6909</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>149</YPos><SelStart>4880</SelStart><SelEnd>4880</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\fatfs.c</Filename><XPos>0</XPos><YPos>501</YPos><SelStart>11716</SelStart><SelEnd>11716</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_mal.c</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_storage.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\memory.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_istr.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_pwr.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>1495</SelStart><SelEnd>1499</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32_USB-FS-Device_Driver\inc\usb_type.h</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_lcd.c</Filename><XPos>0</XPos><YPos>63</YPos><SelStart>2471</SelStart><SelEnd>2495</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</Filename><XPos>0</XPos><YPos>419</YPos><SelStart>16813</SelStart><SelEnd>16813</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\sdcard.c</Filename><XPos>0</XPos><YPos>2109</YPos><SelStart>72313</SelStart><SelEnd>72313</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\ff.c</Filename><XPos>0</XPos><YPos>1632</YPos><SelStart>61852</SelStart><SelEnd>61852</SelEnd></Tab><ActiveTab>17</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\system_stm32f10x.c</Filename><XPos>0</XPos><YPos>1045</YPos><SelStart>34832</SelStart><SelEnd>34832</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h</Filename><XPos>0</XPos><YPos>58</YPos><SelStart>2380</SelStart><SelEnd>2393</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\diskio.c</Filename><XPos>0</XPos><YPos>19</YPos><SelStart>1449</SelStart><SelEnd>1449</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\fatfs.c</Filename><XPos>0</XPos><YPos>501</YPos><SelStart>11716</SelStart><SelEnd>11716</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_mal.c</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mass_storage.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\memory.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_istr.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_pwr.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>1495</SelStart><SelEnd>1499</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32_USB-FS-Device_Driver\inc\usb_type.h</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\STM32_EVAL\STM3210E_EVAL\stm3210e_eval_lcd.c</Filename><XPos>0</XPos><YPos>73</YPos><SelStart>2500</SelStart><SelEnd>2500</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</Filename><XPos>0</XPos><YPos>428</YPos><SelStart>17060</SelStart><SelEnd>17060</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\sdcard.c</Filename><XPos>0</XPos><YPos>898</YPos><SelStart>32926</SelStart><SelEnd>32926</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\ff.c</Filename><XPos>0</XPos><YPos>1632</YPos><SelStart>61852</SelStart><SelEnd>61852</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>149</YPos><SelStart>4881</SelStart><SelEnd>4881</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ff8b\option\ccsbcs.c</Filename><XPos>0</XPos><YPos>520</YPos><SelStart>29539</SelStart><SelEnd>29539</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\touch.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>1138</SelStart><SelEnd>1138</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>268</YPos><SelStart>7248</SelStart><SelEnd>7248</SelEnd></Tab><ActiveTab>17</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-008b5948><key>iaridepm.enu1</key></Toolbar-008b5948></Sizes></Row0><Row1><Sizes><Toolbar-0b101530><key>debuggergui.enu1</key></Toolbar-0b101530></Sizes></Row1><Row2><Sizes><Toolbar-0b1016c0><key>armjlink.enu1</key></Toolbar-0b1016c0></Sizes></Row2></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>565</Bottom><Right>283</Right><x>-2</x><y>-2</y><xscreen>286</xscreen><yscreen>287</yscreen><sizeHorzCX>198611</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>197917</sizeVertCX><sizeVertCY>693154</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>565</Bottom><Right>375</Right><x>-2</x><y>-2</y><xscreen>286</xscreen><yscreen>287</yscreen><sizeHorzCX>198611</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>261806</sizeVertCX><sizeVertCY>693154</sizeVertCY></Rect></Wnd2></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>160</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>162</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>198044</sizeHorzCY><sizeVertCX>198611</sizeVertCX><sizeVertCY>350856</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-004eabb0><key>iaridepm.enu1</key></Toolbar-004eabb0></Sizes></Row0><Row1><Sizes><Toolbar-0bdd17c0><key>debuggergui.enu1</key></Toolbar-0bdd17c0></Sizes></Row1><Row2><Sizes><Toolbar-0bdd1950><key>armjlink.enu1</key></Toolbar-0bdd1950></Sizes></Row2></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>565</Bottom><Right>283</Right><x>-2</x><y>-2</y><xscreen>286</xscreen><yscreen>287</yscreen><sizeHorzCX>198611</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>197917</sizeVertCX><sizeVertCY>693154</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>565</Bottom><Right>375</Right><x>-2</x><y>-2</y><xscreen>286</xscreen><yscreen>287</yscreen><sizeHorzCX>198611</sizeHorzCX><sizeHorzCY>350856</sizeHorzCY><sizeVertCX>261806</sizeVertCX><sizeVertCY>693154</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>160</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>162</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>198044</sizeHorzCY><sizeVertCX>198611</sizeVertCX><sizeVertCY>350856</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

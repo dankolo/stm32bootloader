@@ -33,13 +33,19 @@
 #define LWIP_DNS					0
 #endif
 
-#define LWIP_HAVE_LOOPIF            1
+#define LWIP_HAVE_LOOPIF            0
 
 #define LWIP_PLATFORM_BYTESWAP      0
 #define BYTE_ORDER                  LITTLE_ENDIAN
 
 /* Enable SO_RCVTIMEO processing.   */
 #define LWIP_SO_RCVTIMEO 			1
+
+#ifdef RT_USING_NEWLIB
+/* use timeval structure in newlib */
+#define LWIP_TIMEVAL_PRIVATE 0
+#include <sys/time.h>
+#endif
 
 /* #define RT_LWIP_DEBUG */
 
@@ -267,7 +273,7 @@
 #define LWIP_UDP                    0
 #endif
 
-#define LWIP_UDPLITE                1
+#define LWIP_UDPLITE                0
 #define UDP_TTL                     255
 #define DEFAULT_UDP_RECVMBOX_SIZE   1
 

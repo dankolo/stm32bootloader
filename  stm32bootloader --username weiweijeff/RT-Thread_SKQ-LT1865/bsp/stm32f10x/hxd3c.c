@@ -103,11 +103,13 @@ void draw_hxd3c(void)
     LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Blue2, 0);
   }
   
-  //LCD_str(671,352,"保存结果",32,Blue2,Black);
-  LCD_str(671,352,"自动模式",32,Blue2,Black);
+  LCD_str(671,352,"保存结果",32,Blue2,Black);
+  LCD_str(671,352,"手动模式",32,Blue2,Black);
+
+  
   LCD_str(671,432,"退出实验",32,Red,Black);
   LCD_str(671,256,"级位电压",32,Blue,Black);
-  
+  //rt_thread_delay(10);
 }
 
 
@@ -202,25 +204,35 @@ void hxd3c_TP_respond(int x,int y)
         //sys_flag=main_panel;
         //return;
         auto_scan_flag=~auto_scan_flag;
-        if(auto_scan_flag==0xff)
+        if(auto_scan_flag)
         {
-          skq_scan_thread_create();
+          rt_thread_resume(skq_scan_thread);
           LCD_str(671,352,"自动模式",32,Blue2,Black);
         }
-        else if(auto_scan_flag==0x00)
-        {
-          rt_thread_delete(skq_scan_thread);
+        else
+        {         
+          rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
+          rt_thread_suspend(skq_scan_thread);
           LCD_str(671,352,"手动模式",32,Blue2,Black);
+          rt_mutex_release(scan_over_one_time);
         }
         return;
       }
       else if(n==21)//（退出）
       {
-        rt_thread_delete(skq_scan_thread);
+        
+        //rt_thread_delete(skq_scan_thread);
+       
         PowerA_DIS();
         CD4067_DIS();
+        //while(!scan_over_one_time);
+        rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
         sys_flag=main_panel;
         draw_main_panel();
+        rt_mutex_release(scan_over_one_time);
+        auto_scan_flag=0x00;
+        rt_thread_suspend(skq_scan_thread);
+        rt_schedule();
         return;
       }      
       else 
@@ -228,6 +240,7 @@ void hxd3c_TP_respond(int x,int y)
         LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Black, 0);
         hxd3c_measure_levels(n);
         LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Blue2, 0);
+        return;
       } 
     }
   }

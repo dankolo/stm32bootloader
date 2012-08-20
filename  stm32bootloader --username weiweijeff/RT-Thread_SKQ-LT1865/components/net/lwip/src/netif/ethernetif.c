@@ -98,7 +98,7 @@ err_t ethernetif_linkoutput(struct netif *netif, struct pbuf *p)
 	/* send a message to eth tx thread */
 	msg.netif = netif;
 	msg.buf   = p;
-	if (rt_mb_send(&eth_tx_thread_mb, (rt_uint32_t) &msg) == RT_EOK)
+	if (rt_mb_send_wait(&eth_tx_thread_mb, (rt_uint32_t) &msg, RT_WAITING_FOREVER) == RT_EOK)
 	{
 		/* waiting for ack */
 		rt_sem_take(&(enetif->tx_ack), RT_WAITING_FOREVER);

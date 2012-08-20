@@ -192,7 +192,6 @@ void rt_system_scheduler_start(void)
 	highest_ready_priority = number;
 #endif
 #endif
-        
 
 	/* get switch to thread */
 	to_thread = rt_list_entry(rt_thread_priority_table[highest_ready_priority].next,

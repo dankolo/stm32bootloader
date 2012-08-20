@@ -1,5 +1,5 @@
 [Stack]
-FillEnabled=0
+FillEnabled=1
 OverflowWarningsEnabled=1
 WarningThreshold=90
 SpWarningsEnabled=1
@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1237029099
+Checksum=-1669215102
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -20,10 +20,10 @@ MixedMode=1
 [SWOTraceHWSettings]
 OverrideDefaultClocks=0
 CpuClock=72000000
-ClockAutoDetect=0
-ClockWanted=2000000
-JtagSpeed=2000000
-Prescaler=36
+ClockAutoDetect=1
+ClockWanted=6000000
+JtagSpeed=6000000
+Prescaler=12
 TimeStampPrescIndex=0
 TimeStampPrescData=0
 PcSampCYCTAP=1

@@ -25,7 +25,7 @@
 #include <dfs_posix.h>
 
 
-rt_uint16_t BK_PWM=0x2f;
+rt_uint16_t BK_PWM=0x3f;
 rt_uint16_t coy_src=0x00;
 rt_uint16_t cur_page=0x00;
 rt_uint16_t opt_page=0x00;
@@ -229,7 +229,7 @@ void LCD_FSMCConfig(void)
 	/*-- FSMC Configuration ------------------------------------------------------*/
 	/*----------------------- SRAM Bank 4 ----------------------------------------*/
 	/* FSMC_Bank1_NORSRAM4 configuration */
-	p.FSMC_AddressSetupTime = 0;
+	p.FSMC_AddressSetupTime = 1;
 	p.FSMC_AddressHoldTime = 0;
 	p.FSMC_DataSetupTime = 2;
 	p.FSMC_BusTurnAroundDuration = 0;
@@ -420,14 +420,11 @@ void rt_hw_lcd_init()
 	/* Configure the LCD Control pins --------------------------------------------*/
 	LCD_CtrlLinesConfig();
         
-        GPIO_ResetBits(GPIOG, GPIO_Pin_7);
-        Delay(100);
-        GPIO_SetBits(GPIOG, GPIO_Pin_7);
-
 	/* Configure the FSMC Parallel interface -------------------------------------*/
 	LCD_FSMCConfig();
         LCD_WriteReg(PREF,(BK_PWM+(coy_src<<6)+(cur_page<<9)+(opt_page<<12)));
-        LCD_Clear(Blue2);
+        //LCD_WriteReg(MIRROR,0x03);
+        //LCD_Clear(Blue2);
 
 	
 
@@ -1045,22 +1042,32 @@ void LCD_ASCII(u16 x,u16 y,u8 p,uint8_t fon, u16 charColor,u16 bkColor)
 
 void LCD_str(u16 x, u16 y, unsigned char *str, uint8_t fon, u16 Color, u16 bkColor)
 {
+  u16 x_start=x;
   while (*str)
   {    
     if (*str < 128)
     {
       if((x+fon/2)>799)//一行写满了
       {
-        x=0;
+        x=x_start;
         y+=fon;
       }
       if((y+fon/2)>479)//整屏写满了
       {
         y=0;
       }
-      LCD_ASCII(x,y,*str,fon,Color,bkColor);
-      x=x+fon/2;
-      str+=1;
+      if(*str=='\n')//手动换行
+      {
+        x=x_start;
+        y+=fon;
+        str+=1;
+      }
+      else
+      {
+        LCD_ASCII(x,y,*str,fon,Color,bkColor);
+        x=x+fon/2;
+        str+=1;
+      }
     }
     else
     {

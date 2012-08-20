@@ -83,7 +83,7 @@ void STM3210E_LCD_Init(void)
 /* Configure the FSMC Parallel interface -------------------------------------*/
   LCD_FSMCConfig();
   
-  LCD_WriteReg(PREF,0x00);
+  LCD_WriteReg(PREF,0x3f);
    
 }
 
