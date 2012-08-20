@@ -115,7 +115,7 @@ rt_int16_t *Get_ADC_R_Value()
   }
 //  rt_kprintf("rn=%d\n",n);
   R=(rt_int16_t)((n/32*3298/65356*1.00565+10.2712)/1.86);
-  R=(rt_int16_t)(R*0.908127208-270.6678445);
+  //R=(rt_int16_t)(R*0.908127208-270.6678445);
   if(R<0)
   {
     R=0;
@@ -172,7 +172,8 @@ rt_int16_t *Get_ADC_V_Value()
   return &V;  
 }
 
-void GPIO_config(void)
+void  
+GPIO_config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);
