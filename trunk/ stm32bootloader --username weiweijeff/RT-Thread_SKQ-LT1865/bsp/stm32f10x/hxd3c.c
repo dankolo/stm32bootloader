@@ -6,7 +6,7 @@
 #include "hxd3c.h"
 
 struct level hxd3c_levels[20];
-rt_uint16_t hxd3c_TP[22][4]=
+rt_uint16_t hxd3c_TP[27][4]=
 {
   {160,32,192,64},{192,32,224,64},{224,32,256,64},{256,32,288,64},{288,32,320,64},{320,32,352,64},{352,32,384,64},{384,32,416,64},
   
@@ -16,9 +16,9 @@ rt_uint16_t hxd3c_TP[22][4]=
 
   {160,224,192,256},{192,224,224,256},{224,224,256,256},
   
-  {670,336,799,400},{670,416,799,479}
+  {0,1,128,63},{670,1,798,63},{536,336,664,400},{670,336,798,400},{536,416,600,479},{600,416,664,479},{670,416,798,479}
 };
-
+//手动模式     退出实验        上一步            下一步              是                  否                 保存数据
 rt_uint16_t hxd3c_POINTS[22][2]=
 {
   //制动
@@ -53,30 +53,30 @@ void draw_hxd3c(void)
   LCD_str(192,0,"测试型号:S640U_BCC005",32,Blue,Black);
   
   
-  LCD_str(16,32,"制",32,Blue,Black);
-  LCD_str(80,32,"动",32,Blue,Black);
-  LCD_str(168,32,"* 1 3 5 7 9",32,Blue,Black);
-  LCD_str(352,32,"1112",32,Blue,Black);
-  LCD_str(0,64,"506(606)",32,Blue,Black);
+  LCD_str(16,96,"制",32,Blue,Black);
+  LCD_str(80,96,"动",32,Blue,Black);
+  LCD_str(168,96,"* 1 3 5 7 9",32,Blue,Black);
+  LCD_str(352,96,"1112",32,Blue,Black);
+  LCD_str(0,128,"506(606)",32,Blue,Black);
   
-  LCD_str(16,96,"牵",32,Blue,Black);
-  LCD_str(80,96,"引",32,Blue,Black);
-  LCD_str(168,96,"* 2 4 6 8",32,Blue,Black);
-  LCD_str(320,96,"101213",32,Blue,Black);
-  LCD_str(0,128,"508(608)",32,Blue,Black);
+  LCD_str(16,128,"牵",32,Blue,Black);
+  LCD_str(80,128,"引",32,Blue,Black);
+  LCD_str(168,128,"* 2 4 6 8",32,Blue,Black);
+  LCD_str(320,128,"101213",32,Blue,Black);
+  LCD_str(0,192,"508(608)",32,Blue,Black);
   
-  LCD_str(448,96,"505(605)",32,Blue,Black);
+  LCD_str(448,160,"505(605)",32,Blue,Black);
   
-  LCD_str(16,160,"零",32,Blue,Black);
-  LCD_str(168,160,"0",32,Blue,Black);
+  LCD_str(16,224,"零",32,Blue,Black);
+  LCD_str(168,224,"0",32,Blue,Black);
   
-  LCD_str(208,192,"507(607)",32,Blue,Black);
+  LCD_str(208,258,"507(607)",32,Blue,Black);
   
-  LCD_str(160,224,"后零前",32,Blue,Black);
-  LCD_str(0,288,"353(354)",32,Blue,Black);
-  LCD_str(272,256,"502(602)",32,Blue,Black);
-  LCD_str(272,288,"503(603)",32,Blue,Black);
-  LCD_str(272,320,"504(604)",32,Blue,Black);
+  LCD_str(160,290,"后零前",32,Blue,Black);
+  LCD_str(0,352,"353(354)",32,Blue,Black);
+  LCD_str(272,320,"502(602)",32,Blue,Black);
+  LCD_str(272,352,"503(603)",32,Blue,Black);
+  LCD_str(272,384,"504(604)",32,Blue,Black);
   
   
   
@@ -98,16 +98,20 @@ void draw_hxd3c(void)
   {
     LCD_DrawFullCircle( hxd3c_POINTS[n][0],  hxd3c_POINTS[n][1],  5,  Blue2,  1);
   }
-  for(n=0;n<22;n++)
+  for(n=0;n<27;n++)
   {
     LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Blue2, 0);
   }
   
-  LCD_str(671,352,"保存结果",32,Blue2,Black);
-  LCD_str(671,352,"手动模式",32,Blue2,Black);
-
-  
-  LCD_str(671,432,"退出实验",32,Red,Black);
+  LCD_str(0,16,"手动模式",32,Blue2,Black);
+  LCD_str(671,432,"保存数据",32,Blue2,Black);
+  LCD_str(671,256,"级位电压",32,Blue,Black);
+  LCD_str(671,16,"退出实验",32,Red,Black);
+  LCD_str(552,432,"是",32,Blue,Black);
+  LCD_str(616,432,"否",32,Blue,Black);
+  LCD_str(552,352,"上一步",32,Blue,Black);
+  LCD_str(687,352,"下一步",32,Blue,Black);
+  LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
   LCD_str(671,256,"级位电压",32,Blue,Black);
   //rt_thread_delay(10);
 }
