@@ -79,7 +79,7 @@ void CD4067_GPIO_Config(void)
 }
 
 
-static void delay_nus(rt_int16_t n)
+static void delay_nus(long n)
 {
   n=n*8;
   while(--n);
@@ -233,11 +233,11 @@ void measure_R(void)
 {
   GPIO_ResetBits(GPIOA,GPIO_Pin_1);//关断短路MOSFET
   GPIO_SetBits(GPIOA,GPIO_Pin_2);  //闭合继电器
-  delay_nus(10000);
-  rt_int16_t r;
-  float v;
-  v=*Get_V();
-  r= (rt_int16_t)((2500/v-1.0)*990);
+  delay_nus(100000);
+  rt_int16_t v,r;
+  v=(*Get_V()) -80;
+  rt_kprintf("v=%d\n",v);
+  r=(rt_int16_t) ((2500/(float)v-1.0)*990);
   GPIO_SetBits(GPIOA,GPIO_Pin_1);//MOSFET短路1kohm电阻
   GPIO_ResetBits(GPIOA,GPIO_Pin_2);  //关断继电器
   rt_sprintf(R_value, "%dΩ", r);
@@ -255,7 +255,10 @@ void measure_R(void)
   }
 #endif  
 }
-
+#ifdef RT_USING_FINSH
+#include <finsh.h>
+FINSH_FUNCTION_EXPORT(measure_R, measure R.)
+#endif
 
  
 void set_24V(void)

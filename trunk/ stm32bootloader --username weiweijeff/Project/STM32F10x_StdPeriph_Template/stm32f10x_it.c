@@ -282,11 +282,11 @@ void TIM3_IRQHandler(void)
       y=(tp_y[1]+tp_y[2]+tp_y[3])/3;
       x=800-x;
       //y=480-y;
-//      printf("%d\t%d\r\n",x,y);
+      printf("%d\t%d\r\n",x,y);
      if((x<800)&&(y<479))
      {
        
-//      LCD_DrawFullCircle(x,y,5,0xaaaa,1);
+      LCD_DrawFullCircle(x,y,5,0xaaaa,1);
        if(x>24&&x<320&&y>320&&y<424)
        {
          APP_PROGRAM_FLAG=1;
