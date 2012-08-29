@@ -1302,6 +1302,7 @@ void S640K1_TP_respond(int x,int y)
         rt_mutex_release(scan_over_one_time);
         rt_thread_suspend(skq_scan_thread);
         auto_scan_flag=0x00;
+        uchar_check_step=0;
         return;
       }
       else if(n==25)//±£´æ
