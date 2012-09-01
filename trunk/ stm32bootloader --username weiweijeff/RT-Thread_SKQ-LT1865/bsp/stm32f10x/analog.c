@@ -114,7 +114,7 @@ rt_int16_t *Get_ADC_R_Value()
     n+=ADCConvertedValue_R[i];
   }
 //  rt_kprintf("rn=%d\n",n);
-  R=(rt_int16_t)(n/64*3298/65356)-530;
+  R=(rt_int16_t)(n/64*3298/65356)-540;
   //R=(rt_int16_t)(R*0.908127208-270.6678445);
   if(R<0)
   {
