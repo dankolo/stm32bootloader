@@ -6,6 +6,7 @@
 
 
 void hxd3c_INIT(void);
+void hxd3c_save_data(void);
 void draw_hxd3c(void);
 void hxd3c_TP_respond(int x,int y);
 void hxd3c_measure_levels(unsigned char n);

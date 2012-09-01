@@ -656,7 +656,8 @@ void S640K1_INIT(void)
   
   memcpy(S640K1_levels[17].level_V,untest,5);
   lamp=untest;
-  bhlj=untest;
+  V_jiwei=untest;
+  bhlj=untest;//闭合逻辑
   
 }
 
@@ -1276,7 +1277,7 @@ void S640K1_TP_respond(int x,int y)
         auto_scan_flag=~auto_scan_flag;
         if (auto_scan_flag)
         {
-          rt_thread_resume(skq_scan_thread);
+          rt_thread_resume(&skq_scan_thread);
           LCD_DrawFullRect(257,287,384,479,  Black, 1);
           LCD_str(0,16,"自动模式",32,Blue2,Black);
           return;
@@ -1284,7 +1285,7 @@ void S640K1_TP_respond(int x,int y)
         else
         {
           rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
-          rt_thread_suspend(skq_scan_thread);
+          rt_thread_suspend(&skq_scan_thread);
           LCD_str(0,16,"手动模式",32,Blue2,Black);
           rt_mutex_release(scan_over_one_time);
           LCD_DrawFullRect(257,287,384,479,  Black, 1);
@@ -1300,7 +1301,7 @@ void S640K1_TP_respond(int x,int y)
         sys_flag=main_panel;
         draw_main_panel();
         rt_mutex_release(scan_over_one_time);
-        rt_thread_suspend(skq_scan_thread);
+        rt_thread_suspend(&skq_scan_thread);
         auto_scan_flag=0x00;
         uchar_check_step=0;
         return;

@@ -16,7 +16,7 @@ rt_uint16_t hxd3c_TP[27][4]=
 
 {160,288,192,320},{192,288,224,320},{224,288,256,320},
   
-  {0,1,128,63},{670,1,798,63},{536,336,664,400},{670,336,798,400},{536,416,600,479},{600,416,664,479},{670,416,798,479}
+{0,1,128,63},{670,1,798,63},{536,336,664,400},{670,336,798,400},{536,416,600,479},{600,416,664,479},{670,416,798,479}
 };
 //手动模式     退出实验        上一步            下一步              是                  否                 保存数据
 rt_uint16_t hxd3c_POINTS[22][2]=
@@ -128,6 +128,8 @@ void hxd3c_INIT(void)
     hxd3c_levels[n].contacts[0].point_coordinate[1]=hxd3c_POINTS[n][1];
     hxd3c_levels[n].contacts[0].value_coordinate[0]=hxd3c_value_disp[0][0];
     hxd3c_levels[n].contacts[0].value_coordinate[1]=hxd3c_value_disp[0][1];
+    memcpy(hxd3c_levels[n].level_V,untest,5);
+    memcpy(hxd3c_levels[n].contacts[0].R,untest,5);
   }
   
    
@@ -138,6 +140,8 @@ void hxd3c_INIT(void)
   hxd3c_levels[8].contacts[0].point_coordinate[1]=hxd3c_POINTS[8][1];
   hxd3c_levels[8].contacts[0].value_coordinate[0]=hxd3c_value_disp[2][0];
   hxd3c_levels[8].contacts[0].value_coordinate[1]=hxd3c_value_disp[2][1];
+  memcpy(hxd3c_levels[8].contacts[0].R,untest,5);
+  memcpy(hxd3c_levels[8].level_V,untest,5);
 
   for(n=9;n<17;n++)
   {
@@ -147,7 +151,9 @@ void hxd3c_INIT(void)
     hxd3c_levels[n].contacts[0].point_coordinate[0]=hxd3c_POINTS[n][0];
     hxd3c_levels[n].contacts[0].point_coordinate[1]=hxd3c_POINTS[n][1];
     hxd3c_levels[n].contacts[0].value_coordinate[0]=hxd3c_value_disp[1][0];
-    hxd3c_levels[n].contacts[0].value_coordinate[1]=hxd3c_value_disp[1][1];    
+    hxd3c_levels[n].contacts[0].value_coordinate[1]=hxd3c_value_disp[1][1]; 
+    memcpy(hxd3c_levels[n].level_V,untest,5);
+    memcpy(hxd3c_levels[n].contacts[0].R,untest,5);
   }
   
   hxd3c_levels[17].contacts[0].flag_last=0;
@@ -166,6 +172,10 @@ void hxd3c_INIT(void)
   hxd3c_levels[17].contacts[1].value_coordinate[0]=hxd3c_value_disp[6][0];
   hxd3c_levels[17].contacts[1].value_coordinate[1]=hxd3c_value_disp[6][1];
   
+  memcpy(hxd3c_levels[17].level_V,untest,5);
+  memcpy(hxd3c_levels[17].contacts[0].R,untest,5);
+  memcpy(hxd3c_levels[17].contacts[1].R,untest,5);
+  
   hxd3c_levels[18].contacts[0].flag_last=1;
   hxd3c_levels[18].contacts[0].channel=2;
   hxd3c_levels[18].contacts[0].div=1;
@@ -173,6 +183,8 @@ void hxd3c_INIT(void)
   hxd3c_levels[18].contacts[0].point_coordinate[1]=hxd3c_POINTS[19][1];
   hxd3c_levels[18].contacts[0].value_coordinate[0]=hxd3c_value_disp[4][0];
   hxd3c_levels[18].contacts[0].value_coordinate[1]=hxd3c_value_disp[4][1];
+  memcpy(hxd3c_levels[18].level_V,untest,5);
+  memcpy(hxd3c_levels[18].contacts[0].R,untest,5);
   
   hxd3c_levels[19].contacts[0].flag_last=0;
   hxd3c_levels[19].contacts[0].channel=0;
@@ -189,9 +201,120 @@ void hxd3c_INIT(void)
   hxd3c_levels[19].contacts[1].point_coordinate[1]=hxd3c_POINTS[21][1];
   hxd3c_levels[19].contacts[1].value_coordinate[0]=hxd3c_value_disp[6][0];
   hxd3c_levels[19].contacts[1].value_coordinate[1]=hxd3c_value_disp[6][1];
+  memcpy(hxd3c_levels[19].level_V,untest,5);
+  memcpy(hxd3c_levels[19].contacts[0].R,untest,5);
+  memcpy(hxd3c_levels[19].contacts[1].R,untest,5);
+  V_jiwei=untest;
+  lamp=untest;
+  bhlj=untest;//闭合逻辑
 }
 
 
+void hxd3c_save_data(void)
+{
+  int fd,i;
+  struct tm *time_now;
+  time_t t;
+  t=time(NULL);
+  time_now =localtime(&t);
+  strftime(file_name,sizeof(file_name),"HXD3C_%Y_%m_%d_%H_%M_%S.csv",time_now);  
+  char name_buffer[37];
+  rt_sprintf(name_buffer,"/HXD3C/%s",file_name);
+  fd=open(name_buffer,O_RDWR|O_CREAT,0);
+  
+  write(fd,",,",2);
+  write(fd,file_name,29);
+  write(fd,",\r\n",3);
+  write(fd,"制动级位,*,1,3,5,7,19,11,12,\r\n",30);
+  
+  write(fd,"506(606),",9);
+  for(i=0;i<8;i++)
+  {
+    write(fd,hxd3c_levels[i].contacts[0].R,5);
+    write(fd,",",1);
+  }  
+  write(fd,"505(605),\r\n",11);
+  
+  write(fd,"级位电压,",9);
+  for(i=0;i<8;i++)
+  {
+    write(fd,hxd3c_levels[i].level_V,5);
+    write(fd,",",1);
+  }
+  write(fd,"\r\n\r\n",4);
+  
+  write(fd,"牵引级位,*,2,4,6,8,10,12,13,\r\n",30); 
+  write(fd,"508(608),",9);
+  for(i=9;i<17;i++)
+  {
+    write(fd,hxd3c_levels[i].contacts[0].R,5);
+    write(fd,",",1);
+  }  
+  write(fd,"505(605),\r\n",11);
+  
+  write(fd,"级位电压,",9);
+  for(i=9;i<17;i++)
+  {
+    write(fd,hxd3c_levels[i].level_V,5);
+    write(fd,",",1);
+  }
+  write(fd,"\r\n\r\n",4);
+  
+   write(fd,"大零位,0,\r\n",11);
+   write(fd,"353(354),",9);
+   write(fd,hxd3c_levels[8].contacts[0].R,5);
+   write(fd,",",1);
+   write(fd,hxd3c_levels[i].level_V,5);
+   write(fd,",507(607),\r\n\r\n",14);
+   
+  
+  
+  
+
+  
+  write(fd,"换向级位,后,零,前,\r\n",20);
+  write(fd,"353(354),,,",11);
+  
+  write(fd,hxd3c_levels[19].contacts[0].R,5);
+  
+  write(fd,",502(602),接触电阻单位,,mΩ,\r\n",29);
+
+  
+  write(fd,"353(354),,",10);
+  write(fd,hxd3c_levels[18].contacts[0].R,5);
+  write(fd,",,503(603),联锁逻辑,,",21);
+  write(fd,bhlj,5);
+  write(fd,",\r\n",3);
+  
+  write(fd,"353(354),",9);
+  write(fd,hxd3c_levels[17].contacts[0].R,5);  
+  write(fd,",,,504(604),电位器总电阻值,,",28);
+  write(fd,R_value,6);
+  write(fd,",\r\n",3);
+  
+  write(fd,"353(354),",9);
+  write(fd,hxd3c_levels[17].contacts[1].R,5);
+  write(fd,",,",2);
+  write(fd,hxd3c_levels[19].contacts[1].R,5);
+  write(fd,",505(605),级位电压,,",20);
+  write(fd,V_jiwei,5);
+  write(fd,",\r\n",3);  
+  
+  
+  write(fd,"接触电阻参考值,,",16);
+  write(fd,ref_buffer,5);
+  write(fd,",,,夜光灯,,",11);
+  write(fd,lamp,5);
+  write(fd,",\r\n",3);
+  
+  close(fd);
+  //closedir(dir);
+}
+#ifdef RT_USING_FINSH
+#include <finsh.h>
+FINSH_FUNCTION_EXPORT(hxd3c_save_data, hxd3c_save_data.)
+FINSH_FUNCTION_EXPORT(hxd3c_INIT, hxd3c_INIT.)
+#endif
 
 
 void hxd3c_TP_respond(int x,int y)
@@ -201,43 +324,73 @@ void hxd3c_TP_respond(int x,int y)
   {
     if(x>hxd3c_TP[n][0]&&x<hxd3c_TP[n][2]&&y>hxd3c_TP[n][1]&&y<hxd3c_TP[n][3])
     {
-      if(n==20)
-      {
-        //sys_flag=main_panel;
-        //return;
+      if(n==20)//手动自动切换
+      {        
         auto_scan_flag=~auto_scan_flag;
         if(auto_scan_flag)
         {
-          rt_thread_resume(skq_scan_thread);
-          LCD_str(671,352,"自动模式",32,Blue2,Black);
+          rt_thread_resume(&skq_scan_thread);
+          LCD_str(0,16,"自动模式",32,Blue2,Black);
         }
         else
         {         
           rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
-          rt_thread_suspend(skq_scan_thread);
-          LCD_str(671,352,"手动模式",32,Blue2,Black);
+          rt_thread_suspend(&skq_scan_thread);
+          LCD_str(0,16,"手动模式",32,Blue2,Black);
           rt_mutex_release(scan_over_one_time);
+          LCD_DrawFullRect(448,160,576,319,  Black, 1);
+          LCD_str(448,160,"扳到大零位\n完成后按是",24,Red,Black);
         }
         return;
       }
       else if(n==21)//（退出）
-      {
-        
-        //rt_thread_delete(skq_scan_thread);
-       
+      {       
         PowerA_DIS();
         CD4067_DIS();
-        //while(!scan_over_one_time);
         rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
         sys_flag=main_panel;
         draw_main_panel();
         rt_mutex_release(scan_over_one_time);
+        rt_thread_suspend(&skq_scan_thread);        
         auto_scan_flag=0x00;
-        rt_thread_suspend(skq_scan_thread);
-        rt_schedule();
+        uchar_check_step=0;
+        //rt_schedule();
+        
+        
+        
+        PowerA_DIS();
+        CD4067_DIS();
+        rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
+        sys_flag=main_panel;
+        draw_main_panel();
+        rt_mutex_release(scan_over_one_time);
+        rt_thread_suspend(&skq_scan_thread);
+        auto_scan_flag=0x00;
+        uchar_check_step=0;
+        
         return;
-      }      
-      else 
+      }
+      else if(n==22)//上一步
+      {
+        
+      }
+      else if(n==23)//下一步
+      {
+        
+      }
+      else if(n==24)//是
+      {
+        
+      }
+      else if(n==25)//否
+      {
+        
+      }
+      else if(n==26)//保存数据
+      {
+        
+      }
+      else
       {        
         LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Black, 0);
         hxd3c_measure_levels(n);
@@ -432,7 +585,8 @@ void hxd3c_scan(void)
         {
           LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
         }
-        LCD_str(521,352,"级位错误",32,Red,Black);
+        LCD_DrawFullRect(448,160,576,319,  Black, 1);
+        LCD_str(448,160,"级位错误",32,Red,Black);
         hxd3c_measure_levels(17);
         hxd3c_measure_levels(18);
         hxd3c_measure_levels(19);
@@ -596,7 +750,8 @@ void hxd3c_scan(void)
         {
           LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
         }
-        LCD_str(521,352,"级位错误",32,Red,Black);
+        LCD_DrawFullRect(448,160,576,319,  Black, 1);
+        LCD_str(448,160,"级位错误",32,Red,Black);
         hxd3c_measure_levels(17);
         hxd3c_measure_levels(18);
         hxd3c_measure_levels(19);
