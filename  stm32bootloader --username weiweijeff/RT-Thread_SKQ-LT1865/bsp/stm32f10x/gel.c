@@ -8,7 +8,7 @@
 rt_thread_t skq_scan_thread_id=RT_NULL;
 rt_uint8_t sys_flag=main_panel;
 rt_uint16_t R_ref=500;
-rt_mutex_t scan_over_one_time=RT_NULL;
+//rt_mutex_t scan_over_one_time=RT_NULL;
 rt_uint8_t auto_scan_flag = 0;
 rt_uint8_t uchar_check_step=0;
 
@@ -445,6 +445,7 @@ void ref_manager(rt_uint16_t x,rt_uint16_t y)
   }
 }
 
+#if 0
 #include "tc_comm.h"
 
 rt_thread_t skq_scan_thread=RT_NULL;;
@@ -495,7 +496,7 @@ int skq_scan_thread_create()
   }
   return 0;
 }
-
+#endif
 
 int lcd_hv[24][10][2]={{{0,0},{80,0},{160,0},{240,0},{320,0},{400,0},{480,0},{560,0},{640,0},{720,0}},
 

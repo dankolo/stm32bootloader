@@ -11,7 +11,7 @@
 
 enum system_flag{main_panel,set_ref,set_sys_time,history,tks640k1,hxd3c};
 
-extern rt_thread_t skq_scan_thread;
+extern struct rt_thread skq_scan_thread;
 extern rt_uint8_t sys_flag;
 extern rt_uint16_t R_ref;
 extern rt_uint8_t uchar_check_step;
