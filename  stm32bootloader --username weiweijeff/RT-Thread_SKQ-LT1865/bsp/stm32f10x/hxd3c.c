@@ -4,19 +4,20 @@
 #include "gel.h"
 #include "analog.h"
 #include "hxd3c.h"
+#define hxd3c_steps 14
 
 struct level hxd3c_levels[20];
 rt_uint16_t hxd3c_TP[27][4]=
 {
-{160,96,192,128},{192,96,224,128},{224,96,256,128},{256,96,288,128},{288,96,320,128},{320,96,352,128},{352,96,384,128},{384,96,416,128},
-
-{160,224,192,256},
-
-{160,160,192,192},{192,160,224,192},{224,160,256,192},{256,160,288,192},{288,160,320,192},{320,160,352,192},{352,160,384,192},{384,160,416,192},
-
-{160,288,192,320},{192,288,224,320},{224,288,256,320},
+  {160,96,192,128},{192,96,224,128},{224,96,256,128},{256,96,288,128},{288,96,320,128},{320,96,352,128},{352,96,384,128},{384,96,416,128},
   
-{0,1,128,63},{670,1,798,63},{536,336,664,400},{670,336,798,400},{536,416,600,479},{600,416,664,479},{670,416,798,479}
+  {160,224,192,256},
+  
+  {160,160,192,192},{192,160,224,192},{224,160,256,192},{256,160,288,192},{288,160,320,192},{320,160,352,192},{352,160,384,192},{384,160,416,192},
+  
+  {160,288,192,320},{192,288,224,320},{224,288,256,320},
+  
+  {0,1,128,63},{670,1,798,63},{536,336,664,400},{670,336,798,400},{536,416,600,479},{600,416,664,479},{670,416,798,479}
 };
 //手动模式     退出实验        上一步            下一步              是                  否                 保存数据
 rt_uint16_t hxd3c_POINTS[22][2]=
@@ -80,7 +81,7 @@ void draw_hxd3c(void)
   
   
   
-    
+  
   
   LCD_DrawUniLine( 128, 144,  448,  144,  Green);
   LCD_DrawUniLine( 128, 208,  432,  208,  Green);
@@ -132,7 +133,7 @@ void hxd3c_INIT(void)
     memcpy(hxd3c_levels[n].contacts[0].R,untest,5);
   }
   
-   
+  
   hxd3c_levels[8].contacts[0].flag_last=1;
   hxd3c_levels[8].contacts[0].channel=6;
   hxd3c_levels[8].contacts[0].div=1;
@@ -142,7 +143,7 @@ void hxd3c_INIT(void)
   hxd3c_levels[8].contacts[0].value_coordinate[1]=hxd3c_value_disp[2][1];
   memcpy(hxd3c_levels[8].contacts[0].R,untest,5);
   memcpy(hxd3c_levels[8].level_V,untest,5);
-
+  
   for(n=9;n<17;n++)
   {
     hxd3c_levels[n].contacts[0].flag_last=1;
@@ -238,7 +239,7 @@ void hxd3c_save_data(void)
   write(fd,"级位电压,",9);
   for(i=0;i<8;i++)
   {
-    write(fd,hxd3c_levels[i].level_V,5);
+    write(fd,hxd3c_levels[i].level_V,7);
     write(fd,",",1);
   }
   write(fd,"\r\n\r\n",4);
@@ -255,30 +256,30 @@ void hxd3c_save_data(void)
   write(fd,"级位电压,",9);
   for(i=9;i<17;i++)
   {
-    write(fd,hxd3c_levels[i].level_V,5);
+    write(fd,hxd3c_levels[i].level_V,7);
     write(fd,",",1);
   }
   write(fd,"\r\n\r\n",4);
   
-   write(fd,"大零位,0,\r\n",11);
-   write(fd,"353(354),",9);
-   write(fd,hxd3c_levels[8].contacts[0].R,5);
-   write(fd,",",1);
-   write(fd,hxd3c_levels[i].level_V,5);
-   write(fd,",507(607),\r\n\r\n",14);
-   
+  write(fd,"大零位,0,\r\n",11);
+  write(fd,"353(354),",9);
+  write(fd,hxd3c_levels[8].contacts[0].R,5);
+  write(fd,",",1);
+  write(fd,hxd3c_levels[i].level_V,7);
+  write(fd,",507(607),\r\n\r\n",14);
   
   
   
-
+  
+  
   
   write(fd,"换向级位,后,零,前,\r\n",20);
   write(fd,"353(354),,,",11);
   
   write(fd,hxd3c_levels[19].contacts[0].R,5);
   
-  write(fd,",502(602),接触电阻单位,,mΩ,\r\n",29);
-
+  write(fd,",502(602),接触电阻单位,,mΩ,\r\n",30);
+  
   
   write(fd,"353(354),,",10);
   write(fd,hxd3c_levels[18].contacts[0].R,5);
@@ -320,7 +321,7 @@ FINSH_FUNCTION_EXPORT(hxd3c_INIT, hxd3c_INIT.)
 void hxd3c_TP_respond(int x,int y)
 {
   unsigned char n;
-  for(n=0;n<22;n++)
+  for(n=0;n<27;n++)
   {
     if(x>hxd3c_TP[n][0]&&x<hxd3c_TP[n][2]&&y>hxd3c_TP[n][1]&&y<hxd3c_TP[n][3])
     {
@@ -372,10 +373,220 @@ void hxd3c_TP_respond(int x,int y)
       }
       else if(n==22)//上一步
       {
-        
+        if(uchar_check_step>0)
+        {
+          uchar_check_step-=1;
+          switch(uchar_check_step)
+          {
+          case 0:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 1:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 2:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引小零位\n完成后按是",24,Red,Black);
+              break;            
+            }
+          case 3:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引13级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 4:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 5:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 6:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n制动12级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 7:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n制动其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 8:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 9:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 10:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引13级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 11:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 12:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"夜光照明灯\n是否正常？",24,Red,Black);
+              set_24V();
+              break;
+            }
+          case 13:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"测量\n划片电阻器\n的总电阻值",24,Red,Black);
+              measure_R();
+              LCD_str(448,233,R_value,24,Red,Black);
+              break;
+            }
+          default:
+            {
+              break;
+            }
+          }
+        }
       }
       else if(n==23)//下一步
       {
+        if(uchar_check_step<hxd3c_steps)
+        {
+          uchar_check_step+=1;
+          switch(uchar_check_step)
+          {          
+          case 1:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 2:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 3:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引13级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 4:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 5:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 6:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n制动12级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 7:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n制动其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 8:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 9:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 10:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引13级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 11:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"将手柄扳到\n牵引其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              break;
+            }
+          case 12:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"夜光照明灯\n是否正常？",24,Red,Black);
+              set_24V();
+              break;
+            }
+          case 13:
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              LCD_str(448,160,"测量\n划片电阻器\n的总电阻值",24,Red,Black);
+              measure_R();
+              LCD_str(448,233,R_value,24,Red,Black);
+              break;
+            }
+          case 14://还要该为显示测试结果
+            {
+              LCD_DrawFullRect(448,160,576,319,  Black, 1);
+              //判断级位电压是否正常
+              // if((S640K1_levels[6].level_V[0]==' ')&&(S640K1_levels[6].level_V[1]=='0')&&(S640K1_levels[6].level_V[3]<'2')&&
+              //   (S640K1_levels[8].level_V[0]==' ')&&(S640K1_levels[8].level_V[1]=='0')&&(S640K1_levels[8].level_V[3]<'2')&&
+              //    (S640K1_levels[0].level_V[0]=='1')&&(S640K1_levels[0].level_V[1]=='4')&&(S640K1_levels[0].level_V[3]>'3')&&
+              //      (S640K1_levels[14].level_V[0]=='1')&&(S640K1_levels[14].level_V[1]=='4')&&(S640K1_levels[14].level_V[3]>'3')
+              //        )
+              //    {
+              V_jiwei=zc;
+              //    }
+              //     else
+              {
+                //      V_jiwei=gz;
+              }
+              
+              
+              LCD_str(448,160,"实验已结束\n请保存数据\n并退出实验",24,Red,Black);
+              break;
+            }
+          default:
+            {
+              break;
+            }
+          }
+        }
         
       }
       else if(n==24)//是
@@ -388,7 +599,10 @@ void hxd3c_TP_respond(int x,int y)
       }
       else if(n==26)//保存数据
       {
-        
+        rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
+        hxd3c_save_data();
+        LCD_str(671,432,"保存完毕",32,Blue,Black);
+        rt_mutex_release(scan_over_one_time);
       }
       else
       {        
@@ -405,6 +619,8 @@ void hxd3c_TP_respond(int x,int y)
 
 
 
+
+
 void hxd3c_measure_levels(unsigned char n)
 {
   rt_int8_t  i=0;
@@ -413,62 +629,64 @@ void hxd3c_measure_levels(unsigned char n)
   while(1)
   {
     
-        Set_Scan_Channel(hxd3c_levels[n].contacts[i].channel);
-       
-        p=Get_ADC_R_Value();
-        if((*p)>1250)
-        {
-          temp=*p;
-          hxd3c_levels[n].contacts[i].R[0]=' ';
-          hxd3c_levels[n].contacts[i].R[1]='_';
-          hxd3c_levels[n].contacts[i].R[2]='/';
-          hxd3c_levels[n].contacts[i].R[3]='_';
-        }
-        else if((*p)<=1250)
-        {
-          temp=(u16)((*p)*(hxd3c_levels[n].contacts[i].div));
-          hxd3c_levels[n].contacts[i].R[0]=temp/1000+'0';
-          hxd3c_levels[n].contacts[i].R[1]=(temp%1000)/100+'0';
-          hxd3c_levels[n].contacts[i].R[2]=(temp%100)/10+'0';
-          hxd3c_levels[n].contacts[i].R[3]=temp%10+'0';
-        }
-
-        hxd3c_levels[n].contacts[i].R[4]='\0';
-        
-        if(temp<R_ref)
-        {
-          LCD_DrawFullCircle(hxd3c_levels[n].contacts[i].point_coordinate[0],hxd3c_levels[n].contacts[i].point_coordinate[1],5,Green,0x01);
-        }
-        else
-        {
-          LCD_DrawFullCircle(hxd3c_levels[n].contacts[i].point_coordinate[0],hxd3c_levels[n].contacts[i].point_coordinate[1],5,Red,0x01);
-        }
-        LCD_str(hxd3c_levels[n].contacts[i].value_coordinate[0], hxd3c_levels[n].contacts[i].value_coordinate[1],hxd3c_levels[n].contacts[i].R,32,Blue2, Black);
+    Set_Scan_Channel(hxd3c_levels[n].contacts[i].channel);
+    
+    p=Get_ADC_R_Value();
+    if((*p)>1100)
+    {
+      temp=*p;
+      hxd3c_levels[n].contacts[i].R[0]=' ';
+      hxd3c_levels[n].contacts[i].R[1]='_';
+      hxd3c_levels[n].contacts[i].R[2]='/';
+      hxd3c_levels[n].contacts[i].R[3]='_';
+      hxd3c_levels[n].contacts[i].R[4]='\0';
+    }
+    else if((*p)<=1100)
+    {
+      temp=(u16)((*p)*(hxd3c_levels[n].contacts[i].div));
+      hxd3c_levels[n].contacts[i].R[0]=temp/1000+'0';
+      hxd3c_levels[n].contacts[i].R[1]=(temp%1000)/100+'0';
+      hxd3c_levels[n].contacts[i].R[2]=(temp%100)/10+'0';
+      hxd3c_levels[n].contacts[i].R[3]=temp%10+'0';
+      hxd3c_levels[n].contacts[i].R[4]='\0';
+      //rt_sprintf(hxd3c_levels[n].contacts[i].R,"%d",temp);
+    }
+    
+    
+    if(temp<R_ref)
+    {
+      LCD_DrawFullCircle(hxd3c_levels[n].contacts[i].point_coordinate[0],hxd3c_levels[n].contacts[i].point_coordinate[1],5,Green,0x01);
+    }
+    else
+    {
+      LCD_DrawFullCircle(hxd3c_levels[n].contacts[i].point_coordinate[0],hxd3c_levels[n].contacts[i].point_coordinate[1],5,Red,0x01);
+    }
+    LCD_str(hxd3c_levels[n].contacts[i].value_coordinate[0], hxd3c_levels[n].contacts[i].value_coordinate[1],hxd3c_levels[n].contacts[i].R,32,Blue2, Black);
+    
+    if(hxd3c_levels[n].contacts[i].flag_last==1)
+    {
       
-      if(hxd3c_levels[n].contacts[i].flag_last==1)
+      p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
+      
+      hxd3c_levels[n].level_V[0]=*p/10000+'0';
+      if(hxd3c_levels[n].level_V[0]=='0')
       {
-       
-        p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
-        
-        hxd3c_levels[n].level_V[0]=*p/10000+'0';
-        if(hxd3c_levels[n].level_V[0]=='0')
-        {
-          hxd3c_levels[n].level_V[0]=' ';
-        }
-        hxd3c_levels[n].level_V[1]=(*p%10000)/1000+'0';
-        hxd3c_levels[n].level_V[2]='.';
-        hxd3c_levels[n].level_V[3]=(*p%1000)/100+'0';
-        hxd3c_levels[n].level_V[4]=(*p%100)/10+'0';
-        hxd3c_levels[n].level_V[5]=*p%10+'0';
-        hxd3c_levels[n].level_V[6]='V';
-        hxd3c_levels[n].level_V[7]='\0';
-        
-        
-        LCD_str(671,128,hxd3c_levels[n].level_V,32,Blue,Black);
-        
-        break;
+        hxd3c_levels[n].level_V[0]=' ';
       }
-      i++;
+      hxd3c_levels[n].level_V[1]=(*p%10000)/1000+'0';
+      hxd3c_levels[n].level_V[2]='.';
+      hxd3c_levels[n].level_V[3]=(*p%1000)/100+'0';
+      hxd3c_levels[n].level_V[4]=(*p%100)/10+'0';
+      hxd3c_levels[n].level_V[5]=*p%10+'0';
+      hxd3c_levels[n].level_V[6]='V';
+      hxd3c_levels[n].level_V[7]='\0';
+      
+      
+      LCD_str(671,128,hxd3c_levels[n].level_V,32,Blue,Black);
+      
+      break;
+    }
+    i++;
   }
 }
 
@@ -521,9 +739,9 @@ void hxd3c_scan(void)
   for(n=0;n<7;n++)
   {
     Set_Scan_Channel(n);
-   
+    
     p=Get_ADC_R_Value();
-//    rt_kprintf("R=%d\r\n",(*p));
+    //    rt_kprintf("R=%d\r\n",(*p));
     if((*p)<=1250)
     {
       hxd3c_jiwei_flag=hxd3c_jiwei_flag|1<<n;
@@ -533,8 +751,8 @@ void hxd3c_scan(void)
       hxd3c_jiwei_flag=hxd3c_jiwei_flag&~(1<<n);      
     }
   }
-//  rt_kprintf("hxd3c_jiwei_flag=%x\r\n",hxd3c_jiwei_flag);
-//是否在零位
+  //  rt_kprintf("hxd3c_jiwei_flag=%x\r\n",hxd3c_jiwei_flag);
+  //是否在零位
   if((hxd3c_jiwei_flag>>6))//是
   {
     switch(hxd3c_jiwei_flag)
@@ -624,21 +842,21 @@ void hxd3c_scan(void)
               if(n==hxd3c_jiwei_q[m])
               {
                 hxd3c_measure_levels((9+m));
-              for(k=8;k<16;k++)
-              {
-                LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
-              }
-              LCD_DrawFullRect( hxd3c_TP[9+m][0],   hxd3c_TP[9+m][1],   hxd3c_TP[9+m][2],   hxd3c_TP[9+m][3],  Red, 0);
-              break;
-            }            
+                for(k=8;k<16;k++)
+                {
+                  LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
+                }
+                LCD_DrawFullRect( hxd3c_TP[9+m][0],   hxd3c_TP[9+m][1],   hxd3c_TP[9+m][2],   hxd3c_TP[9+m][3],  Red, 0);
+                break;
+              }            
+            }
+            break;
           }
-          break;
-        }
-      }      
-      break;
+        }      
+        break;
       }
       
-      case 0x2C://后牵
+    case 0x2C://后牵
       {
         LCD_DrawFullRect( 520,   350,   650,   385,  Black, 1);
         for(k=0;k<22;k++)
@@ -659,18 +877,18 @@ void hxd3c_scan(void)
               if(n==hxd3c_jiwei_q[m])
               {
                 hxd3c_measure_levels((9+m));
-              for(k=8;k<16;k++)
-              {
-                LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
+                for(k=8;k<16;k++)
+                {
+                  LCD_DrawFullRect( hxd3c_TP[k][0],   hxd3c_TP[k][1],   hxd3c_TP[k][2],   hxd3c_TP[k][3],  Blue2, 0);
+                }
+                LCD_DrawFullRect( hxd3c_TP[9+m][0],   hxd3c_TP[9+m][1],   hxd3c_TP[9+m][2],   hxd3c_TP[9+m][3],  Red, 0);
+                break;
               }
-              LCD_DrawFullRect( hxd3c_TP[9+m][0],   hxd3c_TP[9+m][1],   hxd3c_TP[9+m][2],   hxd3c_TP[9+m][3],  Red, 0);
-              break;
             }
+            break;
           }
-          break;
         }
-      }
-      break;
+        break;
       }
       
     case 0x19://前制
@@ -684,12 +902,12 @@ void hxd3c_scan(void)
         LCD_DrawFullRect( hxd3c_TP[19][0],   hxd3c_TP[19][1],   hxd3c_TP[19][2],   hxd3c_TP[19][3],  Red, 0);
         
         p=Get_ADC_V_Value();*p=(rt_int16_t)(9.6*(*p));
-//        rt_kprintf("jiwei_v=%d\r\n",(*p));
+        //        rt_kprintf("jiwei_v=%d\r\n",(*p));
         for(n=0;n<14;n++)
         {
           if(((*p)>= hxd3c_jiwei_zv[n])&&((*p)< hxd3c_jiwei_zv[n+1]))
           {
-//             rt_kprintf("jiwei_n=%x\r\n",n);
+            //             rt_kprintf("jiwei_n=%x\r\n",n);
             for(m=0;m<8;m++)
             {
               if(n==hxd3c_jiwei_z[m])
@@ -709,7 +927,7 @@ void hxd3c_scan(void)
         break;
       }
       
-      case 0x1C://后制
+    case 0x1C://后制
       {  
         LCD_DrawFullRect( 520,   350,   650,   385,  Black, 1);
         for(k=0;k<22;k++)
@@ -743,7 +961,7 @@ void hxd3c_scan(void)
         }
         break;
       }
-    
+      
     default:
       {
         for(k=0;k<22;k++)

@@ -7,7 +7,7 @@
 
 
 
-#define sk640_steps 12
+#define sk640_steps 15
 
 struct level S640K1_levels[18];
 u16 S640K1_TP[26][4]=
@@ -147,7 +147,7 @@ void draw_s640k1(void)
   LCD_str(616,432,"否",32,Blue,Black);
   LCD_str(552,352,"上一步",32,Blue,Black);
   LCD_str(687,352,"下一步",32,Blue,Black);
-  LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
+  LCD_str(257,287,"扳到零位\n完成后按是",24,Red,Black);
 }
 
 
@@ -715,21 +715,21 @@ void ss7e_save_data(void)
   write(fd,",,412(412),\r\n",13);
   
   write(fd,"级位电压,",9);
-  write(fd,S640K1_levels[0].level_V,5);
+  write(fd,S640K1_levels[0].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[1].level_V,5);
+  write(fd,S640K1_levels[1].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[2].level_V,5);
+  write(fd,S640K1_levels[2].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[3].level_V,5);
+  write(fd,S640K1_levels[3].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[4].level_V,5);
+  write(fd,S640K1_levels[4].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[5].level_V,5);
+  write(fd,S640K1_levels[5].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[6].level_V,5);
+  write(fd,S640K1_levels[6].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[7].level_V,5);
+  write(fd,S640K1_levels[7].level_V,7);
   write(fd,",\r\n",3);
   
   write(fd,"牵引级位,*,3,6,9,12,15,17,0,\r\n",30);
@@ -779,21 +779,21 @@ void ss7e_save_data(void)
   write(fd,",,,,,,,413(413),\r\n",18);
   
   write(fd,"级位电压,",9);
-  write(fd,S640K1_levels[8].level_V,5);
+  write(fd,S640K1_levels[8].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[9].level_V,5);
+  write(fd,S640K1_levels[9].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[10].level_V,5);
+  write(fd,S640K1_levels[10].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[11].level_V,5);
+  write(fd,S640K1_levels[11].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[12].level_V,5);
+  write(fd,S640K1_levels[12].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[13].level_V,5);
+  write(fd,S640K1_levels[13].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[14].level_V,5);
+  write(fd,S640K1_levels[14].level_V,7);
   write(fd,",",1);
-  write(fd,S640K1_levels[7].level_V,5);
+  write(fd,S640K1_levels[7].level_V,7);
   write(fd,",\r\n",3);
   
   
@@ -874,23 +874,26 @@ void S640K1_measure_levels(unsigned char n)
     
     
     p=Get_ADC_R_Value();
-    if((*p)>1250)
+    if((*p)>1100)
     {
       temp=*p;
       S640K1_levels[n].contacts[i].R[0]=' ';
       S640K1_levels[n].contacts[i].R[1]='_';
       S640K1_levels[n].contacts[i].R[2]='/';
       S640K1_levels[n].contacts[i].R[3]='_';
+      S640K1_levels[n].contacts[i].R[4]='\0';
     }
-    else if((*p)<=1250)
+    else if((*p)<=1100)
     {
       temp=(u16)((*p)*(S640K1_levels[n].contacts[i].div));
+      //rt_sprintf(S640K1_levels[n].contacts[i].R,"%d",temp);
       S640K1_levels[n].contacts[i].R[0]=temp/1000+'0';
       S640K1_levels[n].contacts[i].R[1]=(temp%1000)/100+'0';
       S640K1_levels[n].contacts[i].R[2]=(temp%100)/10+'0';
       S640K1_levels[n].contacts[i].R[3]=temp%10+'0';
+      S640K1_levels[n].contacts[i].R[4]='\0';
     }
-    S640K1_levels[n].contacts[i].R[4]='\0';
+    
     
     if(temp<R_ref)
     {
@@ -1198,69 +1201,10 @@ rt_int16_t  sk640k1_scan_level(void)
   if((*p)<=1250)//是
   {
     return (sk640_jiwei_flag+(1<<8));
-#if 0    
-    switch(sk640_jiwei_flag)
-    {
-    case 0x00://级位为0
-      {           
-        break;
-      }
-    case 0x4C://后
-      {
-        
-        break;
-      }
-    case 0x2A://前
-      {
-        
-        break;
-      }
-    case 0x34://制
-      {
-        
-        break;
-      }
-    default:
-      {
-        
-        break;
-      }
-    }
-#endif
   }
   else//不是在0位
   {
     return sk640_jiwei_flag;
-#if 0
-    switch(sk640_jiwei_flag)
-    {
-    case 0x00://级位为0
-      {
-        LCD_str(257,287,"无司控器",32,Red,Black);
-        break;
-      }
-    case 0x4D://后
-      {
-        
-        break;
-      }
-    case 0x2B://前
-      {
-        
-        break;
-      }
-    case 0x35://制
-      {
-        
-      }
-    default:
-      {            
-        LCD_DrawFullRect(257,287,384,479,  Black, 1);
-        LCD_str(257,287,"级位错误",32,Red,Black);
-        break;
-      }
-    }
-#endif
   }
 }
 
@@ -1289,7 +1233,7 @@ void S640K1_TP_respond(int x,int y)
           LCD_str(0,16,"手动模式",32,Blue2,Black);
           rt_mutex_release(scan_over_one_time);
           LCD_DrawFullRect(257,287,384,479,  Black, 1);
-          LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
+          LCD_str(257,287,"扳到零位\n完成后按是",24,Red,Black);
           return;
         }
       }
@@ -1324,74 +1268,92 @@ void S640K1_TP_respond(int x,int y)
           case 0:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到零位\n完成后按是",24,Red,Black);
               break;
             }
           case 1:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到制动位\n的大零位\n完成后按是",24,Red,Black);
               break;
             }
           case 2:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
               break;
             }
           case 3:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到1级\n完成后按是",24,Red,Black);
               break;
             }
           case 4:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到向前位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
           case 5:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到向前位\n的大零位\n完成后按是",24,Red,Black);
               break;
             }
           case 6:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              LCD_str(257,287,"扳到向前位\n的小零位\n完成后按是",24,Red,Black);
               break;
             }
           case 7:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
               break;
             }
           case 8:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
           case 9:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+           case 10:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 11:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 12:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
               LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
-          case 10:
+          case 13:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
               LCD_str(257,287,"夜光照明灯\n是否正常？",24,Red,Black);
               set_24V();
               break;
             }
-          case 11:
+          case 14:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"正在测量\n划片电阻器\n的总电阻值",24,Red,Black);
+              LCD_str(257,287,"测量\n划片电阻器\n的总电阻值",24,Red,Black);
               measure_R();
               LCD_str(257,360,R_value,24,Red,Black);
               break;
@@ -1413,73 +1375,91 @@ void S640K1_TP_respond(int x,int y)
           case 1:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到制动位\n的大零位\n完成后按是",24,Red,Black);
               break;
             }
           case 2:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到制动位\n的小零位\n完成后按是",24,Red,Black);
               break;
             }
           case 3:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到1级\n完成后按是",24,Red,Black);
               break;
             }
           case 4:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到向前位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
           case 5:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"扳到向前位\n的大零位\n完成后按是",24,Red,Black);
               break;
             }
           case 6:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+              LCD_str(257,287,"扳到向前位\n的小零位\n完成后按是",24,Red,Black);
               break;
             }
           case 7:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
               break;
             }
           case 8:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+              LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
           case 9:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+              break;
+            }
+           case 10:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 11:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
+              LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+              break;
+            }
+          case 12:
+            {
+              LCD_DrawFullRect(257,287,384,479,  Black, 1);
               LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
               break;
             }
-          case 10:
+          case 13:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
               LCD_str(257,287,"夜光照明灯\n是否正常？",24,Red,Black);
               set_24V();
               break;
             }
-          case 11:
+          case 14:
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
-              LCD_str(257,287,"正在测量\n划片电阻器\n的总电阻值",24,Red,Black);
+              LCD_str(257,287,"测量\n划片电阻器\n的总电阻值",24,Red,Black);
               measure_R();
               LCD_str(257,360,R_value,24,Red,Black);
               break;
             }
-          case 12://还要该为显示测试结果
+          case 15://还要该为显示测试结果
             {
               LCD_DrawFullRect(257,287,384,479,  Black, 1);
               //判断级位电压是否正常
@@ -1511,7 +1491,7 @@ void S640K1_TP_respond(int x,int y)
       {
         switch(uchar_check_step)
         {
-        case 0://扳到大零位\n完成后按是
+        case 0://扳到零位\n完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -1522,7 +1502,7 @@ void S640K1_TP_respond(int x,int y)
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
                   S640K1_measure_levels(7);//测量0级位触点和大零位级位电压
-                  bhlj=zc;//闭合逻辑正常,后续实验出现一个故障就算工作，不再出现这条语句
+                  bhlj=zc;//闭合逻辑正常,后续实验出现一个故障就算故障，不再出现这条语句
                   LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   return;
                   break;
@@ -1530,21 +1510,21 @@ void S640K1_TP_respond(int x,int y)
               case 0x4C://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x34://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1574,21 +1554,21 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2B://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x35://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到大零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到零位\n完成后按是",24,Red,Black);
                   return;
                 }
               default:
@@ -1607,7 +1587,7 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 1://扳到制动位\n的小零位\n完成后按是
+        case 1://扳到制动位\n的大零位\n完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -1617,21 +1597,21 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x4C://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1668,21 +1648,21 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2B://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x35://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"扳到小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
                   return;
                 }
               default:
@@ -1701,7 +1681,7 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 2://将调速手柄扳到17级完成后按是
+        case 2://扳到制动位\n的小零位\n完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -1711,28 +1691,28 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n调速手柄扳\n到制动17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x4C://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到制动17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到制动17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x34://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);                  
-                  LCD_str(257,287,"将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"扳到小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1762,20 +1742,20 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到制动17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2B://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到制动17级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x35://制
                 {
-                  LCD_DrawFullRect(257,287,384,479,  Black, 1);//需要判断闭合逻辑互锁和与小零位的电压差
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
                   S640K1_measure_levels(6);//检测制动17级                  
                   LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   return;
@@ -1796,13 +1776,7 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 3://将调速手柄扳到其余各个级位后点击相应级位数字的边框
-          {
-            LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"点击完成后\n请按下一步",24,Red,Black);
-            break;
-          }
-        case 4://扳到向前位的小零位完成后按是
+        case 3://将调速手柄扳到1级完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -1812,7 +1786,202 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n扳到向前位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n调速手柄扳\n到制动1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x4C://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到制动1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2A://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到制动1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x34://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);                  
+                  LCD_str(257,287,"将调速手柄\n扳到1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            else
+            {
+              switch(m)
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"测试仪\n没有检测到\n司机控制器",24,Red,Black);
+                  break;
+                }
+              case 0x4D://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到制动1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2B://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到制动1级\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x35://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);//需要判断闭合逻辑互锁和与小零位的电压差
+                  S640K1_measure_levels(0);//检测制动1级                  
+                  LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
+                  return;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            return;
+            break;
+          }
+        case 4://将调速手柄扳到其余各个级位后点击相应级位数字的边框
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            LCD_str(257,287,"点击完成后\n请按下一步",24,Red,Black);
+            break;
+          }
+        case 5://扳到向前位的大零位完成后按是
+          {
+            m=sk640k1_scan_level();
+            if((m>>8))
+            {
+              switch((m&0x00ff))
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x4C://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2A://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);//此处判断一下逻辑正常    
+                  LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x34://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);              
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            else
+            {
+              switch(m)
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"测试仪\n没有检测到\n司机控制器",24,Red,Black);
+                  break;
+                }
+              case 0x4D://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2B://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x35://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            return;
+            break;
+          }
+        case 6://扳到向前位的小零位完成后按是
+          {
+            m=sk640k1_scan_level();
+            if((m>>8))
+            {
+              switch((m&0x00ff))
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到向前位\n的小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1826,7 +1995,7 @@ void S640K1_TP_respond(int x,int y)
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);//此处判断一下逻辑正常    
-                  LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
+                  LCD_str(257,287,"扳到小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1870,7 +2039,8 @@ void S640K1_TP_respond(int x,int y)
               case 0x2B://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n扳到向前位\n扳到小零位\n完成后按是",24,Red,Black);
+                  S640K1_measure_levels(8);            
+                  LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   return;
                   break;
                 }
@@ -1896,7 +2066,7 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 5://将调速手柄扳到*级完成后按是
+        case 7://将调速手柄扳到17完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -1906,28 +2076,28 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n调速手柄扳\n到向前17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x4C://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到向前17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"调速手柄扳\n到17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x34://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在制动级位\n调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n调速手柄扳\n到向前17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -1957,14 +2127,14 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到向前17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2B://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  S640K1_measure_levels(8);//检测向前*级
+                  S640K1_measure_levels(14);//检测向前*级
                   LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   return;
                   break;
@@ -1972,7 +2142,7 @@ void S640K1_TP_respond(int x,int y)
               case 0x35://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);//需要判断闭合逻辑互锁和与小零位的电压差
-                  LCD_str(257,287,"司机控制器\n在向后级位\n调速手柄扳\n到向前*级\n完成后按是",24,Red,Black);                  
+                  LCD_str(257,287,"司机控制器\n在制动级位\n调速手柄扳\n到向前17级\n完成后按是",24,Red,Black);                  
                   return;
                   break;
                 }
@@ -1992,13 +2162,13 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 6://将调速手柄扳到其余各个级位后点击相应级位数字的边框
+        case 8://将调速手柄扳到其余各个级位后点击相应级位数字的边框
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             LCD_str(257,287,"点击完成后\n请按下一步",24,Red,Black);
             break;
           }
-        case 7://扳到向后位的小零位完成后按是
+        case 9://扳到向后位的大零位完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -2008,7 +2178,7 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -2016,6 +2186,101 @@ void S640K1_TP_respond(int x,int y)
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);//此处判断一下逻辑正常
                   LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2A://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x34://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+                  
+                  return;
+                  break;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            else
+            {
+              switch(m)
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"测试仪\n没有检测到\n司机控制器",24,Red,Black);
+                  break;
+                }
+              case 0x4D://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"扳到大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x2B://前
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x35://制
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);                  
+                  return;
+                  break;
+                }
+              default:
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"级位错误",32,Red,Black);
+                  bhlj=gz;//闭合逻辑故障
+                  S640K1_measure_levels(15);
+                  S640K1_measure_levels(17);
+                  S640K1_measure_levels(18);
+                  return;
+                  break;
+                }
+              }
+            }
+            break;
+          }
+        case 10://扳到向后位的小零位完成后按是
+          {
+            m=sk640k1_scan_level();
+            if((m>>8))
+            {
+              switch((m&0x00ff))
+              {
+              case 0x00://级位为0
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);
+                  LCD_str(257,287,"司机控制器\n在零位\n扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+                  return;
+                  break;
+                }
+              case 0x4C://后
+                {
+                  LCD_DrawFullRect(257,287,384,479,  Black, 1);//此处判断一下逻辑正常
+                  LCD_str(257,287,"扳到小零位\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -2060,7 +2325,8 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"扳到小零位\n完成后按是",24,Red,Black);
+                  S640K1_measure_levels(8);        
+                  LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   return;
                   break;
                 }
@@ -2093,7 +2359,7 @@ void S640K1_TP_respond(int x,int y)
             }
             break;
           }
-        case 8://将调速手柄扳到*级完成后按是
+        case 11://将调速手柄扳到17级完成后按是
           {
             m=sk640k1_scan_level();
             if((m>>8))
@@ -2103,21 +2369,21 @@ void S640K1_TP_respond(int x,int y)
               case 0x00://级位为0
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在大零级位\n调速手柄扳\n到向后*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在零位\n调速手柄扳\n到向后17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x4C://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"调速手柄扳\n到向后*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"调速手柄扳\n到向后17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
               case 0x2A://前
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到向后*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在向前级位\n调速手柄扳\n到向后17级\n完成后按是",24,Red,Black);
                   
                   return;
                   break;
@@ -2125,7 +2391,7 @@ void S640K1_TP_respond(int x,int y)
               case 0x34://制
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);
-                  LCD_str(257,287,"司机控制器\n在制动级位\n调速手柄扳\n到向后*级\n完成后按是",24,Red,Black);
+                  LCD_str(257,287,"司机控制器\n在制动级位\n调速手柄扳\n到向后17级\n完成后按是",24,Red,Black);
                   return;
                   break;
                 }
@@ -2155,7 +2421,7 @@ void S640K1_TP_respond(int x,int y)
               case 0x4D://后
                 {
                   LCD_DrawFullRect(257,287,384,479,  Black, 1);//需要判断闭合逻辑互锁和与小零位的电压差
-                  S640K1_measure_levels(8);//检测向前*级
+                  S640K1_measure_levels(14);
                   LCD_str(257,287,"此步骤完成\n请按下一步",24,Red,Black);
                   
                   return;
@@ -2191,13 +2457,13 @@ void S640K1_TP_respond(int x,int y)
             return;
             break;
           }
-        case 9://将调速手柄扳到其余各个级位后点击相应级位数字的边框
+        case 12://将调速手柄扳到其余各个级位后点击相应级位数字的边框
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             LCD_str(257,287,"点击完成后\n请按下一步",24,Red,Black);
             break;
           }
-        case 10://夜光照明灯是否正常？
+        case 13://夜光照明灯是否正常？
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             lamp=zc;//照明记录为正常
@@ -2205,12 +2471,12 @@ void S640K1_TP_respond(int x,int y)
             reset_24V();
             break;
           }
-        case 11://划片电阻器的总电阻值
+        case 14://划片电阻器的总电阻值
           {
             LCD_str(257,287,"测量完成\n请按下一步",24,Red,Black);
             break;
           }
-        case 12://还要该为显示测试结果
+        case 15://还要该为显示测试结果
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             LCD_str(257,287,"实验已结束\n请保存数据\n并退出实验",24,Red,Black);
@@ -2230,64 +2496,82 @@ void S640K1_TP_respond(int x,int y)
         case 0:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n扳到大零位\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到零位\n完成后按是",24,Red,Black);
             break;
           }
         case 1:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到制动位\n的大零位\n完成后按是",24,Red,Black);
             break;
           }
         case 2:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到制动位\n的小零位\n完成后按是",24,Red,Black);
             break;
           }
         case 3:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到1级\n完成后按是",24,Red,Black);
             break;
           }
         case 4:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n扳到向前位\n的小零位\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
             break;
           }
         case 5:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到向前位\n的大零位\n完成后按是",24,Red,Black);
             break;
           }
         case 6:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到向前位\n的小零位\n完成后按是",24,Red,Black);
             break;
           }
         case 7:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
             break;
           }
         case 8:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到*级\n完成后按是",24,Red,Black);
+            LCD_str(257,287,"将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
             break;
           }
         case 9:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
-            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+            LCD_str(257,287,"请按照提示\n扳到向后位\n的大零位\n完成后按是",24,Red,Black);
             break;
           }
         case 10:
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            LCD_str(257,287,"请按照提示\n扳到向后位\n的小零位\n完成后按是",24,Red,Black);
+            break;
+          }
+        case 11:
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到17级\n完成后按是",24,Red,Black);
+            break;
+          }
+        case 12:
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            LCD_str(257,287,"请按照提示\n将调速手柄\n扳到其余各\n个级位后点\n击相应级位\n数字的边框",24,Red,Black);
+            break;
+          }
+        case 13:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             lamp=gz;//照明记录为故障
@@ -2295,13 +2579,13 @@ void S640K1_TP_respond(int x,int y)
             LCD_str(257,287,"请按下一步",24,Red,Black);
             break;
           }
-        case 11:
+        case 14:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             LCD_str(257,287,"请按照提示\n操作",24,Red,Black);
             break;
           }
-        case 12:
+        case 15:
           {
             LCD_DrawFullRect(257,287,384,479,  Black, 1);
             LCD_str(257,287,"实验已结束\n请保存数据\n并退出实验",24,Red,Black);
