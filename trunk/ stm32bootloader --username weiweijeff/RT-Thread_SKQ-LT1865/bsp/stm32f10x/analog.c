@@ -114,7 +114,7 @@ rt_int16_t *Get_ADC_R_Value()
     n+=ADCConvertedValue_R[i];
   }
 //  rt_kprintf("rn=%d\n",n);
-  R=(rt_int16_t)(n/64*3298/65356)-540;
+  R=(rt_int16_t)(n/64*3298/65356)-320;
   //R=(rt_int16_t)(R*0.908127208-270.6678445);
   if(R<0)
   {
@@ -154,26 +154,32 @@ rt_int16_t *Get_ADC_V_Value()
   {
     n+=ADCConvertedValue_V[i];
   }
-//  rt_kprintf("vn=%d\n",n);
-  ftemp=((n>>5)*3298)>>16;
+  
+  ftemp=(((n>>5)*3298)>>16)+14;
+  
   if(ftemp<1)
   {
     ftemp=0;
   }
-  else if(ftemp<1500)
+  //else if(ftemp<1500)
   {
-    ftemp=ftemp*0.9985+32;
+    //ftemp=ftemp*0.9985+32;
   }
-  else
+ // else
   {
-    ftemp=ftemp*1.01978+0.4;
+    //ftemp=ftemp*1.01978+0.4;
   }
   V=(rt_int16_t)ftemp;
+  rt_kprintf("%d\n",V);
   return &V;  
 }
 
-void  
-GPIO_config(void)
+#ifdef RT_USING_FINSH
+#include <finsh.h>
+FINSH_FUNCTION_EXPORT(Get_ADC_V_Value, Get_ADC_V_Value.)
+#endif
+
+void GPIO_config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);

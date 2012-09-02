@@ -178,7 +178,7 @@ void hxd3c_INIT(void)
   memcpy(hxd3c_levels[17].contacts[1].R,untest,5);
   
   hxd3c_levels[18].contacts[0].flag_last=1;
-  hxd3c_levels[18].contacts[0].channel=2;
+  hxd3c_levels[18].contacts[0].channel=1;
   hxd3c_levels[18].contacts[0].div=1;
   hxd3c_levels[18].contacts[0].point_coordinate[0]=hxd3c_POINTS[19][0];
   hxd3c_levels[18].contacts[0].point_coordinate[1]=hxd3c_POINTS[19][1];
@@ -350,11 +350,11 @@ void hxd3c_TP_respond(int x,int y)
         CD4067_DIS();
         rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
         sys_flag=main_panel;
-        draw_main_panel();
-        rt_mutex_release(scan_over_one_time);
-        rt_thread_suspend(&skq_scan_thread);        
+        draw_main_panel();        
+        rt_thread_suspend(&skq_scan_thread);
         auto_scan_flag=0x00;
         uchar_check_step=0;
+        rt_mutex_release(scan_over_one_time);
         //rt_schedule();
         
         
@@ -373,6 +373,8 @@ void hxd3c_TP_respond(int x,int y)
       }
       else if(n==22)//上一步
       {
+        if(auto_scan_flag)
+        {return;}
         if(uchar_check_step>0)
         {
           uchar_check_step-=1;
@@ -474,6 +476,8 @@ void hxd3c_TP_respond(int x,int y)
       }
       else if(n==23)//下一步
       {
+        if(auto_scan_flag)
+        {return;}
         if(uchar_check_step<hxd3c_steps)
         {
           uchar_check_step+=1;
@@ -590,22 +594,238 @@ void hxd3c_TP_respond(int x,int y)
       }
       else if(n==24)//是
       {
-        
+        if(auto_scan_flag)
+        {return;}
+        switch(uchar_check_step)
+        {
+        case 0:
+          {
+            hxd3c_measure_levels(8);
+            hxd3c_measure_levels(18);
+            bhlj=zc;//闭合逻辑正常,后续实验出现一个故障就算故障，不再出现这条语句
+            return;
+            break;
+          }
+        case 1:
+          {
+            hxd3c_measure_levels(17);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 2:
+          {
+            hxd3c_measure_levels(9);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 3:
+          {
+            hxd3c_measure_levels(16);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 4:
+          {
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 5:
+          {
+            hxd3c_measure_levels(0);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 6:
+          {
+            hxd3c_measure_levels(7);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 7:
+          {
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 8:
+          {
+            hxd3c_measure_levels(19);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 9:
+          {
+            hxd3c_measure_levels(9);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 10:
+          {
+            hxd3c_measure_levels(16);
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 11:
+          {
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 12:
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            lamp=zc;//照明记录为故障
+            reset_24V();
+            return;
+            break;
+          }
+        case 13:
+          {
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"此步骤完成\n请按下一步",24,Red,Black);
+            return;
+            break;
+          }
+        case 14:
+          {
+            LCD_DrawFullRect(448,160,576,319,  Black, 1);
+            LCD_str(448,160,"实验已结束\n请保存数据\n并退出实验",24,Red,Black);
+            return;
+            break;
+          }
+        default:
+          {
+            return;
+            break;
+          }
+        }
       }
       else if(n==25)//否
       {
-        
+        if(auto_scan_flag)
+        {return;}
+        switch(uchar_check_step)
+        {
+        case 0:
+          {
+            return;
+            break;
+          }
+        case 1:
+          {
+            return;
+            break;
+          }
+        case 2:
+          {
+            return;
+            break;
+          }
+        case 3:
+          {
+            return;
+            break;
+          }
+        case 4:
+          {
+            return;
+            break;
+          }
+        case 5:
+          {
+            return;
+            break;
+          }
+        case 6:
+          {
+            return;
+            break;
+          }
+        case 7:
+          {
+            return;
+            break;
+          }
+        case 8:
+          {
+            return;
+            break;
+          }
+        case 9:
+          {
+            return;
+            break;
+          }
+        case 10:
+          {
+            return;
+            break;
+          }
+        case 11:
+          {
+            return;
+            break;
+          }
+        case 12:
+          {
+            LCD_DrawFullRect(257,287,384,479,  Black, 1);
+            lamp=gz;//照明记录为故障
+            reset_24V();
+            return;
+            break;
+          }
+        case 13:
+          {
+            return;
+            break;
+          }
+        case 14:
+          {
+            return;
+            break;
+          }
+        default:
+          {
+            return;
+            break;
+          }
+        }
       }
       else if(n==26)//保存数据
       {
+        if(auto_scan_flag)
+        {return;}
         rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
         hxd3c_save_data();
         LCD_str(671,432,"保存完毕",32,Blue,Black);
         rt_mutex_release(scan_over_one_time);
       }
       else
-      {        
+      {
+        if(auto_scan_flag)
+        {return;}
         LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Black, 0);
+        rt_kprintf("n=%d\n",n);
         hxd3c_measure_levels(n);
         LCD_DrawFullRect( hxd3c_TP[n][0],   hxd3c_TP[n][1],   hxd3c_TP[n][2],   hxd3c_TP[n][3],  Blue2, 0);
         return;
@@ -817,7 +1037,8 @@ void hxd3c_scan(void)
     {
     case 0x00://级位为0
       {
-        LCD_str(521,352,"无司控器",32,Red,Black);
+        LCD_DrawFullRect(448,160,576,319,  Black, 1);
+        LCD_str(448,160,"无司控器",32,Red,Black);
         break;
       }
     case 0x29://前牵
@@ -969,6 +1190,7 @@ void hxd3c_scan(void)
         }
         LCD_DrawFullRect(448,160,576,319,  Black, 1);
         LCD_str(448,160,"级位错误",32,Red,Black);
+        bhlj=gz;
         hxd3c_measure_levels(17);
         hxd3c_measure_levels(18);
         hxd3c_measure_levels(19);
