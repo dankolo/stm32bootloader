@@ -49,6 +49,7 @@
 #include "gel.h"
 #include "analog.h"
 
+rt_mutex_t scan_over_one_time=RT_NULL;
 
 ALIGN(RT_ALIGN_SIZE)
 static rt_uint8_t led_stack[ 512 ];
@@ -184,6 +185,41 @@ static void touch_thread_entry(void* parameter)
 
 
 
+static rt_uint8_t skq_scan_stack[ 2048 ];
+struct rt_thread skq_scan_thread;
+void skq_scan_thread_entry(void* parameter)
+{
+  //rt_err_t result;
+  while (auto_scan_flag)
+  {
+    rt_thread_delay(10);
+    switch(sys_flag)
+    {
+    case tks640k1:
+      {
+//        scan_over_one_time=0;
+        rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
+        sk640k1_scan();
+//        scan_over_one_time=1;
+        rt_mutex_release(scan_over_one_time);
+        break;
+      }
+    case hxd3c:
+      {
+//        scan_over_one_time=0;
+        rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
+        hxd3c_scan();
+//        scan_over_one_time=1;
+        rt_mutex_release(scan_over_one_time);
+        break;
+      }
+    default:
+      {
+          break;
+      }
+    }
+  }
+}
 
 
 
@@ -280,6 +316,7 @@ void rt_init_thread_entry(void* parameter)
 
 int rt_application_init()
 {
+  scan_over_one_time= rt_mutex_create("scan_over", RT_IPC_FLAG_FIFO);
 	rt_thread_t init_thread;
 
 	rt_err_t result;
@@ -312,8 +349,16 @@ int rt_application_init()
         //rt_thread_startup(&ltc1865_thread);
 	}
         
-        skq_scan_thread_create();
-        rt_thread_suspend(skq_scan_thread);
+        result = rt_thread_init(&skq_scan_thread,
+		"skq_scan",
+		skq_scan_thread_entry, RT_NULL,
+		(rt_uint8_t*)&skq_scan_stack[0], sizeof(skq_scan_stack), 25, 10);
+	if (result == RT_EOK)
+	{
+        rt_thread_startup(&skq_scan_thread);
+	}
+        //skq_scan_thread_create();
+        rt_thread_suspend(&skq_scan_thread);
         
 #if (RT_THREAD_PRIORITY_MAX == 32)
 	init_thread = rt_thread_create("init",
