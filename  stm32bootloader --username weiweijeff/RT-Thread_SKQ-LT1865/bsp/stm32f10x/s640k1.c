@@ -1244,10 +1244,10 @@ void S640K1_TP_respond(int x,int y)
         rt_mutex_take(scan_over_one_time, RT_WAITING_FOREVER);
         sys_flag=main_panel;
         draw_main_panel();
-        rt_mutex_release(scan_over_one_time);
         rt_thread_suspend(&skq_scan_thread);
         auto_scan_flag=0x00;
         uchar_check_step=0;
+        rt_mutex_release(scan_over_one_time);
         return;
       }
       else if(n==25)//±£´æ
