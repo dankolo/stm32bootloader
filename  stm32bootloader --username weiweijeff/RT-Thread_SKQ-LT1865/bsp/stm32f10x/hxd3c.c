@@ -4,8 +4,8 @@
 #include "gel.h"
 #include "analog.h"
 #include "hxd3c.h"
-#define hxd3c_steps 14
 
+#define hxd3c_steps 14
 struct level hxd3c_levels[20];
 rt_uint16_t hxd3c_TP[27][4]=
 {
@@ -564,17 +564,17 @@ void hxd3c_TP_respond(int x,int y)
             {
               LCD_DrawFullRect(448,160,576,319,  Black, 1);
               //判断级位电压是否正常
-              // if((S640K1_levels[6].level_V[0]==' ')&&(S640K1_levels[6].level_V[1]=='0')&&(S640K1_levels[6].level_V[3]<'2')&&
-              //   (S640K1_levels[8].level_V[0]==' ')&&(S640K1_levels[8].level_V[1]=='0')&&(S640K1_levels[8].level_V[3]<'2')&&
-              //    (S640K1_levels[0].level_V[0]=='1')&&(S640K1_levels[0].level_V[1]=='4')&&(S640K1_levels[0].level_V[3]>'3')&&
-              //      (S640K1_levels[14].level_V[0]=='1')&&(S640K1_levels[14].level_V[1]=='4')&&(S640K1_levels[14].level_V[3]>'3')
-              //        )
-              //    {
-              V_jiwei=zc;
-              //    }
-              //     else
+              if((hxd3c_levels[0].level_V[0]==' ')&&(hxd3c_levels[0].level_V[1]=='0')&&(hxd3c_levels[0].level_V[3]<'1')&&
+                 (hxd3c_levels[9].level_V[0]==' ')&&(hxd3c_levels[9].level_V[1]=='0')&&(hxd3c_levels[9].level_V[3]<'1')&&
+                   (hxd3c_levels[7].level_V[0]=='2')&&(hxd3c_levels[7].level_V[1]>='3')&&(hxd3c_levels[0].level_V[3]>='6')&&
+                     (hxd3c_levels[16].level_V[0]=='2')&&(hxd3c_levels[16].level_V[1]>='3')&&(hxd3c_levels[16].level_V[3]>='6')
+                       )
               {
-                //      V_jiwei=gz;
+                V_jiwei=zc;
+              }
+              else
+              {
+                V_jiwei=gz;
               }
               
               
@@ -587,7 +587,6 @@ void hxd3c_TP_respond(int x,int y)
             }
           }
         }
-        
       }
       else if(n==24)//是
       {
